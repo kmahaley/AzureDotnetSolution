@@ -40,18 +40,20 @@
 ***Installing certificate on Azure resource***
 
   - Install certificates on Azure Virtual machine scale set(VMSS)
+    - Upload certificate in Azure keyvault. Goto Azure portal ->[keyvaultName]-> Certificate section->Import `.pfx` private key -> save
+    - make note of secret identifier [certificateSecretIdentifier] 
+    - example: https://[keyVaultUrl]/secrets/[certificateName]/[version]
     - update VMSS ARM template.
     - https://resources.azure.com/ -> select subscription -> resource group -> providers -> microsoft.compute -> VMSS name -> Put call to update VMSS
     - Add below mentioned json in ARM template VMSS -> virtualMachineProfile -> osProfile -> secrets -> vaultCertificates
+    - After Put call make sure ARM template updated and VMSS are in updating state
 
 ```
 {
-"certificateUrl": "{secret Identifier from keyvault}",
+"certificateUrl": "[certificateSecretIdentifier]",
 "certificateStore": "My"
 }
 ```
-  - After Put call make sure ARM template updated and VMSS are inupdating state
- 
 
 ## Access Azure key vault using dotnet core
 
@@ -92,3 +94,11 @@ There are 4 ways to access Azure key vault secrets. You can make code behave as 
  Check `KeyVaultService.GetSecretAsApplicationUsingClientCertificateAsync` method
 
 #### Using Azure Managed Identity of Azure Resources [Best approach]
+
+ Having certificates, installation and renewal is tiring process. Azure provides an approach of enabling managed identity for Azure resource.
+ Managed Identity creates an AAD application registration. All you need is give access to this app registration in key vault using access policy
+ Now you [appRegistartionName] has access to [keyvaultName].
+
+ Managed identity works only when an Azure resource tries to access another Azure resource. https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/
+
+ Check `KeyVaultService.GetSecretAsApplicationUsingManagedIdentityAsync` method
