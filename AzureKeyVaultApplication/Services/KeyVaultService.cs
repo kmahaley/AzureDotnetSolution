@@ -30,8 +30,12 @@ namespace AzureKeyVaultApplication.Services
         {
             SecretClientOptions options = KeyVaultUtility.CreateSecretClientOptions();
 
-            // Environment variables enabled
-            // can login in VS2019 and remove ExcludeVisualStudioCodeCredential 
+            /* 
+             * Environment variables enabled. VS2019->application->properties->debug->Environment variable
+             * AZURE_CLIENT_SECRET, AZURE_CLIENT_ID, AZURE_TENANT_ID
+             * You can login in VS2019 with credentials having access to key vault. Add ExcludeEnvironmentCredential = true and
+             * remove ExcludeVisualStudioCodeCredential  
+             */
             var credentialOptions = new DefaultAzureCredentialOptions
             {
                 ExcludeAzureCliCredential = true,

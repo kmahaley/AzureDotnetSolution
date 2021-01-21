@@ -23,10 +23,9 @@ namespace AzureKeyVaultApplication.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<int> Get()
+        public string Get()
         {
-            var rng = new Random();
-            return Enumerable.Range(1, 5);
+            return "service running...";
         }
 
         [HttpGet("keyvault")]
