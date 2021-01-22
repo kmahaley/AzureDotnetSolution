@@ -95,10 +95,30 @@ There are 4 ways to access Azure key vault secrets. You can make code behave as 
 
 #### Using Azure Managed Identity of Azure Resources [Best approach]
 
+##### System Created Managed identity
+
  Having certificates, installation and renewal is tiring process. Azure provides an approach of enabling managed identity for Azure resource.
  Managed Identity creates an AAD application registration. All you need is give access to this app registration in key vault using access policy
  Now you [appRegistartionName] has access to [keyvaultName].
 
+ In this example we will give Azure Webapp system assigned managed identity
+
+  - Goto Azure portal ->Select Webapp resource -> Identity -> enable system assigned -> save
+  - Goto key vault -> Add Access policy -> select permission -> select service principle as above Azure resource name -> save
+  
+ you can see that Azure created AAD application for Webapp resource in Azure portal -> AAD
+
  Managed identity works only when an Azure resource tries to access another Azure resource. https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/
 
  Check `KeyVaultService.GetSecretAsApplicationUsingManagedIdentityAsync` method
+
+***if you remove system assigned managed identity from azure resource then AAD application is deleted. you will loose access to key vault***
+
+##### UserCreated Managed identity
+
+  - Goto Azure portal -> Managed Identity-> Create user assigned managed Identity->make note of [UserAssignedManagedIdentityName] and client id of that identity [ClientIdOfUserAssignedManagedIdentityName]
+  - Associate [UserAssignedManagedIdentityName] to Azure webapp resource 
+  - Goto Azure portal -> Select Webapp resource -> Identity -> user assigned -> select [UserAssignedManagedIdentityName] -> save
+  - Goto key vault -> Add Access policy -> select permission -> select service principle as [UserAssignedManagedIdentityName] -> save
+
+ Check `KeyVaultService.GetSecretAsApplicationUsingUserManagedIdentityAsync` method
