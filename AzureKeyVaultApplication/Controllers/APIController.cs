@@ -32,14 +32,21 @@ namespace AzureKeyVaultApplication.Controllers
         public async Task<string> GetKeyVaultAsync()
         {
             string secretValue = "";
-            var isManagedIdentity = keyVaultService.IsManagedIdentityEnabled();
+            var isSystemManagedIdentity = keyVaultService.IsManagedIdentityEnabled();
+            var isUserAssignedManagedIdentity = keyVaultService.IsUserManagedIdentityEnabled();
 
-            if(isManagedIdentity)
+            if(isSystemManagedIdentity)
             {
                 // Will work when deployed in Azure resource eg. Webapps,VMSS etc.
-                var secretAsmanagedIdentity = await keyVaultService.GetSecretAsApplicationUsingManagedIdentityAsync();
-                logger.LogInformation($"--------- user secret ManagedIdentity {secretAsmanagedIdentity}");
-                secretValue = $"Managed identity: {isManagedIdentity}, secret: {secretAsmanagedIdentity}";
+                var secretAsmanagedIdentity = await keyVaultService.GetSecretAsApplicationUsingUserManagedIdentityAsync();
+                logger.LogInformation($"--------- user secret as System Assigned ManagedIdentity {secretAsmanagedIdentity}");
+                secretValue = $"System Managed identity: {isSystemManagedIdentity}, secret: {secretAsmanagedIdentity}";
+            }
+            else if(isUserAssignedManagedIdentity)
+            {
+                var secretAsUsermanagedIdentity = await keyVaultService.GetSecretAsApplicationUsingUserManagedIdentityAsync();
+                logger.LogInformation($"--------- user secret as User Assigned ManagedIdentity {secretAsUsermanagedIdentity}");
+                secretValue = $"User Managed identity: {isUserAssignedManagedIdentity}, secret: {secretAsUsermanagedIdentity}";
             }
             else
             {
@@ -52,8 +59,8 @@ namespace AzureKeyVaultApplication.Controllers
                 var secretAsClientCertificate = await keyVaultService.GetSecretAsApplicationUsingClientCertificateAsync();
                 logger.LogInformation($"--------- user secret as AAD client app + client certificate {secretAsClientCertificate}");
 
-                secretValue = $"Managed identity: {isManagedIdentity}, secret: {secretAsClientSecret}";
-                
+                secretValue = $"Managed identity: {isSystemManagedIdentity}, secret: {secretAsClientSecret}";
+
             }
             
             return secretValue; 

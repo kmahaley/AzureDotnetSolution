@@ -31,8 +31,14 @@ namespace AzureKeyVaultApplication.Services
             return keyVaultConfiguration.ManagedIdentity;
         }
 
+        public bool IsUserManagedIdentityEnabled()
+        {
+            return keyVaultConfiguration.UserAssignedManagedIdentity;
+        }
+
         public async Task<string> GetSecretAsUserAsync()
         {
+            logger.LogInformation("----- User Async");
             SecretClientOptions options = KeyVaultUtility.CreateSecretClientOptions();
 
             /* 
@@ -71,6 +77,8 @@ namespace AzureKeyVaultApplication.Services
 
         public async Task<string> GetSecretAsApplicationUsingClientSecretAsync()
         {
+            logger.LogInformation("----- Client Secret Async");
+
             SecretClientOptions options = KeyVaultUtility.CreateSecretClientOptions();
             TokenCredentialOptions tokenOptions = KeyVaultUtility.CreateTokenCredentialOptions();
 
@@ -98,6 +106,8 @@ namespace AzureKeyVaultApplication.Services
 
         public async Task<string> GetSecretAsApplicationUsingClientCertificateAsync()
         {
+            logger.LogInformation("----- Client Certificate Async");
+
             SecretClientOptions options = KeyVaultUtility.CreateSecretClientOptions();
             var keyVault = keyVaultConfiguration.Url;
 
@@ -123,6 +133,8 @@ namespace AzureKeyVaultApplication.Services
 
         public async Task<string> GetSecretAsApplicationUsingManagedIdentityAsync()
         {
+            logger.LogInformation("----- System Assigned Managed Identity");
+
             SecretClientOptions options = KeyVaultUtility.CreateSecretClientOptions();
 
             var credentialOptions = new DefaultAzureCredentialOptions
@@ -151,10 +163,36 @@ namespace AzureKeyVaultApplication.Services
                 throw;
             }
         }
+
+        public async Task<string> GetSecretAsApplicationUsingUserManagedIdentityAsync()
+        {
+            logger.LogInformation("----- User Assigned Managed Identity");
+
+            SecretClientOptions options = KeyVaultUtility.CreateSecretClientOptions();
+
+            var credentials = new ManagedIdentityCredential(keyVaultConfiguration.UserAssignedManagedIdentityClientId);
+
+            var keyVault = keyVaultConfiguration.Url;
+            var client = new SecretClient(new Uri(keyVault), credentials, options);
+
+            KeyVaultSecret secret = null;
+            try
+            {
+                secret = await client.GetSecretAsync(keyVaultConfiguration.SecretName);
+                return secret.Value;
+            }
+            catch(Exception ex)
+            {
+                logger.LogError(ex, "Failed to get secret as managed identity");
+                throw;
+            }
+        }
     }
 
     public interface IKeyVaultService
     {
+        bool IsUserManagedIdentityEnabled();
+
         bool IsManagedIdentityEnabled();
 
         Task<string> GetSecretAsUserAsync();
@@ -164,6 +202,8 @@ namespace AzureKeyVaultApplication.Services
         Task<string> GetSecretAsApplicationUsingClientCertificateAsync();
 
         Task<string> GetSecretAsApplicationUsingManagedIdentityAsync();
+
+        Task<string> GetSecretAsApplicationUsingUserManagedIdentityAsync();
 
     }
 }
