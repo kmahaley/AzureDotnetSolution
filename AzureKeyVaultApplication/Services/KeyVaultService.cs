@@ -26,6 +26,11 @@ namespace AzureKeyVaultApplication.Services
             this.applicationConfiguration = applicationConfiguration.Value;
         }
 
+        public bool IsManagedIdentityEnabled()
+        {
+            return keyVaultConfiguration.ManagedIdentity;
+        }
+
         public async Task<string> GetSecretAsUserAsync()
         {
             SecretClientOptions options = KeyVaultUtility.CreateSecretClientOptions();
@@ -41,7 +46,7 @@ namespace AzureKeyVaultApplication.Services
                 ExcludeAzureCliCredential = true,
                 ExcludeInteractiveBrowserCredential = true,
                 ExcludeSharedTokenCacheCredential = true,
-                ExcludeVisualStudioCredential = true,
+                ExcludeEnvironmentCredential = true,
                 ExcludeManagedIdentityCredential = true,
                 ExcludeVisualStudioCodeCredential = true
             };
@@ -150,6 +155,8 @@ namespace AzureKeyVaultApplication.Services
 
     public interface IKeyVaultService
     {
+        bool IsManagedIdentityEnabled();
+
         Task<string> GetSecretAsUserAsync();
 
         Task<string> GetSecretAsApplicationUsingClientSecretAsync();

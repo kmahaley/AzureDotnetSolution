@@ -31,20 +31,32 @@ namespace AzureKeyVaultApplication.Controllers
         [HttpGet("keyvault")]
         public async Task<string> GetKeyVaultAsync()
         {
-            var secretAsUser = await keyVaultService.GetSecretAsUserAsync();
-            logger.LogInformation($"--------- user secret as User: {secretAsUser}");
+            string secretValue = "";
+            var isManagedIdentity = keyVaultService.IsManagedIdentityEnabled();
 
-            var secretAsClientSecret = await keyVaultService.GetSecretAsApplicationUsingClientSecretAsync();
-            logger.LogInformation($"--------- user secret as AAD client app + client secret: {secretAsClientSecret}");
+            if(isManagedIdentity)
+            {
+                // Will work when deployed in Azure resource eg. Webapps,VMSS etc.
+                var secretAsmanagedIdentity = await keyVaultService.GetSecretAsApplicationUsingManagedIdentityAsync();
+                logger.LogInformation($"--------- user secret ManagedIdentity {secretAsmanagedIdentity}");
+                secretValue = $"Managed identity: {isManagedIdentity}, secret: {secretAsmanagedIdentity}";
+            }
+            else
+            {
+                var secretAsUser = await keyVaultService.GetSecretAsUserAsync();
+                logger.LogInformation($"--------- user secret as User: {secretAsUser}");
 
-            var secretAsClientCertificate = await keyVaultService.GetSecretAsApplicationUsingClientCertificateAsync();
-            logger.LogInformation($"--------- user secret as AAD client app + client certificate {secretAsClientCertificate}");
+                var secretAsClientSecret = await keyVaultService.GetSecretAsApplicationUsingClientSecretAsync();
+                logger.LogInformation($"--------- user secret as AAD client app + client secret: {secretAsClientSecret}");
 
-            // Will work when deployed in Azure resource eg. Webapps,VMSS etc.
-            var secretAsmanagedIdentity = await keyVaultService.GetSecretAsApplicationUsingManagedIdentityAsync();
-            logger.LogInformation($"--------- user secret ManagedIdentity {secretAsmanagedIdentity}");
+                var secretAsClientCertificate = await keyVaultService.GetSecretAsApplicationUsingClientCertificateAsync();
+                logger.LogInformation($"--------- user secret as AAD client app + client certificate {secretAsClientCertificate}");
+
+                secretValue = $"Managed identity: {isManagedIdentity}, secret: {secretAsClientSecret}";
+                
+            }
             
-            return secretAsUser; 
+            return secretValue; 
         }
     }
 }
