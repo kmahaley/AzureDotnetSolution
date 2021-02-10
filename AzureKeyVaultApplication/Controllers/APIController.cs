@@ -38,7 +38,7 @@ namespace AzureKeyVaultApplication.Controllers
             if(isSystemManagedIdentity)
             {
                 // Will work when deployed in Azure resource eg. Webapps,VMSS etc.
-                var secretAsmanagedIdentity = await keyVaultService.GetSecretAsApplicationUsingUserManagedIdentityAsync();
+                var secretAsmanagedIdentity = await keyVaultService.GetSecretAsApplicationUsingManagedIdentityAsync();
                 logger.LogInformation($"--------- user secret as System Assigned ManagedIdentity {secretAsmanagedIdentity}");
                 secretValue = $"System Managed identity: {isSystemManagedIdentity}, secret: {secretAsmanagedIdentity}";
             }
