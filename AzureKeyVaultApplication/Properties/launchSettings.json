@@ -14,10 +14,10 @@
       "launchBrowser": true,
       "launchUrl": "api",
       "environmentVariables": {
-        "AZURE_CLIENT_SECRET": "f6VA17DLCs.2EFVv.-RH_k7BWd51K8bxlP",
-        "AZURE_CLIENT_ID": "8696471d-bcbb-41e2-8991-0414c3dba481",
+        "AZURE_CLIENT_SECRET": "{AZURE_CLIENT_SECRET}",
+        "AZURE_CLIENT_ID": "{AZURE_CLIENT_ID}",
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "AZURE_TENANT_ID": "a8eec281-aaa3-4dae-ac9b-9a398b9215e7"
+        "AZURE_TENANT_ID": "{AZURE_TENANT_ID}"
       }
     },
     "AzureKeyVaultApplication": {
