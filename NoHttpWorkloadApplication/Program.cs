@@ -20,6 +20,7 @@ namespace NoHttpWorkloadApplication
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                .UseEnvironment("Development")
                 .ConfigureServices((hostContext, services) =>
                 {
                     services.AddHostedService<BookService>();
