@@ -4,24 +4,24 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:65518",
-      "sslPort": 44368
+      "applicationUrl": "http://localhost:61576",
+      "sslPort": 44318
     }
   },
   "profiles": {
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "book",
+      "launchUrl": "student/mock",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "ResilientPollyApplication": {
+    "SimulateDownStreamApplication": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "book",
-      "applicationUrl": "https://localhost:5001;http://localhost:5000",
+      "launchUrl": "student/mock",
+      "applicationUrl": "https://localhost:8081;http://localhost:8080",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
