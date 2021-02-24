@@ -9,13 +9,15 @@ namespace ResilientPollyApplication.Extensions
 {
     public static class HttpTypedExtension
     {
-        public static void AddHttpTypedBasedDependencies(this ServiceCollection services)
+        public static IServiceCollection AddHttpTypedBasedDependencies(this IServiceCollection services)
         {
             /*
             services.AddHttpClient<IHttpService, HttpTypedService>()
+                .AddHttpMessageHandler()
                 .AddPolicyHandler(HttpPolicyUtils.WaitAndRetryPolicy<HttpClientTypedService>())
                 .AddPolicyHandler(HttpPolicyUtils.GetCircuitBreakerPolicy());
             */
+            return services;
         }
     }
 }

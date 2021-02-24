@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using ResilientPollyApplication.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,10 +12,20 @@ namespace ResilientPollyApplication.Controllers
     [Route("[controller]")]
     public class BookController : ControllerBase
     {
-        [HttpGet]
-        public IEnumerable<string> Get()
+        private readonly ILogger<BookController> logger;
+
+        private readonly IHttpService pollyWrappedService;
+
+        public BookController(IEnumerable<IHttpService> httpServices, ILogger<BookController> logger)
         {
-            return new string[] { "book" };
+            this.logger = logger;
+            pollyWrappedService = httpServices.First(s => "PollyWrappedService".Equals(s.GetServiceName()));
+        }
+
+        [HttpGet]
+        public async Task<IEnumerable<string>> Get()
+        {
+            return await pollyWrappedService.TestHttpCallWithPollyBasedFramework();
         }
     }
 }

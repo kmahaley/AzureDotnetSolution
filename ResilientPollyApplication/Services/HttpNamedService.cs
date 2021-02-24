@@ -10,6 +10,7 @@ namespace ResilientPollyApplication.Services
 {
     public class HttpNamedService : IHttpService
     {
+
         private readonly IHttpClientFactory httpClientFactory;
 
         private readonly ILogger<HttpNamedService> logger;
@@ -20,7 +21,12 @@ namespace ResilientPollyApplication.Services
             this.logger = logger;
         }
 
-        public async Task TestHttpCallWithPollyBasedFramework()
+        public string GetServiceName()
+        {
+            return "HttpNamedService";
+        }
+
+        public async Task<List<string>> TestHttpCallWithPollyBasedFramework()
         {
             var request = new HttpRequestMessage(HttpMethod.Get, "http://localhost:5000/student/mock");
             HttpClient client;
@@ -46,6 +52,7 @@ namespace ResilientPollyApplication.Services
             {
                 logger.LogError($"{(int)response.StatusCode}, failed to process http response.");
             }
+            return new List<string>();
         }
     }
 }

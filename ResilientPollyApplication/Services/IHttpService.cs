@@ -7,6 +7,8 @@ namespace ResilientPollyApplication.Services
 {
     public interface IHttpService
     {
-        Task TestHttpCallWithPollyBasedFramework();
+        string GetServiceName();
+
+        Task<List<string>> TestHttpCallWithPollyBasedFramework();
     }
 }
