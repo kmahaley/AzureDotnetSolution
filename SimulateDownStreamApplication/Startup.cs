@@ -42,7 +42,7 @@ namespace SimulateDownStreamApplication
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
 

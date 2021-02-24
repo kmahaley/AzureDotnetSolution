@@ -8,12 +8,16 @@ namespace SimulateDownStreamApplication.Repository
 {
     public class StudentRepository : IStudentRepository
     {
-        private Dictionary<int, Student> dictionary = new Dictionary<int, Student>();
-
+        private Dictionary<int, Student> dictionary = new Dictionary<int, Student>()
+        {
+            { 1, new Student { Name="Sachin", RollNumber=111, Id=1 } },
+            { 2, new Student { Name="Dina", RollNumber=222, Id=2 } },
+            { 3, new Student { Name="Andy", RollNumber=333, Id=3 } }
+        };
 
         public Student AddStudent(Student student)
         {
-            if (dictionary.ContainsKey(student.Id))
+            if(dictionary.ContainsKey(student.Id))
             {
                 throw new Exception("student already exists");
             }
@@ -28,7 +32,7 @@ namespace SimulateDownStreamApplication.Repository
 
         public Student GetStudent(int id)
         {
-            if (dictionary.ContainsKey(id))
+            if(dictionary.ContainsKey(id))
             {
                 return dictionary[id];
             }
@@ -47,12 +51,12 @@ namespace SimulateDownStreamApplication.Repository
 
         public Student UpdateStudent(int id, Student student)
         {
-            if (!dictionary.ContainsKey(id))
+            if(!dictionary.ContainsKey(id))
             {
                 throw new Exception("Student not present");
             }
             student.Id = id;
-            dictionary[id] =  student;
+            dictionary[id] = student;
             return dictionary[id];
         }
     }
