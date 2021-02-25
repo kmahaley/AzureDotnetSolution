@@ -1,9 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using ResilientPollyApplication.Handlers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ResilientPollyApplication.Extensions
 {
@@ -11,7 +6,7 @@ namespace ResilientPollyApplication.Extensions
     {
         public static IServiceCollection AddHttpNamedBasedDependencies(this IServiceCollection services)
         {
-            
+            /*
             //network failures, 5xx and 408 responses
             services.AddHttpClient("transientpolicy")
                 .AddHttpMessageHandler<TimingHttpMessageHandler>()
@@ -33,7 +28,7 @@ namespace ResilientPollyApplication.Extensions
                 .AddHttpMessageHandler<TimingHandler>()
                 .AddPolicyHandler(request => request.Method == HttpMethod.Get ? HttpPolicyUtils.PolicyWithExceptionAndRetry() : HttpPolicyUtils.NoOperationPolicy());
 
-            
+            */
             return services;
         }
     }

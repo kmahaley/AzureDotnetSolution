@@ -1,31 +1,19 @@
 ﻿using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using ResilientPollyApplication.Model;
-using ResilientPollyApplication.Polly;
-using ResilientPollyApplication.Utilities;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Polly;
-using Polly.Retry;
 using System;
 
 namespace ResilientPollyApplication.Services
 {
     public class PollyWrappedService : IHttpService
     {
-        private readonly IHttpClientFactory httpClientFactory;
-
         private readonly ILogger<PollyWrappedService> logger;
 
-        private readonly HttpClient client;
-
-        public PollyWrappedService(IHttpClientFactory httpClientFactory, ILogger<PollyWrappedService> logger)
+        public PollyWrappedService(ILogger<PollyWrappedService> logger)
         {
-            this.httpClientFactory = httpClientFactory;
             this.logger = logger;
-            this.client = httpClientFactory.CreateClient("PollyWrappedService");
         }
 
         public string GetServiceName()
@@ -35,6 +23,7 @@ namespace ResilientPollyApplication.Services
 
         public async Task<List<string>> TestHttpCallWithPollyBasedFramework()
         {
+            await Task.Delay(1000);
             throw new NotImplementedException();
         }
 

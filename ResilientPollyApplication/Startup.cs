@@ -35,9 +35,9 @@ namespace ResilientPollyApplication
             services.AddControllers();
             services.AddSingleton<TimingHttpMessageHandler>();
 
-            //services.AddPollyWrappedBasedDependencies();
+            services.AddPollyWrappedBasedDependencies();
 
-            services.AddHttpNamedBasedDependencies();
+            //services.AddHttpNamedBasedDependencies();
 
             services.AddHttpTypedBasedDependencies();
 
