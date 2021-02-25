@@ -1,9 +1,12 @@
-﻿using Polly;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Polly;
 using Polly.Extensions.Http;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
+using System.Transactions;
 
 namespace UtilityLibrary.PollyProject
 {
@@ -28,10 +31,10 @@ namespace UtilityLibrary.PollyProject
 
         }
 
-        public static IAsyncPolicy<HttpResponseMessage> CreateWaitAndRetryPolicy(List<int> retryableStatusCode)
+        public static Func<IServiceProvider, HttpRequestMessage, IAsyncPolicy<HttpResponseMessage>> CreateWaitAndRetryPolicy<T>(List<int> retryableStatusCode)
         {
-
-            return HttpPolicyExtensions
+            return (services, request) =>
+                HttpPolicyExtensions
                     .HandleTransientHttpError()
                     .OrResult(msg => {
                         var responseCode = (int)msg.StatusCode;
@@ -40,9 +43,12 @@ namespace UtilityLibrary.PollyProject
                     .WaitAndRetryAsync(3, 
                                     retryAttempt => TimeSpan.FromSeconds(Math.Pow(1, retryAttempt)),
                                     (outcome, timeSpan, retryCount, context) => {
+
+                                        var logger = services.GetRequiredService<ILogger<T>>();
+
                                         if(outcome != null && outcome.Exception != null)
                                         {
-                                            Console.WriteLine($"==== {outcome.Exception.Message}, {timeSpan}, {retryCount}");
+                                            logger.LogInformation("###### {exception}. Delaying for {delay}ms, then making retry {retry}.", outcome.Result.StatusCode, timeSpan.TotalMilliseconds, retryCount);
                                         }
                                         
                                     });

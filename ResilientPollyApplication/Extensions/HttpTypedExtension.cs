@@ -16,7 +16,7 @@ namespace ResilientPollyApplication.Extensions
             services.AddHttpClient<IHttpService, HttpTypedService>()
                 .AddHttpMessageHandler<TimingHttpMessageHandler>()
                 .AddPolicyHandler(TypedHttpClientBasedPolicy.CreateTimeoutPolicy())
-                .AddPolicyHandler(TypedHttpClientBasedPolicy.CreateWaitAndRetryPolicy(new List<int>()))
+                .AddPolicyHandler(TypedHttpClientBasedPolicy.CreateWaitAndRetryPolicy<HttpTypedService>(new List<int>()))
                 .AddPolicyHandler(TypedHttpClientBasedPolicy.CreateCircuitBreakerPolicy(new List<int>()));
             
             return services;
