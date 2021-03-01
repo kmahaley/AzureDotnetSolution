@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
+using Polly.CircuitBreaker;
+using Polly.Timeout;
 using ResilientPollyApplication.Model;
 using System;
 using System.Collections.Generic;
@@ -41,7 +43,15 @@ namespace ResilientPollyApplication.Services
             }
             catch(Exception ex)
             {
-                logger.LogError(ex, $"{nameof(HttpTypedService)} TestHttpCallWithPollyBasedFramework. Http call failed.");
+                if(ex.GetType() == typeof(BrokenCircuitException) || ex.GetType() == typeof(TimeoutRejectedException))
+                {
+                    logger.LogError($"####### {ex.GetType()}. Http call failed with Polly based exception.");
+                }
+                else
+                {
+                    logger.LogError(ex, $"!!!!!!!!!!! {nameof(HttpTypedService)} TestHttpCallWithPollyBasedFramework. Http call failed.");
+                }
+                //throw;
             }
 
             IEnumerable<Student> students = new List<Student>();
@@ -57,8 +67,8 @@ namespace ResilientPollyApplication.Services
             }
             else
             {
-                int code = response != null ? (int)response.StatusCode : 0;
-                logger.LogError($" --------------------->    {code}, failed to process http response.");
+                int code = (response != null) ? (int)response.StatusCode : 0;
+                logger.LogError($" ---------------------> {code}, failed to process http response.");
                 
             }
             return students.Select(s => s.Name).ToList();

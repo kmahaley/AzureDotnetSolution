@@ -1,4 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using ResilientPollyApplication.Handlers;
+using ResilientPollyApplication.Services;
+using System.Collections.Generic;
+using UtilityLibrary.PollyProject;
 
 namespace ResilientPollyApplication.Extensions
 {
@@ -6,16 +10,16 @@ namespace ResilientPollyApplication.Extensions
     {
         public static IServiceCollection AddHttpNamedBasedDependencies(this IServiceCollection services)
         {
-            /*
+            services.AddSingleton<IHttpService, HttpNamedService>();
+
             //network failures, 5xx and 408 responses
             services.AddHttpClient("transientpolicy")
-                .AddHttpMessageHandler<TimingHttpMessageHandler>()
-                //.AddTransientHttpErrorPolicy(HttpPolicyUtils.GetRetryPolicyWithTimeBetweenCalls())
-                //.AddTransientHttpErrorPolicy(HttpPolicyUtils.GetRetryPolicy())
-                //.AddTransientHttpErrorPolicy(HttpPolicyUtils.GetCircuitBreakerPolicy())
-                .AddTransientHttpErrorPolicy(HttpPolicyUtils.GetRetryPolicyWithTimeBetweenCalls());
-
-
+                //.AddHttpMessageHandler<NamedHttpMessageHandler>()
+                .AddPolicyHandler(NamedHttpClientBasedPolicy.CreateTimeoutPolicy())
+                .AddPolicyHandler(NamedHttpClientBasedPolicy.CreateWaitAndRetryPolicy<HttpNamedService>(new List<int>()))
+                .AddPolicyHandler(NamedHttpClientBasedPolicy.CreateCircuitBreakerPolicy(new List<int>()));
+            
+            /*
             //AddPolicyHandler: you define what and how to handle
             services.AddHttpClient("conditionalpolicy")
                 .AddHttpMessageHandler<TimingHandler>()
@@ -27,8 +31,8 @@ namespace ResilientPollyApplication.Extensions
             services.AddHttpClient("selectPolicy")
                 .AddHttpMessageHandler<TimingHandler>()
                 .AddPolicyHandler(request => request.Method == HttpMethod.Get ? HttpPolicyUtils.PolicyWithExceptionAndRetry() : HttpPolicyUtils.NoOperationPolicy());
-
             */
+            
             return services;
         }
     }

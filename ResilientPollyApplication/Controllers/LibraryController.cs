@@ -18,11 +18,14 @@ namespace ResilientPollyApplication.Controllers
 
         private readonly IHttpService httpTypedService;
 
+        private readonly IHttpService httpNamedService;
+
         public LibraryController(IEnumerable<IHttpService> httpServices, ILogger<LibraryController> logger)
         {
             this.logger = logger;
             this.pollyWrappedService = httpServices.First(s => "PollyWrappedService".Equals(s.GetServiceName()));
             this.httpTypedService = httpServices.First(s => "HttpTypedService".Equals(s.GetServiceName()));
+            this.httpNamedService = httpServices.First(s => "HttpNamedService".Equals(s.GetServiceName()));
         }
 
         [HttpGet]
@@ -30,6 +33,13 @@ namespace ResilientPollyApplication.Controllers
         {
             logger.LogInformation("^^^^^^^^^^^^^^^^^^^^^ LibraryController call");
             return await httpTypedService.TestHttpCallWithPollyBasedFramework();
+        }
+
+        [HttpGet("named")]
+        public async Task<IEnumerable<string>> GetNamedClient()
+        {
+            logger.LogInformation("^^^^^^^^^^^^^^^^^^^^^ LibraryController call");
+            return await httpNamedService.TestHttpCallWithPollyBasedFramework();
         }
     }
 }

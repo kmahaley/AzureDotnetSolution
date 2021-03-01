@@ -13,11 +13,13 @@ namespace ResilientPollyApplication.Extensions
     {
         public static IServiceCollection AddHttpTypedBasedDependencies(this IServiceCollection services)
         {
+            var retryableCodes = new List<int>() {422, 423};
+
             services.AddHttpClient<IHttpService, HttpTypedService>()
-                .AddHttpMessageHandler<TimingHttpMessageHandler>()
+                //.AddHttpMessageHandler<TimingHttpMessageHandler>()
                 .AddPolicyHandler(TypedHttpClientBasedPolicy.CreateTimeoutPolicy())
-                .AddPolicyHandler(TypedHttpClientBasedPolicy.CreateWaitAndRetryPolicy<HttpTypedService>(new List<int>()))
-                .AddPolicyHandler(TypedHttpClientBasedPolicy.CreateCircuitBreakerPolicy(new List<int>()));
+                .AddPolicyHandler(TypedHttpClientBasedPolicy.CreateWaitAndRetryPolicy<HttpTypedService>(retryableCodes))
+                .AddPolicyHandler(TypedHttpClientBasedPolicy.CreateCircuitBreakerPolicy(retryableCodes));
             
             return services;
         }
