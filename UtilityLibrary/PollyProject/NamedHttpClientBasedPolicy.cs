@@ -94,24 +94,36 @@ namespace UtilityLibrary.PollyProject
                     .CircuitBreakerAsync(failuresBeforeBreaking, durationOfTheBreak, OnBreak, OnReset);
         }
 
-        
 
+        /// <summary>
+        /// When request get successful response when Circuit state is HalfOpen, OnReset delegate is executed.
+        /// </summary>
+        /// <param name="context">Polly based context.</param>
         private static void OnReset(Context context)
         {
             if(!context.TryGetLogger(out var logger))
             {
                 return;
             }
+
             logger.LogError(" >>>>>>>>>>> Circuit closed, requests will flow normally.");
         }
 
-        private static void OnBreak(DelegateResult<HttpResponseMessage> result, TimeSpan ts, Context context)
+        /// <summary>
+        /// When requests fail beyond defined threshold, circuit is broken/opened, no further request will flow
+        /// until circuitBrokenTime is lapsed
+        /// </summary>
+        /// <param name="result">Result of the last execution.</param>
+        /// <param name="circuitBrokenTime">Time for which circuit will remain open</param>
+        /// <param name="context">Polly based context</param>
+        private static void OnBreak(DelegateResult<HttpResponseMessage> result, TimeSpan circuitBrokenTime, Context context)
         {
             if(!context.TryGetLogger(out var logger))
             {
                 return;
             }
-            logger.LogError($" >>>>>>>>>>> Circuit brocken, requests will not flow. {ts.TotalMilliseconds}");
+
+            logger.LogError($" >>>>>>>>>>> Circuit broken, requests will not flow. {circuitBrokenTime.TotalMilliseconds}");
         }
     }
 }
