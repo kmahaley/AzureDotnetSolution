@@ -42,10 +42,21 @@ namespace SimulateDownStreamApplication.Controllers
 
         }
 
-        [HttpGet]
+        [HttpGet("1")]
         public IActionResult GetStudents()
         {
             return Ok(_repository.GetStudents());
+        }
+
+        [HttpGet("2")]
+        public IActionResult GetStudentDuplicate()
+        {
+            var s = new List<Student>
+            {
+                new Student { Id=1, Name="duplicate", RollNumber = 100 },
+                new Student { Id=2, Name="duplicateeeee", RollNumber = 101 }
+            };
+            return Ok(s);
         }
 
         [HttpGet("{id}", Name = "GetStudent")]

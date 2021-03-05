@@ -27,6 +27,9 @@ namespace ResilientPollyApplication.Services
             throw new NotImplementedException();
         }
 
-        
+        public Task<List<string>> TestHttpCallWithPollyBasedFrameworkDuplicate()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

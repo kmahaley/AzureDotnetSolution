@@ -35,11 +35,18 @@ namespace ResilientPollyApplication.Controllers
             return await httpTypedService.TestHttpCallWithPollyBasedFramework();
         }
 
-        [HttpGet("named")]
+        [HttpGet("named/1")]
         public async Task<IEnumerable<string>> GetNamedClient()
         {
             logger.LogInformation("^^^^^^^^^^^^^^^^^^^^^ BookController call");
             return await httpNamedService.TestHttpCallWithPollyBasedFramework();
+        }
+
+        [HttpGet("named/2")]
+        public async Task<IEnumerable<string>> GetNamedClientDuplicate()
+        {
+            logger.LogInformation("^^^^^^^^^^^^^^^^^^^^^ BookController duplicate call");
+            return await httpNamedService.TestHttpCallWithPollyBasedFrameworkDuplicate();
         }
     }
 }

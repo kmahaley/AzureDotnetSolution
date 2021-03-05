@@ -73,5 +73,10 @@ namespace ResilientPollyApplication.Services
             }
             return students.Select(s => s.Name).ToList();
         }
+
+        public Task<List<string>> TestHttpCallWithPollyBasedFrameworkDuplicate()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

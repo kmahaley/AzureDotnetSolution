@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections;
+using System.ComponentModel.DataAnnotations;
 
 namespace SimulateDownStreamApplication.Model
 {
@@ -9,5 +10,7 @@ namespace SimulateDownStreamApplication.Model
         public string Name { get; set; }
 
         public int RollNumber { get; set; }
+
+        
     }
 }

@@ -15,5 +15,9 @@ namespace ResilientPollyApplication.Constants
                    HttpStatusCode.ServiceUnavailable, // 503
                    HttpStatusCode.GatewayTimeout // 504
                 };
+
+        public const string PollyBasedNamedHttpClient = "PollyBasedNamedHttpClient";
+
+
     }
 }

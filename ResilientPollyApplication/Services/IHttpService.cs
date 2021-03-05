@@ -10,5 +10,7 @@ namespace ResilientPollyApplication.Services
         string GetServiceName();
 
         Task<List<string>> TestHttpCallWithPollyBasedFramework();
+
+        Task<List<string>> TestHttpCallWithPollyBasedFrameworkDuplicate();
     }
 }
