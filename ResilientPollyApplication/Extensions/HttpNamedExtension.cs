@@ -13,6 +13,7 @@ namespace ResilientPollyApplication.Extensions
     {
         public static IServiceCollection AddHttpNamedBasedDependencies(this IServiceCollection services)
         {
+            services.AddSingleton<PollyExceptionHandler>();
             services.AddSingleton<NamedHttpMessageHandler>();
             services.AddSingleton<IHttpService, HttpNamedService>();
 
@@ -20,17 +21,18 @@ namespace ResilientPollyApplication.Extensions
             //network failures, 5xx and 408 responses
             services.AddHttpClient("transientpolicy")
                 .AddHttpMessageHandler<NamedHttpMessageHandler>()
-                .AddPolicyHandler(NamedHttpClientBasedPolicy.CreateTimeoutPolicy(TimeSpan.FromSeconds(20)))
-                .AddPolicyHandler(NamedHttpClientBasedPolicy.CreateWaitAndRetryPolicy())
                 .AddPolicyHandler(NamedHttpClientBasedPolicy.CreateTimeoutPolicy(TimeSpan.FromSeconds(5)))
+                .AddPolicyHandler(NamedHttpClientBasedPolicy.CreateWaitAndRetryPolicy())
+                .AddPolicyHandler(NamedHttpClientBasedPolicy.CreateTimeoutPolicy(TimeSpan.FromSeconds(1)))
                 .AddPolicyHandler(NamedHttpClientBasedPolicy.CreateCircuitBreakerPolicy(durationOfTheBreak:TimeSpan.FromSeconds(30)));
 
             //network failures, 5xx and 408 responses
             services.AddHttpClient(RetryableConstants.PollyBasedNamedHttpClient)
                 //.AddHttpMessageHandler<NamedHttpMessageHandler>()
-                .AddPolicyHandler(NamedHttpClientBasedPolicy.CreateTimeoutPolicy(TimeSpan.FromSeconds(20)))
+                .AddHttpMessageHandler<PollyExceptionHandler>()
+                .AddPolicyHandler(NamedHttpClientBasedPolicy.CreateTimeoutPolicy(TimeSpan.FromSeconds(10)))
                 .AddPolicyHandler(NamedHttpClientBasedPolicy.CreateWaitAndRetryPolicy(retryableCode, 3))
-                .AddPolicyHandler(NamedHttpClientBasedPolicy.CreateTimeoutPolicy(TimeSpan.FromSeconds(2)));
+                .AddPolicyHandler(NamedHttpClientBasedPolicy.CreateTimeoutPolicy(TimeSpan.FromSeconds(1)));
             /*
             //AddPolicyHandler: you define what and how to handle
             services.AddHttpClient("conditionalpolicy")

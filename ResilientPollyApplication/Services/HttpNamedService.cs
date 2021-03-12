@@ -56,9 +56,9 @@ namespace ResilientPollyApplication.Services
                 var httpClient = this.httpClientFactory.CreateClient(RetryableConstants.PollyBasedNamedHttpClient);
 
                 request.SetPolicyExecutionContext(CreatePolicyExecutionContext("TestHttpCallWithPollyBasedFramework"));
-                response = await policy1.ExecuteAsync(() => httpClient.SendAsync(request));
+                //response = await policy1.ExecuteAsync(() => httpClient.SendAsync(request));
 
-                //response = await httpClient.SendAsync(request);
+                response = await httpClient.SendAsync(request);
                 logger.LogInformation($"-------- time taken for the complete request : {sw.ElapsedMilliseconds}ms");
             }
             catch(Exception ex)
@@ -91,9 +91,9 @@ namespace ResilientPollyApplication.Services
                 var httpClient = this.httpClientFactory.CreateClient(RetryableConstants.PollyBasedNamedHttpClient);
 
                 request.SetPolicyExecutionContext(CreatePolicyExecutionContext("TestHttpCallWithPollyBasedFrameworkDuplicate"));
-                response = await policy2.ExecuteAsync( () => httpClient.SendAsync(request));
+                //response = await policy2.ExecuteAsync( () => httpClient.SendAsync(request));
 
-                //response = await httpClient.SendAsync(request);
+                response = await httpClient.SendAsync(request);
                 logger.LogInformation($"-------- time taken for the complete request : {sw.ElapsedMilliseconds}ms");
             }
             catch(Exception ex)

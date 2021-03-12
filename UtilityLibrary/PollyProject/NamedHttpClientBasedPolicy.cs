@@ -2,11 +2,13 @@
 using Microsoft.Extensions.Logging;
 using Polly;
 using Polly.Extensions.Http;
+using Polly.Timeout;
 using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 using UtilityLibrary.Extensions;
 
 namespace UtilityLibrary.PollyProject
@@ -31,7 +33,16 @@ namespace UtilityLibrary.PollyProject
         public static IAsyncPolicy<HttpResponseMessage> CreateTimeoutPolicy(TimeSpan timeOutDuration)
         {
             timeOutDuration = timeOutDuration == null ? TimeSpan.FromSeconds(10) : timeOutDuration;
-            return Policy.TimeoutAsync<HttpResponseMessage>(timeOutDuration);
+            return Policy.TimeoutAsync<HttpResponseMessage>(timeOutDuration, onTimeoutAsync: (context, timeSpan, task) =>
+            {
+                if(!context.TryGetLogger(out var logger))
+                {
+                    return Task.CompletedTask;
+                }
+                logger.LogError("{id} >>>>>>>>>>> Timeout delegate fired after {timeout} seconds", context.CorrelationId, timeSpan.TotalSeconds);
+                return Task.CompletedTask;
+                
+            });
         }
 
         public static IAsyncPolicy<HttpResponseMessage> CreateWaitAndRetryPolicy()
@@ -56,6 +67,7 @@ namespace UtilityLibrary.PollyProject
             return
                 HttpPolicyExtensions
                     .HandleTransientHttpError()
+                    .Or<TimeoutRejectedException>()
                     .OrResult(msg => retryableStatusCode.Contains(msg.StatusCode))
                     .WaitAndRetryAsync(
                         numberOfRetries,
@@ -67,10 +79,10 @@ namespace UtilityLibrary.PollyProject
                                 return;
                             }
                                 
-                            logger.LogInformation(" >>>>>>>>>>> Delaying = {delay}ms, retryAttempt = {retry}.", timeSpan.TotalMilliseconds, retryCount);
+                            logger.LogInformation("{id} >>>>>>>>>>> Delaying = {delay}ms, retryAttempt = {retry}.", context.CorrelationId, timeSpan.TotalMilliseconds, retryCount);
                             if(outcome != null && outcome.Result != null)
                             {
-                                logger.LogError(" >>>>>>>>>>> Previous request error code = {status}.", outcome.Result.StatusCode);
+                                logger.LogError("{id} >>>>>>>>>>> Previous request error code = {status}.", context.CorrelationId, outcome.Result.StatusCode);
                             }
 
                         });
@@ -106,7 +118,7 @@ namespace UtilityLibrary.PollyProject
                 return;
             }
 
-            logger.LogError(" >>>>>>>>>>> Circuit closed, requests will flow normally.");
+            logger.LogError("{id} >>>>>>>>>>> Circuit closed, requests will flow normally.", context.CorrelationId);
         }
 
         /// <summary>
@@ -123,7 +135,7 @@ namespace UtilityLibrary.PollyProject
                 return;
             }
 
-            logger.LogError($" >>>>>>>>>>> Circuit broken, requests will not flow. {circuitBrokenTime.TotalMilliseconds}");
+            logger.LogError($"id:{context.CorrelationId} >>>>>>>>>>> Circuit broken, requests will not flow. {circuitBrokenTime.TotalMilliseconds}");
         }
     }
 }

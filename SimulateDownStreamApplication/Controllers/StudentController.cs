@@ -5,6 +5,7 @@ using SimulateDownStreamApplication.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SimulateDownStreamApplication.Controllers
@@ -56,6 +57,7 @@ namespace SimulateDownStreamApplication.Controllers
                 new Student { Id=1, Name="duplicate", RollNumber = 100 },
                 new Student { Id=2, Name="duplicateeeee", RollNumber = 101 }
             };
+            //Thread.Sleep(1200);
             return Ok(s);
         }
 
