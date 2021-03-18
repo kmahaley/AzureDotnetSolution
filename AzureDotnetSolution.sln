@@ -13,7 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NoHttpWorkloadApplication",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimulateDownStreamApplication", "SimulateDownStreamApplication\SimulateDownStreamApplication.csproj", "{288D556F-5A96-4B82-80E0-450ADA96AF02}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoreConsoleApplication", "CoreConsoleApplication\CoreConsoleApplication.csproj", "{1B0E9311-35B8-4681-B092-EE9E60EF82E3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoreConsoleApplication", "CoreConsoleApplication\CoreConsoleApplication.csproj", "{1B0E9311-35B8-4681-B092-EE9E60EF82E3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoreWebApplication", "CoreWebApplication\CoreWebApplication.csproj", "{A4EC70B8-E7AE-4747-8483-0F2D02BC9ED4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{1B0E9311-35B8-4681-B092-EE9E60EF82E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1B0E9311-35B8-4681-B092-EE9E60EF82E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1B0E9311-35B8-4681-B092-EE9E60EF82E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A4EC70B8-E7AE-4747-8483-0F2D02BC9ED4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A4EC70B8-E7AE-4747-8483-0F2D02BC9ED4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4EC70B8-E7AE-4747-8483-0F2D02BC9ED4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A4EC70B8-E7AE-4747-8483-0F2D02BC9ED4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
