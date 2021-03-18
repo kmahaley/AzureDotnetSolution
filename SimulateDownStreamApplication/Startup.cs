@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 using SimulateDownStreamApplication.Repository;
 using System;
 using System.Collections.Generic;
@@ -30,6 +31,15 @@ namespace SimulateDownStreamApplication
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddSwaggerGen(options => {
+                options.SwaggerDoc("v1",
+                    new OpenApiInfo()
+                    {
+                        Title = "Simulated Downstream Application API",
+                        Version = "v1",
+                        Description = "Use this application to behave as downstream application"
+                    });
+            });
 
             services.AddSingleton<IStudentRepository, StudentRepository>();
         }
@@ -51,6 +61,12 @@ namespace SimulateDownStreamApplication
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+
+            app.UseSwagger();
+            app.UseSwaggerUI(options => 
+            {
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", "Simulated Downstream Application API");
             });
         }
     }
