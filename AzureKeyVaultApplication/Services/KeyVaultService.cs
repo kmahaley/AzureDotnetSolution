@@ -17,7 +17,7 @@ namespace AzureKeyVaultApplication.Services
 
         private readonly AADApplicationConfiguration applicationConfiguration;
 
-        public KeyVaultService(ILogger<KeyVaultService> logger, 
+        public KeyVaultService(ILogger<KeyVaultService> logger,
             IOptions<KeyVaultConfiguration> keyVaultConfiguration,
             IOptions<AADApplicationConfiguration> applicationConfiguration)
         {
@@ -41,11 +41,11 @@ namespace AzureKeyVaultApplication.Services
             logger.LogInformation("----- User Async");
             SecretClientOptions options = KeyVaultUtility.CreateSecretClientOptions();
 
-            /* 
+            /*
              * Environment variables enabled. VS2019->application->properties->debug->Environment variable
              * AZURE_CLIENT_SECRET, AZURE_CLIENT_ID, AZURE_TENANT_ID
              * You can login in VS2019 with credentials having access to key vault. Add ExcludeEnvironmentCredential = true and
-             * remove ExcludeVisualStudioCodeCredential  
+             * remove ExcludeVisualStudioCodeCredential
              */
             var credentialOptions = new DefaultAzureCredentialOptions
             {
@@ -67,12 +67,11 @@ namespace AzureKeyVaultApplication.Services
                 secret = await client.GetSecretAsync(keyVaultConfiguration.SecretName);
                 return secret.Value;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 logger.LogError(ex, "Failed to get secret as user");
                 throw;
             }
-
         }
 
         public async Task<string> GetSecretAsApplicationUsingClientSecretAsync()
@@ -97,7 +96,7 @@ namespace AzureKeyVaultApplication.Services
                 secret = await client.GetSecretAsync(keyVaultConfiguration.SecretName);
                 return secret.Value;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 logger.LogError(ex, "Failed to get secret as client secret");
                 throw;
@@ -124,7 +123,7 @@ namespace AzureKeyVaultApplication.Services
                 secret = await client.GetSecretAsync(keyVaultConfiguration.SecretName);
                 return secret.Value;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 logger.LogError(ex, "Failed to get secret as client sertificate");
                 throw;
@@ -157,7 +156,7 @@ namespace AzureKeyVaultApplication.Services
                 secret = await client.GetSecretAsync(keyVaultConfiguration.SecretName);
                 return secret.Value;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 logger.LogError(ex, "Failed to get secret as managed identity");
                 throw;
@@ -181,7 +180,7 @@ namespace AzureKeyVaultApplication.Services
                 secret = await client.GetSecretAsync(keyVaultConfiguration.SecretName);
                 return secret.Value;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 logger.LogError(ex, "Failed to get secret as managed identity");
                 throw;
@@ -204,6 +203,5 @@ namespace AzureKeyVaultApplication.Services
         Task<string> GetSecretAsApplicationUsingManagedIdentityAsync();
 
         Task<string> GetSecretAsApplicationUsingUserManagedIdentityAsync();
-
     }
 }

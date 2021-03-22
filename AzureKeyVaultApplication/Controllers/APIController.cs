@@ -1,9 +1,6 @@
 ﻿using AzureKeyVaultApplication.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace AzureKeyVaultApplication.Controllers
@@ -35,14 +32,14 @@ namespace AzureKeyVaultApplication.Controllers
             var isSystemManagedIdentity = keyVaultService.IsManagedIdentityEnabled();
             var isUserAssignedManagedIdentity = keyVaultService.IsUserManagedIdentityEnabled();
 
-            if(isSystemManagedIdentity)
+            if (isSystemManagedIdentity)
             {
                 // Will work when deployed in Azure resource eg. Webapps,VMSS etc.
                 var secretAsmanagedIdentity = await keyVaultService.GetSecretAsApplicationUsingManagedIdentityAsync();
                 logger.LogInformation($"--------- user secret as System Assigned ManagedIdentity {secretAsmanagedIdentity}");
                 secretValue = $"System Managed identity: {isSystemManagedIdentity}, secret: {secretAsmanagedIdentity}";
             }
-            else if(isUserAssignedManagedIdentity)
+            else if (isUserAssignedManagedIdentity)
             {
                 var secretAsUsermanagedIdentity = await keyVaultService.GetSecretAsApplicationUsingUserManagedIdentityAsync();
                 logger.LogInformation($"--------- user secret as User Assigned ManagedIdentity {secretAsUsermanagedIdentity}");
@@ -60,10 +57,9 @@ namespace AzureKeyVaultApplication.Controllers
                 logger.LogInformation($"--------- user secret as AAD client app + client certificate {secretAsClientCertificate}");
 
                 secretValue = $"Managed identity: {isSystemManagedIdentity}, secret: {secretAsClientSecret}";
-
             }
-            
-            return secretValue; 
+
+            return secretValue;
         }
     }
 }

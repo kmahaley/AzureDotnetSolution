@@ -8,7 +8,7 @@ namespace UtilityLibrary.Extensions
     {
         public static bool TryGetLogger(this Context context, out ILogger logger)
         {
-            if(context.TryGetValue(PollyConstant.LoggerKey, out var loggerObject) && loggerObject is ILogger theLogger)
+            if (context.TryGetValue(PollyConstant.LoggerKey, out var loggerObject) && loggerObject is ILogger theLogger)
             {
                 logger = theLogger;
                 return true;

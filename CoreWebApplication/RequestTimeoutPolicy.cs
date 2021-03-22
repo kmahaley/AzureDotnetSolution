@@ -1,8 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Polly;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -10,7 +8,6 @@ namespace CoreWebApplication
 {
     public class RequestTimeoutPolicy : IResilientPolicy
     {
-
         private readonly ILogger logger;
         private readonly TimeSpan requestTimeout;
 
@@ -23,7 +20,6 @@ namespace CoreWebApplication
         public RequestTimeoutPolicy(ILogger logger)
         {
             this.logger = logger;
-
 
             requestTimeout = TimeSpan.FromSeconds(15);
 
@@ -39,7 +35,6 @@ namespace CoreWebApplication
             {
                 logger.LogError($"CorrelationId:{context.CorrelationId}, OperationName:{context.OperationKey} >>>>>>>>>>> Timeout delegate fired after {timeSpan.TotalSeconds} seconds");
 
-               
                 return Task.CompletedTask;
             });
         }

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace CoreConsoleApplication
 {
@@ -9,7 +7,6 @@ namespace CoreConsoleApplication
         public static void Main(string[] args)
         {
             Console.WriteLine();
-            
         }
     }
 }

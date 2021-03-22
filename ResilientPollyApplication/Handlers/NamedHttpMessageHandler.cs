@@ -1,8 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,7 +8,6 @@ namespace ResilientPollyApplication.Handlers
 {
     public class NamedHttpMessageHandler : DelegatingHandler
     {
-
         private readonly ILogger<NamedHttpMessageHandler> _logger;
 
         public NamedHttpMessageHandler(ILogger<NamedHttpMessageHandler> logger)

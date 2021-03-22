@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace SimulateDownStreamApplication.Repository
 {
@@ -17,7 +16,7 @@ namespace SimulateDownStreamApplication.Repository
 
         public Student AddStudent(Student student)
         {
-            if(dictionary.ContainsKey(student.Id))
+            if (dictionary.ContainsKey(student.Id))
             {
                 throw new Exception("student already exists");
             }
@@ -32,7 +31,7 @@ namespace SimulateDownStreamApplication.Repository
 
         public Student GetStudent(int id)
         {
-            if(dictionary.ContainsKey(id))
+            if (dictionary.ContainsKey(id))
             {
                 return dictionary[id];
             }
@@ -51,7 +50,7 @@ namespace SimulateDownStreamApplication.Repository
 
         public Student UpdateStudent(int id, Student student)
         {
-            if(!dictionary.ContainsKey(id))
+            if (!dictionary.ContainsKey(id))
             {
                 throw new Exception("Student not present");
             }
@@ -60,5 +59,4 @@ namespace SimulateDownStreamApplication.Repository
             return dictionary[id];
         }
     }
-
 }

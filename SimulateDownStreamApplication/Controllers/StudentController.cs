@@ -4,9 +4,6 @@ using SimulateDownStreamApplication.Model;
 using SimulateDownStreamApplication.Repository;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SimulateDownStreamApplication.Controllers
 {
@@ -35,12 +32,11 @@ namespace SimulateDownStreamApplication.Controllers
                     id = response.Id
                 }, response);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError($"exception in AddStudent, {ex.Message}");
                 return BadRequest(ex.Message);
             }
-
         }
 
         [HttpGet("1")]
@@ -69,7 +65,7 @@ namespace SimulateDownStreamApplication.Controllers
                 Student response = _repository.GetStudent(id);
                 return Ok(response);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError($"exception in GetStudent, {ex.Message}");
                 return BadRequest(ex.Message);
@@ -80,13 +76,12 @@ namespace SimulateDownStreamApplication.Controllers
         public IActionResult DeleteStudent(int id)
         {
             bool isDeleted = _repository.DeleteStudent(id);
-            if(isDeleted)
+            if (isDeleted)
             {
                 return NoContent();
             }
             _logger.LogError($"Student not present: DeleteStudent, {id}");
             return BadRequest(id);
-
         }
 
         [HttpPut("{id}")]
@@ -97,12 +92,11 @@ namespace SimulateDownStreamApplication.Controllers
                 Student response = _repository.UpdateStudent(id, student);
                 return Ok(response);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError($"exception in UpdateStudent, {ex.Message}");
                 return BadRequest(ex.Message);
             }
-
         }
 
         [HttpPatch("{id}")]
@@ -117,7 +111,6 @@ namespace SimulateDownStreamApplication.Controllers
             _logger.LogInformation("********************* Get call revceived");
             throw new ArgumentException();
 
-
             //return new List<string>() { "GET", "apple", "banana" };
         }
 
@@ -126,7 +119,6 @@ namespace SimulateDownStreamApplication.Controllers
         {
             _logger.LogInformation("^^^^^^^^^^^^^^^^^^^^^^^^^ Post call revceived");
             throw new ArgumentException();
-
 
             //return new List<string>() { "POST", "apple", "banana" };
         }

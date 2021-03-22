@@ -2,13 +2,9 @@
 using Microsoft.Extensions.Logging;
 using Polly;
 using Polly.Extensions.Http;
-using Polly.Timeout;
 using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Net.Http;
-using System.Text;
-using System.Transactions;
 
 namespace UtilityLibrary.PollyProject
 {
@@ -34,13 +30,12 @@ namespace UtilityLibrary.PollyProject
             return Policy.TimeoutAsync<HttpResponseMessage>(timeOutDuration);
         }
 
-        public static IAsyncPolicy<HttpResponseMessage> CreateWaitAndRetryPolicy() {
-
+        public static IAsyncPolicy<HttpResponseMessage> CreateWaitAndRetryPolicy()
+        {
             return HttpPolicyExtensions
                     .HandleTransientHttpError()
                     .OrResult(msg => !msg.IsSuccessStatusCode)
                     .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(1, retryAttempt)));
-
         }
 
         /// <summary>
@@ -56,22 +51,22 @@ namespace UtilityLibrary.PollyProject
                 HttpPolicyExtensions
                     .HandleTransientHttpError()
                     //.Or<TimeoutRejectedException>()
-                    .OrResult(msg => {
+                    .OrResult(msg =>
+                    {
                         var responseCode = (int)msg.StatusCode;
                         return retryableStatusCode.Contains(responseCode);
                     })
-                    .WaitAndRetryAsync(numberOfRetries, 
+                    .WaitAndRetryAsync(numberOfRetries,
                                     retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)),
-                                    (outcome, timeSpan, retryCount, context) => {
-
+                                    (outcome, timeSpan, retryCount, context) =>
+                                    {
                                         var logger = services.GetRequiredService<ILogger<T>>();
                                         logger.LogInformation("Delaying request {request} for {delay}ms, then making retry {retry}.", request.RequestUri, timeSpan.TotalMilliseconds, retryCount);
-                                        if(outcome != null && outcome.Result != null)
+                                        if (outcome != null && outcome.Result != null)
                                         {
                                             logger.LogError("Error with code {status} received on request {request}.", outcome.Result.StatusCode, request.RequestUri);
                                         }
                                     });
-
         }
 
         /// <summary>
@@ -86,12 +81,12 @@ namespace UtilityLibrary.PollyProject
             retryableStatusCode ??= new List<int>();
             return HttpPolicyExtensions
                     .HandleTransientHttpError()
-                    .OrResult(msg => {
+                    .OrResult(msg =>
+                    {
                         var responseCode = (int)msg.StatusCode;
                         return retryableStatusCode.Contains(responseCode);
                     })
                     .CircuitBreakerAsync(failuresBeforeBreaking, TimeSpan.FromSeconds(durationOfTheBreak));
-
         }
     }
 }

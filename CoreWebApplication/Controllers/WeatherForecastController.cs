@@ -27,7 +27,6 @@ namespace CoreWebApplication.Controllers
         {
             logger = logger;
             httpClient = httpClientFactory.CreateClient("named");
-            
         }
 
         [HttpGet]
@@ -42,11 +41,10 @@ namespace CoreWebApplication.Controllers
             {
                 request.SetPolicyExecutionContext(new Context("WeatherForecastGet"));
                 response = await this.httpClient.SendAsync(request);
-                logger.LogInformation($"response: {response.IsSuccessStatusCode}" );
+                logger.LogInformation($"response: {response.IsSuccessStatusCode}");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                
                 throw;
             }
             logger.LogInformation($"-------- time taken for the complete request : {sw.ElapsedMilliseconds}ms");

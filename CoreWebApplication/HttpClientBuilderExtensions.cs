@@ -1,9 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace CoreWebApplication
 {
@@ -12,7 +9,7 @@ namespace CoreWebApplication
         public static IHttpClientBuilder AddResilientPolicy<TResilientPolicy>(this IHttpClientBuilder builder)
             where TResilientPolicy : class, IResilientPolicy
         {
-            if(builder == null)
+            if (builder == null)
             {
                 throw new ArgumentNullException(nameof(builder));
             }

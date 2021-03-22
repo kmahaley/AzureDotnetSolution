@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using ResilientPollyApplication.Handlers;
 using ResilientPollyApplication.Services;
 
 namespace ResilientPollyApplication.Extensions

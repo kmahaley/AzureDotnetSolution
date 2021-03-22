@@ -1,9 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
 using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ResilientPollyApplication.Services
 {
@@ -17,8 +15,8 @@ namespace ResilientPollyApplication.Services
         }
 
         public string GetServiceName()
-        { 
-            return "PollyWrappedService";  
+        {
+            return "PollyWrappedService";
         }
 
         public async Task<List<string>> TestHttpCallWithPollyBasedFramework()

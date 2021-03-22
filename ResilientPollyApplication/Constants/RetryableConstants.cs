@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Net;
-using System.Threading.Tasks;
 
 namespace ResilientPollyApplication.Constants
 {
@@ -17,7 +14,5 @@ namespace ResilientPollyApplication.Constants
                 };
 
         public const string PollyBasedNamedHttpClient = "PollyBasedNamedHttpClient";
-
-
     }
 }

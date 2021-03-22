@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace AzureKeyVaultApplication.Configurations
+﻿namespace AzureKeyVaultApplication.Configurations
 {
     public class KeyVaultConfiguration
     {
@@ -16,7 +11,5 @@ namespace AzureKeyVaultApplication.Configurations
         public bool UserAssignedManagedIdentity { get; set; }
 
         public string UserAssignedManagedIdentityClientId { get; set; }
-
-
     }
 }

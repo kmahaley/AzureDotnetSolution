@@ -10,13 +10,11 @@ namespace SimulateDownStreamApplication.Repository
         public Student GetStudent(int ind);
 
         public List<Student> GetStudents();
-        
+
         public Student UpdateStudent(int id, Student student);
 
         public Student PatchStudent(int id, Student student);
 
         public bool DeleteStudent(int id);
-
-        
     }
 }

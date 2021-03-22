@@ -2,10 +2,7 @@
 using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Cryptography.X509Certificates;
-using System.Threading.Tasks;
 
 namespace AzureKeyVaultApplication.Utility
 {
@@ -46,7 +43,7 @@ namespace AzureKeyVaultApplication.Utility
         /// <returns>X509 Certificate.</returns>
         public static X509Certificate2 GetCertificate(string thumbprint)
         {
-            if(string.IsNullOrEmpty(thumbprint))
+            if (string.IsNullOrEmpty(thumbprint))
             {
                 throw new ArgumentNullException(nameof(thumbprint));
             }
@@ -58,7 +55,7 @@ namespace AzureKeyVaultApplication.Utility
                 X509Certificate2Collection certCollection = store.Certificates.Find(
                     X509FindType.FindByThumbprint, thumbprint, false);
 
-                if(certCollection.Count != 1)
+                if (certCollection.Count != 1)
                 {
                     throw new ArgumentException($"Can't find unique certificate with a given thumbprint: {thumbprint}. Store: {StoreLocation.LocalMachine}");
                 }

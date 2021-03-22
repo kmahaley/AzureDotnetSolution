@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Polly;
 using Polly.Extensions.Http;
 using Polly.Timeout;
@@ -7,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using UtilityLibrary.Extensions;
 
@@ -35,24 +33,21 @@ namespace UtilityLibrary.PollyProject
             timeOutDuration = timeOutDuration == null ? TimeSpan.FromSeconds(10) : timeOutDuration;
             return Policy.TimeoutAsync<HttpResponseMessage>(timeOutDuration, onTimeoutAsync: (context, timeSpan, task) =>
             {
-                if(!context.TryGetLogger(out var logger))
+                if (!context.TryGetLogger(out var logger))
                 {
                     return Task.CompletedTask;
                 }
                 logger.LogError("{id} >>>>>>>>>>> Timeout delegate fired after {timeout} seconds", context.CorrelationId, timeSpan.TotalSeconds);
                 return Task.CompletedTask;
-                
             });
         }
 
         public static IAsyncPolicy<HttpResponseMessage> CreateWaitAndRetryPolicy()
         {
-
             return HttpPolicyExtensions
                     .HandleTransientHttpError()
                     .OrResult(msg => !msg.IsSuccessStatusCode)
                     .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(1, retryAttempt)));
-
         }
 
         /// <summary>
@@ -74,19 +69,17 @@ namespace UtilityLibrary.PollyProject
                         retryAttempt => TimeSpan.FromSeconds(Math.Pow(1, retryAttempt)),
                         (outcome, timeSpan, retryCount, context) =>
                         {
-                            if(!context.TryGetLogger(out var logger))
+                            if (!context.TryGetLogger(out var logger))
                             {
                                 return;
                             }
-                                
+
                             logger.LogInformation("{id} >>>>>>>>>>> Delaying = {delay}ms, retryAttempt = {retry}.", context.CorrelationId, timeSpan.TotalMilliseconds, retryCount);
-                            if(outcome != null && outcome.Result != null)
+                            if (outcome != null && outcome.Result != null)
                             {
                                 logger.LogError("{id} >>>>>>>>>>> Previous request error code = {status}.", context.CorrelationId, outcome.Result.StatusCode);
                             }
-
                         });
-
         }
 
         /// <summary>
@@ -106,14 +99,13 @@ namespace UtilityLibrary.PollyProject
                     .CircuitBreakerAsync(failuresBeforeBreaking, durationOfTheBreak, OnBreak, OnReset);
         }
 
-
         /// <summary>
         /// When request get successful response when Circuit state is HalfOpen, OnReset delegate is executed.
         /// </summary>
         /// <param name="context">Polly based context.</param>
         private static void OnReset(Context context)
         {
-            if(!context.TryGetLogger(out var logger))
+            if (!context.TryGetLogger(out var logger))
             {
                 return;
             }
@@ -130,7 +122,7 @@ namespace UtilityLibrary.PollyProject
         /// <param name="context">Polly based context</param>
         private static void OnBreak(DelegateResult<HttpResponseMessage> result, TimeSpan circuitBrokenTime, Context context)
         {
-            if(!context.TryGetLogger(out var logger))
+            if (!context.TryGetLogger(out var logger))
             {
                 return;
             }

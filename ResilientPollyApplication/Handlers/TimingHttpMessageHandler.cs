@@ -8,7 +8,6 @@ namespace ResilientPollyApplication.Handlers
 {
     public class TimingHttpMessageHandler : DelegatingHandler
     {
-
         private readonly ILogger<TimingHttpMessageHandler> _logger;
 
         public TimingHttpMessageHandler(ILogger<TimingHttpMessageHandler> logger)

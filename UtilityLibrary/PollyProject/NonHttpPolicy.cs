@@ -2,22 +2,21 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.Text;
 
 namespace UtilityLibrary.PollyProject
 {
     public static class NonHttpPolicy
     {
-        public static AsyncPolicy CreateRetryPolicy() {
-
+        public static AsyncPolicy CreateRetryPolicy()
+        {
             return Policy
                     .Handle<ArgumentOutOfRangeException>()
                     .Or<IndexOutOfRangeException>()
                     .Or<ArgumentException>()
-                    .WaitAndRetryAsync(3, 
+                    .WaitAndRetryAsync(3,
                         retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)),
-                        (ex, count) => {
+                        (ex, count) =>
+                        {
                             Console.WriteLine($"{ex}, {count}");
                         });
         }
@@ -29,7 +28,8 @@ namespace UtilityLibrary.PollyProject
                     .Handle<Exception>(ex => IsExceptionPresent(ex, exceptions))
                     .WaitAndRetryAsync(3,
                         retryAttempt => TimeSpan.FromSeconds(Math.Pow(1, retryAttempt)),
-                        (ex, count) => {
+                        (ex, count) =>
+                        {
                             Console.WriteLine($"{ex}, {count}");
                         });
         }

@@ -24,7 +24,7 @@ namespace ResilientPollyApplication.Extensions
                 .AddPolicyHandler(NamedHttpClientBasedPolicy.CreateTimeoutPolicy(TimeSpan.FromSeconds(5)))
                 .AddPolicyHandler(NamedHttpClientBasedPolicy.CreateWaitAndRetryPolicy())
                 .AddPolicyHandler(NamedHttpClientBasedPolicy.CreateTimeoutPolicy(TimeSpan.FromSeconds(1)))
-                .AddPolicyHandler(NamedHttpClientBasedPolicy.CreateCircuitBreakerPolicy(durationOfTheBreak:TimeSpan.FromSeconds(30)));
+                .AddPolicyHandler(NamedHttpClientBasedPolicy.CreateCircuitBreakerPolicy(durationOfTheBreak: TimeSpan.FromSeconds(30)));
 
             //network failures, 5xx and 408 responses
             services.AddHttpClient(RetryableConstants.PollyBasedNamedHttpClient)
@@ -40,7 +40,6 @@ namespace ResilientPollyApplication.Extensions
                 .AddPolicyHandler(HttpPolicyUtils.PolicyWithExceptionAndRetry())
                 .AddPolicyHandler(HttpPolicyUtils.GetCircuitBreakerPolicyFromExtension())
                 .AddPolicyHandler(HttpPolicyUtils.TimeoutPolicy());
-
 
             services.AddHttpClient("selectPolicy")
                 .AddHttpMessageHandler<TimingHandler>()

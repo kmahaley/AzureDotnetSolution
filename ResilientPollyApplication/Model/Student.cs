@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace ResilientPollyApplication.Model
+﻿namespace ResilientPollyApplication.Model
 {
     // Student model is mapped to SimulatedDownStreamApplication.Model.Student class
     public class Student
@@ -14,6 +9,4 @@ namespace ResilientPollyApplication.Model
 
         public int RollNumber { get; set; }
     }
-
 }
-

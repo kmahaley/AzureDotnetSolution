@@ -5,7 +5,6 @@ using ResilientPollyApplication.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -14,14 +13,12 @@ namespace ResilientPollyApplication.Services
 {
     public class HttpTypedService : IHttpService
     {
-
         private readonly HttpClient httpClient;
 
         private readonly ILogger<HttpTypedService> logger;
 
         public HttpTypedService(HttpClient httpClient, ILogger<HttpTypedService> logger)
         {
-
             this.httpClient = httpClient;
             this.logger = logger;
         }
@@ -34,16 +31,16 @@ namespace ResilientPollyApplication.Services
         public async Task<List<string>> TestHttpCallWithPollyBasedFramework()
         {
             var request = new HttpRequestMessage(HttpMethod.Get, "http://localhost:8080/student");
-            
+
             HttpResponseMessage response = null;
 
             try
             {
                 response = await httpClient.SendAsync(request);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                if(ex.GetType() == typeof(BrokenCircuitException) || ex.GetType() == typeof(TimeoutRejectedException))
+                if (ex.GetType() == typeof(BrokenCircuitException) || ex.GetType() == typeof(TimeoutRejectedException))
                 {
                     logger.LogError($"####### {ex.GetType()}. Http call failed with Polly based exception.");
                 }
@@ -55,10 +52,10 @@ namespace ResilientPollyApplication.Services
             }
 
             IEnumerable<Student> students = new List<Student>();
-            if(response != null && response.IsSuccessStatusCode)
+            if (response != null && response.IsSuccessStatusCode)
             {
                 using var res = await response.Content.ReadAsStreamAsync();
-                
+
                 var properties = new JsonSerializerOptions()
                 {
                     PropertyNameCaseInsensitive = true
@@ -69,7 +66,6 @@ namespace ResilientPollyApplication.Services
             {
                 int code = (response != null) ? (int)response.StatusCode : 0;
                 logger.LogError($" ---------------------> {code}, failed to process http response.");
-                
             }
             return students.Select(s => s.Name).ToList();
         }

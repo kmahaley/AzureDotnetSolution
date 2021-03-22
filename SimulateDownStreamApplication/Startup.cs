@@ -1,17 +1,10 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using SimulateDownStreamApplication.Repository;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SimulateDownStreamApplication
 {
@@ -22,8 +15,7 @@ namespace SimulateDownStreamApplication
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration
-        {
+        public IConfiguration Configuration {
             get;
         }
 
@@ -31,7 +23,8 @@ namespace SimulateDownStreamApplication
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddSwaggerGen(options => {
+            services.AddSwaggerGen(options =>
+            {
                 options.SwaggerDoc("v1",
                     new OpenApiInfo()
                     {
@@ -47,7 +40,7 @@ namespace SimulateDownStreamApplication
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if(env.IsDevelopment())
+            if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
@@ -64,7 +57,7 @@ namespace SimulateDownStreamApplication
             });
 
             app.UseSwagger();
-            app.UseSwaggerUI(options => 
+            app.UseSwaggerUI(options =>
             {
                 options.SwaggerEndpoint("/swagger/v1/swagger.json", "Simulated Downstream Application API");
             });

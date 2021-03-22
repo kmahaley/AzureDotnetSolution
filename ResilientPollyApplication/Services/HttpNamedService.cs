@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
-using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Threading.Tasks;
 using UtilityLibrary.Constants;
@@ -19,7 +18,6 @@ namespace ResilientPollyApplication.Services
 {
     public class HttpNamedService : IHttpService
     {
-
         private readonly IHttpClientFactory httpClientFactory;
 
         private readonly HttpClient httpClient;
@@ -61,10 +59,10 @@ namespace ResilientPollyApplication.Services
                 response = await httpClient.SendAsync(request);
                 logger.LogInformation($"-------- time taken for the complete request : {sw.ElapsedMilliseconds}ms");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 logger.LogInformation($"-------- Exception : time taken for the complete request : {sw.ElapsedMilliseconds}ms");
-                if(ex.GetType() == typeof(BrokenCircuitException) || ex.GetType() == typeof(TimeoutRejectedException))
+                if (ex.GetType() == typeof(BrokenCircuitException) || ex.GetType() == typeof(TimeoutRejectedException))
                 {
                     logger.LogError($"-------- { nameof(HttpNamedService)} {ex.GetType()}. Http call failed with Polly based exception.");
                 }
@@ -77,7 +75,6 @@ namespace ResilientPollyApplication.Services
 
             return await ProcessResponse(response);
         }
-
 
         public async Task<List<string>> TestHttpCallWithPollyBasedFrameworkDuplicate()
         {
@@ -96,10 +93,10 @@ namespace ResilientPollyApplication.Services
                 response = await httpClient.SendAsync(request);
                 logger.LogInformation($"-------- time taken for the complete request : {sw.ElapsedMilliseconds}ms");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 logger.LogInformation($"-------- Exception : time taken for the complete request : {sw.ElapsedMilliseconds}ms");
-                if(ex.GetType() == typeof(BrokenCircuitException) || ex.GetType() == typeof(TimeoutRejectedException))
+                if (ex.GetType() == typeof(BrokenCircuitException) || ex.GetType() == typeof(TimeoutRejectedException))
                 {
                     logger.LogError($"-------- { nameof(HttpNamedService)} {ex.GetType()}. Http call failed with Polly based exception.");
                 }
@@ -115,7 +112,6 @@ namespace ResilientPollyApplication.Services
 
         private Context CreatePolicyExecutionContext(string operationKey)
         {
-            
             var context = new Context(operationKey, new Dictionary<string, object>
                 {
                     { PollyConstant.LoggerKey, logger }
@@ -126,7 +122,7 @@ namespace ResilientPollyApplication.Services
         private async Task<List<string>> ProcessResponse(HttpResponseMessage response)
         {
             IEnumerable<Student> students = new List<Student>();
-            if(response != null && response.IsSuccessStatusCode)
+            if (response != null && response.IsSuccessStatusCode)
             {
                 using var res = await response.Content.ReadAsStreamAsync();
 
@@ -140,7 +136,6 @@ namespace ResilientPollyApplication.Services
             {
                 int code = response != null ? (int)response.StatusCode : 0;
                 logger.LogError($"-------- {code}, failed to process http response.");
-
             }
             return students.Select(s => s.Name).ToList();
         }

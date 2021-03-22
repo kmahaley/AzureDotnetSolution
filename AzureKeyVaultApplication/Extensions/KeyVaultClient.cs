@@ -5,9 +5,6 @@ using AzureKeyVaultApplication.Configurations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace AzureKeyVaultApplication.Extensions
 {
@@ -37,10 +34,9 @@ namespace AzureKeyVaultApplication.Extensions
                 ExcludeSharedTokenCacheCredential = true,
                 ExcludeVisualStudioCodeCredential = true,
                 ExcludeVisualStudioCredential = true,
-
             };
 
-            if(keyVaultConfiguration.ManagedIdentity)
+            if (keyVaultConfiguration.ManagedIdentity)
             {
                 credentialOptions.ExcludeEnvironmentCredential = true;
             }
