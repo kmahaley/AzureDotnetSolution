@@ -109,9 +109,9 @@ namespace SimulateDownStreamApplication.Controllers
         public IEnumerable<string> Get()
         {
             _logger.LogInformation("********************* Get call revceived");
-            throw new ArgumentException();
+            //throw new ArgumentException();
 
-            //return new List<string>() { "GET", "apple", "banana" };
+            return new List<string>() { "GET", "apple", "banana" };
         }
 
         [HttpPost("mock")]
