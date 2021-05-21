@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace CoreWebApplication.Controllers
@@ -14,10 +15,6 @@ namespace CoreWebApplication.Controllers
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
 
         private readonly ILogger<WeatherForecastController> logger;
         private readonly IHttpClientFactory httpClientFactory;
@@ -25,12 +22,12 @@ namespace CoreWebApplication.Controllers
 
         public WeatherForecastController(ILogger<WeatherForecastController> logger, IHttpClientFactory httpClientFactory)
         {
-            logger = logger;
-            httpClient = httpClientFactory.CreateClient("named");
+            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            this.httpClient = httpClientFactory.CreateClient("named");
         }
 
         [HttpGet]
-        public async Task<IEnumerable<WeatherForecast>> GetAsync()
+        public async Task<IEnumerable<WeatherForecast>> GetAsync(CancellationToken token = default)
         {
             var sw = Stopwatch.StartNew();
             var request = new HttpRequestMessage(HttpMethod.Get, "http://localhost:8080/student/1");
@@ -40,23 +37,25 @@ namespace CoreWebApplication.Controllers
             try
             {
                 request.SetPolicyExecutionContext(new Context("WeatherForecastGet"));
-                response = await this.httpClient.SendAsync(request);
+                response = await this.httpClient.SendAsync(request, token);
                 logger.LogInformation($"response: {response.IsSuccessStatusCode}");
             }
             catch (Exception ex)
             {
-                throw;
+                logger.LogError($"Request failed {ex.GetType()} : {ex.Message}");
+                throw new ArgumentException($"We don't offer a weather forecast for {ex.GetType()} ");
             }
+            
             logger.LogInformation($"-------- time taken for the complete request : {sw.ElapsedMilliseconds}ms");
-
-            var rng = new Random();
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+            return new WeatherForecast[1]
             {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = rng.Next(-20, 55),
-                Summary = Summaries[rng.Next(Summaries.Length)]
-            })
-            .ToArray();
+                new WeatherForecast
+                { 
+                    Date = new DateTime(),
+                    TemperatureC =72,
+                    Summary = "sunny"
+                }
+            };
         }
     }
 }
