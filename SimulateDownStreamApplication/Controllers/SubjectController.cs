@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using SimulateDownStreamApplication.Model;
 using SimulateDownStreamApplication.Service;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -44,9 +45,11 @@ namespace SimulateDownStreamApplication.Controllers
         [HttpDelete]
         [Route("{resourceId}")]
         [Route("{resourceId}/{*url}")]
-        public IActionResult ProxyCmkRequestToBackendAsync([FromRoute] int resourceId)
+        public IActionResult ProxyCmkRequestToBackendAsync([FromRoute] string resourceId)
         {
             logger.LogInformation($"------------ {Request.Method}");
+            throw new ArgumentException($"bad request value from user {resourceId}");
+            return BadRequest();
             var s = new List<Student>
             {
                 new Student { Id=1, Name="subject", RollNumber = 100 },
