@@ -19,9 +19,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoreWebApplication", "CoreW
 EndProject
 Project("{A07B5EB6-E848-4116-A8D0-A826331D98C6}") = "Market", "Market\Market.sfproj", "{46913621-2E3F-43FF-8771-30A732D82ADF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarketWeb", "MarketWeb\MarketWeb.csproj", "{E927431A-7D6A-4866-B858-B98B7154371E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarketWeb", "MarketWeb\MarketWeb.csproj", "{E927431A-7D6A-4866-B858-B98B7154371E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarketData", "MarketData\MarketData.csproj", "{8A61760A-6140-44E0-A55B-DB3EFBF5FC2B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarketData", "MarketData\MarketData.csproj", "{8A61760A-6140-44E0-A55B-DB3EFBF5FC2B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
