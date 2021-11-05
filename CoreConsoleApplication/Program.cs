@@ -21,11 +21,11 @@ namespace CoreConsoleApplication
             d2.Add("guid4", "m4");
             d2.Add("guid5", "m5");
 
-            Dictionary<string, string> dictionary = d1.Union(d2).GroupBy(x => x.Key).ToDictionary(x =>x.Key, x=> x.First().Value);
-            dictionary.ToList().ForEach(x => Console.WriteLine($"{x.Key} {x.Value}"));
-
-            string configName = "yarn-site-spark-cluster-type.cfg";
-            configName = configName.Replace("-spark-cluster-type", string.Empty);
+            if(d1.TryGetValue("guid3", out var val)
+                && val.Equals("m3"))
+            {
+                Console.WriteLine("worked");
+            }
             
 
             Console.WriteLine();
