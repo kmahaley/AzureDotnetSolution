@@ -9,6 +9,8 @@ Application to learn connection to SQL DB and perform CRUD operations
 - Microsoft.EntityFrameworkCore.Tools
 - Microsoft.EntityFrameworkCore.SqlServer
 
+*EntityFrameworkCore packages should be of same version*
+
 
 ## Reference links:
 - Scaffolding DB scema to Models
@@ -18,3 +20,6 @@ Application to learn connection to SQL DB and perform CRUD operations
 ```
 dotnet ef dbcontext scaffold "Data Source=KARTIKATL0717;Initial Catalog=SqlDbApplication;User ID=****;Password=******;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False" Microsoft.EntityFrameworkCore.SqlServer --table stores,products --context SqlRepositoryImpl --context-dir Repositories/Sql --output-dir Models/Sql
 ```
+
+- Add Repository instance 
+  - ConfigureServices -> `services.AddDbContext<SqlRepositoryImpl>();`
