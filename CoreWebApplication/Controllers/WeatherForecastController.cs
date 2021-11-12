@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Polly;
 using System;
@@ -17,15 +18,19 @@ namespace CoreWebApplication.Controllers
     {
 
         private readonly ILogger<WeatherForecastController> logger;
+        private readonly IConfiguration config;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        public WeatherForecastController(ILogger<WeatherForecastController> logger, IConfiguration configuration)
         {
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            config = configuration;
         }
 
         [HttpGet]
         public async Task<IEnumerable<WeatherForecast>> GetAsync(CancellationToken token = default)
         {
+            var x = config["KeyValue"];
+            logger.LogInformation($"--------------{x}");
             return new WeatherForecast[1]
             {
                 new WeatherForecast
