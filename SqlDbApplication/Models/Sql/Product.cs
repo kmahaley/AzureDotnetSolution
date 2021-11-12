@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace SqlDbApplication.Models.Sql
 {
-    public partial class Product
+    public class Product
     {
         public int ProductId { get; set; }
         public string Name { get; set; }

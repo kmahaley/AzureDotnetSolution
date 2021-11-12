@@ -25,7 +25,7 @@ namespace SqlDbApplication.Repositories.Sql
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Data Source=KARTIKATL0717;Initial Catalog=SqlDbApplication;User ID=sa;Password=passwordabc123$;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
+                optionsBuilder.UseSqlServer("Add DB connection string");
             }
         }
 

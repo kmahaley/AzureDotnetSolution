@@ -20,9 +20,6 @@ namespace CoreWebApplication
         {
             services.AddControllers();
 
-            services
-                .AddHttpClient("named");
-                //.AddResilientPolicy<RequestTimeoutPolicy>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

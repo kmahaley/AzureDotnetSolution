@@ -9,8 +9,7 @@ namespace NoHttpWorkloadApplication.Services
     {
         private readonly ILogger logger;
 
-        public BookService(ILogger<BookService> logger,
-            IHostApplicationLifetime appLifetime)
+        public BookService(ILogger<BookService> logger, IHostApplicationLifetime appLifetime)
         {
             this.logger = logger;
 
