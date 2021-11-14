@@ -20,11 +20,15 @@ namespace CoreConsoleApplication
             d2.Add("guid3", "m31");
             d2.Add("guid4", "m4");
             d2.Add("guid5", "m5");
+            IDictionary<string, string> d = null;
 
-            if(d1.TryGetValue("guid3", out var val)
-                && val.Equals("m3"))
+            var val = d1?.Values.Where(x => "m5".Equals(x));
+            Console.WriteLine($"worked {val.Any()}");
+
+            var myd = d?.Values.Where(x => "m5".Equals(x));
+            if(myd?.Any() != true)
             {
-                Console.WriteLine("worked");
+                Console.WriteLine("--------------");
             }
             
 

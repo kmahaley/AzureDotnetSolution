@@ -3,7 +3,7 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:57212",
+      "applicationUrl": "http://localhost:35000",
       "sslPort": 44357
     }
   },
@@ -11,7 +11,7 @@
   "profiles": {
     "IIS Express": {
       "commandName": "IISExpress",
-      "launchBrowser": true,
+      "launchBrowser": false,
       "launchUrl": "api",
       "environmentVariables": {
         "AZURE_CLIENT_SECRET": "{AZURE_CLIENT_SECRET}",
@@ -22,7 +22,7 @@
     },
     "AzureKeyVaultApplication": {
       "commandName": "Project",
-      "launchBrowser": true,
+      "launchBrowser": false,
       "launchUrl": "api",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
