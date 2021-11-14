@@ -22,9 +22,9 @@ namespace CoreWebApplication.Controllers
 
         private readonly ILogger<ItemController> logger;
 
-        public ItemController(IRepository repository, ILogger<ItemController> logger)
+        public ItemController(IEnumerable<IRepository> repositories, ILogger<ItemController> logger)
         {
-            this.repository = repository;
+            this.repository = repositories.FirstOrDefault(repo => string.Equals(repo.GetRepositoryName, nameof(MongoDbRepository)));
             this.logger = logger;
         }
 

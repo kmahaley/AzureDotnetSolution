@@ -6,6 +6,8 @@ namespace CoreWebApplication.Repositories
 {
     public interface IRepository
     {
+        string GetRepositoryName { get; }
+
         Item GetItem(Guid id);
         IEnumerable<Item> GetItems();
         Item CreateItem(Item item);

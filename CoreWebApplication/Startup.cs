@@ -1,3 +1,4 @@
+using CoreWebApplication.Configurations;
 using CoreWebApplication.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -5,6 +6,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Serializers;
+using MongoDB.Driver;
+using System;
 
 namespace CoreWebApplication
 {
@@ -22,7 +28,20 @@ namespace CoreWebApplication
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //Configurations
+            services.Configure<MongoDbConfiguration>(Configuration.GetSection("MongoDbConfiguration"));
+
+            //Serialize item's properties in Mongodb
+            BsonSerializer.RegisterSerializer(new GuidSerializer(BsonType.String));
+            BsonSerializer.RegisterSerializer(new DateTimeOffsetSerializer(BsonType.String));
+            //Repositories
+            services.AddSingleton<IMongoClient>(serviceProvider => {
+                var mongoDbConfiguration = Configuration.GetSection("MongoDbConfiguration").Get<MongoDbConfiguration>();
+                return new MongoClient(mongoDbConfiguration.ConnectionString);
+            });
+            services.AddSingleton<IRepository, MongoDbRepository>();
             services.AddSingleton<IRepository, InMemoryRepository>();
+
             services.AddControllers();
             services.AddSwaggerGen(options =>
             {

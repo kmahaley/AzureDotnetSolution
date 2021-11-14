@@ -15,6 +15,7 @@ namespace CoreWebApplication.Repositories
             new Item { Id = Guid.NewGuid(), Name="keyboard", Price=124, CreatedDate = DateTimeOffset.UtcNow},
         };
 
+        public string GetRepositoryName => nameof(InMemoryRepository);
 
         public Item CreateItem(Item item)
         {
