@@ -36,7 +36,7 @@ namespace CoreWebApplication.Controllers
         }
 
         [HttpPut("{id}")]
-        public ActionResult<ItemDto> Create(Guid id, ItemDto itemDto)
+        public ActionResult<ItemDto> Update(Guid id, ItemDto itemDto)
         {
             if(id != itemDto.Id)
             {
@@ -46,7 +46,7 @@ namespace CoreWebApplication.Controllers
             return Ok(updatedItem.AsItemDto());
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public ActionResult Delete(Guid id)
         {
             return Ok(repository.DeleteItem(id));
