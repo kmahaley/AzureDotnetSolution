@@ -17,38 +17,38 @@ namespace CoreWebApplication.Repositories
 
         public string GetRepositoryName => nameof(InMemoryRepository);
 
-        public Item CreateItem(Item item)
+        public async Task<Item> CreateItemAsync(Item item)
         {
             items.Add(item);
-            return item;
+            return await Task.FromResult(item);
         }
 
-        public Item UpdateItem(Guid id, Item item)
+        public async Task<Item> UpdateItemAsync(Guid id, Item item)
         {
-            var existingItem = GetItem(id);
+            var existingItem = await GetItemAsync(id);
             var existingItemIndex = items.IndexOf(existingItem);
             items[existingItemIndex] = item;
             return item;
         }
 
-        public IEnumerable<Item> GetItems()
+        public async Task<IEnumerable<Item>> GetItemsAsync()
         {
-            return items;
+            return await Task.FromResult(items);
         }
 
-        public Item GetItem(Guid id)
+        public async Task<Item> GetItemAsync(Guid id)
         {
             var existingItem = items.FirstOrDefault(item => id == item.Id);
             if(existingItem == null)
             {
-                throw new ArgumentException($"{nameof(GetItem)}, item not present in repository: {id}");
+                throw new ArgumentException($"{nameof(GetItemAsync)}, item not present in repository: {id}");
             }
-            return existingItem;
+            return await Task.FromResult(existingItem);
         }
 
-        public Guid DeleteItem(Guid id)
+        public async Task<Guid> DeleteItemAsync(Guid id)
         {
-            var existingItem = GetItem(id);
+            var existingItem = await GetItemAsync(id);
             items.Remove(existingItem);
             return id;
         }

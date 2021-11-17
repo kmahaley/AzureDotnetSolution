@@ -1,6 +1,7 @@
 ﻿using CoreWebApplication.Models;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace CoreWebApplication.Repositories
 {
@@ -8,10 +9,10 @@ namespace CoreWebApplication.Repositories
     {
         string GetRepositoryName { get; }
 
-        Item GetItem(Guid id);
-        IEnumerable<Item> GetItems();
-        Item CreateItem(Item item);
-        Item UpdateItem(Guid id, Item item);
-        Guid DeleteItem(Guid id);
+        Task<Item> GetItemAsync(Guid id);
+        Task<IEnumerable<Item>> GetItemsAsync();
+        Task<Item> CreateItemAsync(Item item);
+        Task<Item> UpdateItemAsync(Guid id, Item item);
+        Task<Guid> DeleteItemAsync(Guid id);
     }
 }

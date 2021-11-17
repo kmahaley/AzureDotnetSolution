@@ -29,33 +29,34 @@ namespace CoreWebApplication.Controllers
         }
 
         [HttpPost]
-        public ActionResult<ItemDto> Create(ItemDto itemDto)
+        public async Task<ActionResult<ItemDto>> Create(ItemDto itemDto)
         {
-            var addedItem = repository.CreateItem(itemDto.AsItem());
+            var addedItem = await repository.CreateItemAsync(itemDto.AsItem());
             return Ok(addedItem.AsItemDto());
         }
 
         [HttpPut("{id}")]
-        public ActionResult<ItemDto> Update(Guid id, ItemDto itemDto)
+        public async Task<ActionResult<ItemDto>> Update(Guid id, ItemDto itemDto)
         {
             if(id != itemDto.Id)
             {
                 return BadRequest();
             }
-            var updatedItem = repository.UpdateItem(id, itemDto.AsItem());
+            var updatedItem = await repository.UpdateItemAsync(id, itemDto.AsItem());
             return Ok(updatedItem.AsItemDto());
         }
 
         [HttpDelete("{id}")]
-        public ActionResult Delete(Guid id)
+        public async Task<ActionResult> Delete(Guid id)
         {
-            return Ok(repository.DeleteItem(id));
+            var guid = await repository.DeleteItemAsync(id);
+            return Ok(guid);
         }
 
         [HttpGet("{id}")]
-        public ActionResult<ItemDto> GetItem(Guid id)
+        public async Task<ActionResult<ItemDto>> GetItemAsync(Guid id)
         {
-            var item = repository.GetItem(id);
+            var item = await repository.GetItemAsync(id);
             if(item == null)
             {
                 return NotFound();
@@ -64,9 +65,10 @@ namespace CoreWebApplication.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<ItemDto>> GetItems()
+        public async Task<ActionResult<IEnumerable<ItemDto>>> GetItemsAsync()
         {
-            var itemDtos = repository.GetItems().Select(item => item.AsItemDto());
+            var items = await repository.GetItemsAsync();
+            var itemDtos = items.Select(item => item.AsItemDto());
             return Ok(itemDtos);
         }
 

@@ -4,6 +4,7 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace CoreWebApplication.Repositories
 {
@@ -29,23 +30,23 @@ namespace CoreWebApplication.Repositories
         }
 
 
-        public Item CreateItem(Item item)
+        public async Task<Item> CreateItemAsync(Item item)
         {
-            itemCollection.InsertOne(item);
+            await itemCollection.InsertOneAsync(item);
             return item;
         }
 
-        public Guid DeleteItem(Guid id)
+        public async Task<Guid> DeleteItemAsync(Guid id)
         {
             var filter = filterBuilder.Eq(item => item.Id, id);
-            itemCollection.DeleteOne(filter);
+            await itemCollection.DeleteOneAsync(filter);
             return id;
         }
 
-        public Item GetItem(Guid id)
+        public async Task<Item> GetItemAsync(Guid id)
         {
             var filter = filterBuilder.Eq(item => item.Id, id);
-            var existingItem = itemCollection.Find(filter).FirstOrDefault();
+            var existingItem = await itemCollection.Find(filter).FirstOrDefaultAsync();
             if(existingItem == null)
             {
                 logger.LogError($"Document not found in mongodb {id}");
@@ -53,15 +54,15 @@ namespace CoreWebApplication.Repositories
             return existingItem;
         }
 
-        public IEnumerable<Item> GetItems()
+        public async Task<IEnumerable<Item>> GetItemsAsync()
         {
-            return itemCollection.Find(filterBuilder.Empty).ToList();
+            return await itemCollection.Find(filterBuilder.Empty).ToListAsync();
         }
 
-        public Item UpdateItem(Guid id, Item item)
+        public async Task<Item> UpdateItemAsync(Guid id, Item item)
         {
             var filter = filterBuilder.Eq(existingItem => existingItem.Id, id);
-            itemCollection.ReplaceOne(filter, item);
+            await itemCollection.ReplaceOneAsync(filter, item);
             return item;
         }
     }
