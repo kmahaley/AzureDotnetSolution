@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SqlDbApplication.Exceptions;
 using SqlDbApplication.Models.Sql;
 using SqlDbApplication.Repositories.Sql;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -24,52 +26,60 @@ namespace SqlDbApplication.Controllers
 
         // GET: api/<ProductController>
         [HttpGet]
-        public IEnumerable<Product> GetAll()
+        public async Task<IEnumerable<Product>> GetAllAsync()
         {
-            return _sqlRepositoryImpl.Products.ToList();
+            return await _sqlRepositoryImpl.Products.ToListAsync();
         }
 
         // GET api/<ProductController>/5
         [HttpGet("{id}")]
-        public Product Get(int id)
+        public async Task<Product> GetAsync(int id)
         {
-            return _sqlRepositoryImpl.Products.Find(id);
+            var existingEntity = await _sqlRepositoryImpl.Products.FindAsync(id);
+            if(existingEntity == null)
+            { 
+                throw new Exception("Bad request!!!");
+            }
+            return existingEntity;
         }
 
         // POST api/<ProductController>
         [HttpPost]
-        public Product Post([FromBody] Product product)
+        public async Task<Product> PostAsync([FromBody] Product product)
         {
-            var savedProduct = _sqlRepositoryImpl.Add(product);
-            _sqlRepositoryImpl.SaveChanges();
+            var savedProduct = await _sqlRepositoryImpl.AddAsync(product);
+            _ = _sqlRepositoryImpl.SaveChangesAsync();
             return savedProduct.Entity;
         }
 
         // PUT api/<ProductController>/5
         [HttpPut("{id}")]
-        public Product Put(int id, [FromBody] Product product)
+        public async Task<Product> PutAsync(int id, [FromBody] Product product)
         {
-            if(id != product.ProductId)
-            {
+            var existingEntity = await _sqlRepositoryImpl.Products.FindAsync(id);
+            if(existingEntity == null)
+            { 
                 throw new Exception("Bad request!!!");
             }
-
-            var savedProduct = _sqlRepositoryImpl.Add(product);
-            _sqlRepositoryImpl.SaveChanges();
-            return savedProduct.Entity;
+            existingEntity.Name = product.Name;
+            existingEntity.Color = product.Color;
+            existingEntity.UnitPrice = product.UnitPrice;
+            existingEntity.AvailableQuantity = product.AvailableQuantity;
+            _ = _sqlRepositoryImpl.SaveChangesAsync();
+            return product;
         }
 
         // DELETE api/<ProductController>/5
         [HttpDelete("{id}")]
-        public Product Delete(int id)
+        public async Task<Product> DeleteAsync(int id)
         {
-            var existingEntity = _sqlRepositoryImpl.Products.Find(id);
+            var existingEntity = await _sqlRepositoryImpl.Products.FindAsync(id);
             if(existingEntity == null)
             { 
                 throw new Exception("Bad request!!!");
             }
             _sqlRepositoryImpl.Products.Remove(existingEntity);
-            _sqlRepositoryImpl.SaveChanges();
+            _ = _sqlRepositoryImpl.SaveChangesAsync();
             return existingEntity;
         }
     }

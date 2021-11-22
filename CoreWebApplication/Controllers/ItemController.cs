@@ -1,9 +1,7 @@
 ﻿using CoreWebApplication.Dtos;
 using CoreWebApplication.Dtos.Extensions;
-using CoreWebApplication.Models;
 using CoreWebApplication.Models.Extensions;
 using CoreWebApplication.Repositories;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -29,14 +27,14 @@ namespace CoreWebApplication.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<ItemDto>> Create(ItemDto itemDto)
+        public async Task<ActionResult<ItemDto>> CreateAsync(ItemDto itemDto)
         {
             var addedItem = await repository.CreateItemAsync(itemDto.AsItem());
             return Ok(addedItem.AsItemDto());
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<ItemDto>> Update(Guid id, ItemDto itemDto)
+        public async Task<ActionResult<ItemDto>> UpdateAsync(Guid id, ItemDto itemDto)
         {
             if(id != itemDto.Id)
             {
@@ -47,7 +45,7 @@ namespace CoreWebApplication.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(Guid id)
+        public async Task<ActionResult> DeleteAsync(Guid id)
         {
             var guid = await repository.DeleteItemAsync(id);
             return Ok(guid);

@@ -30,19 +30,23 @@ namespace CoreWebApplication
         {
             //Configurations
             services.Configure<MongoDbConfiguration>(Configuration.GetSection("MongoDbConfiguration"));
+            var mongoDbConfiguration = Configuration.GetSection("MongoDbConfiguration").Get<MongoDbConfiguration>();
 
             //Serialize item's properties in Mongodb
             BsonSerializer.RegisterSerializer(new GuidSerializer(BsonType.String));
             BsonSerializer.RegisterSerializer(new DateTimeOffsetSerializer(BsonType.String));
+
             //Repositories
             services.AddSingleton<IMongoClient>(serviceProvider => {
-                var mongoDbConfiguration = Configuration.GetSection("MongoDbConfiguration").Get<MongoDbConfiguration>();
                 return new MongoClient(mongoDbConfiguration.ConnectionString);
             });
             services.AddSingleton<IRepository, MongoDbRepository>();
             services.AddSingleton<IRepository, InMemoryRepository>();
 
             services.AddControllers();
+            services.AddHealthChecks();
+
+            //Swagger
             services.AddSwaggerGen(options =>
             {
                 options.SwaggerDoc("v1",
@@ -68,6 +72,7 @@ namespace CoreWebApplication
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHealthChecks("/health");
             });
 
             app.UseSwagger();
