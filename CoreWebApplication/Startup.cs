@@ -41,7 +41,7 @@ namespace CoreWebApplication
                 return new MongoClient(mongoDbConfiguration.ConnectionString);
             });
             services.AddSingleton<IRepository, MongoDbRepository>();
-            services.AddSingleton<IRepository, InMemoryRepository>();
+            //services.AddSingleton<IRepository, InMemoryRepository>();
 
             services.AddControllers();
             services.AddHealthChecks();
