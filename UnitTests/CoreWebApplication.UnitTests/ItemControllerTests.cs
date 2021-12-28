@@ -17,7 +17,7 @@ namespace CoreWebApplication.UnitTests
     public class ItemControllerTests
     {
 
-        //private readonly Mock<List<IRepository>> listOfRepositoriesMock = new Mock<List<IRepository>>();
+        private readonly Mock<List<IRepository>> listOfRepositoriesMock = new Mock<List<IRepository>>();
 
         private readonly Mock<IRepository> repositoryMock = new Mock<IRepository>();
 
@@ -33,11 +33,12 @@ namespace CoreWebApplication.UnitTests
         [TestInitialize]
         public void Setup()
         {           
-            /*listOfRepositoriesMock
-                .Setup(repo => repo.FirstOrDefault(repo => string.Equals(repo.GetRepositoryName, nameof(MongoDbRepository))))
-                .Returns(repositoryMock.Object);*/
+            listOfRepositoriesMock
+                .Setup(repoList => repoList.FirstOrDefault(It.IsAny<Func<IRepository, bool>>()))
+                .Returns(repositoryMock.Object);
 
-            controller = new ItemController(repositoryMock.Object, loggerMock.Object);
+            controller = new ItemController(listOfRepositoriesMock.Object, loggerMock.Object);
+            //controller = new ItemController(repositoryMock.Object, loggerMock.Object);
         }
 
         [TestMethod]
