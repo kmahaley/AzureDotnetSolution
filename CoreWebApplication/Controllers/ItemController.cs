@@ -1,12 +1,9 @@
-﻿using CoreWebApplication.Dtos;
-using CoreWebApplication.Dtos.Extensions;
-using CoreWebApplication.Models.Extensions;
+﻿using CoreWebApplication.Models;
 using CoreWebApplication.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace CoreWebApplication.Controllers
@@ -26,21 +23,21 @@ namespace CoreWebApplication.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<ItemDto>> CreateAsync(ItemDto itemDto)
+        public async Task<ActionResult<Item>> CreateAsync(Item item)
         {
-            var addedItem = await repository.CreateItemAsync(itemDto.AsItem());
-            return Ok(addedItem.AsItemDto());
+            var addedItem = await repository.CreateItemAsync(item);
+            return Ok(addedItem);
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<ItemDto>> UpdateAsync(Guid id, ItemDto itemDto)
+        public async Task<ActionResult<Item>> UpdateAsync(Guid id, Item item)
         {
-            if(id != itemDto.Id)
+            if(id != item.Id)
             {
                 return BadRequest();
             }
-            var updatedItem = await repository.UpdateItemAsync(id, itemDto.AsItem());
-            return Ok(updatedItem.AsItemDto());
+            var updatedItem = await repository.UpdateItemAsync(id, item);
+            return Ok(updatedItem);
         }
 
         [HttpDelete("{id}")]
@@ -51,22 +48,21 @@ namespace CoreWebApplication.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<ItemDto>> GetItemAsync(Guid id)
+        public async Task<ActionResult<Item>> GetItemAsync(Guid id)
         {
             var item = await repository.GetItemAsync(id);
             if(item == null)
             {
                 return NotFound();
             }
-            return item.AsItemDto();
+            return Ok(item);
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ItemDto>>> GetItemsAsync()
+        public async Task<ActionResult<IEnumerable<Item>>> GetItemsAsync()
         {
             var items = await repository.GetItemsAsync();
-            var itemDtos = items.Select(item => item.AsItemDto());
-            return Ok(itemDtos);
+            return Ok(items);
         }
 
 

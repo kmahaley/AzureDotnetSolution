@@ -23,9 +23,7 @@ namespace CoreWebApplication
         public void ConfigureServices(IServiceCollection services)
         {
             //Configurations
-
-            //Serialize item's properties in Mongodb
-            
+           
             //Repositories
             services.AddSingleton<IRepository, InMemoryRepository>();
 
