@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MongoDbApplication.Dtos;
-using MongoDbApplication.Dtos.Extensions;
-using MongoDbApplication.Models.Extensions;
+using MongoDbApplication.Models;
 using MongoDbApplication.Repositories;
 using System;
 using System.Collections.Generic;
@@ -19,23 +19,25 @@ namespace MongoDbApplication.Controllers
 
         private readonly ILogger<ItemController> logger;
 
-        public ItemController(IEnumerable<IRepository> repositories, ILogger<ItemController> logger)
-        {
-            this.repository = repositories.FirstOrDefault(repo => string.Equals(repo.GetRepositoryName, nameof(MongoDbRepository)));
-            this.logger = logger;
-        }
+        private readonly IMapper mapper;
 
-        //public ItemController(IRepository repository, ILogger<ItemController> logger)
-        //{
-        //    this.repository = repository;
-        //    this.logger = logger;
-        //}
+        public ItemController(
+            IRepository repository,
+            ILogger<ItemController> logger,
+            IMapper mapper)
+        {
+            this.repository = repository;
+            this.logger = logger;
+            this.mapper = mapper;
+        }
 
         [HttpPost]
         public async Task<ActionResult<ItemDto>> CreateAsync(ItemDto itemDto)
         {
-            var addedItem = await repository.CreateItemAsync(itemDto.AsItem());
-            return Ok(addedItem.AsItemDto());
+            var inputItem = mapper.Map<Item>(itemDto);
+            var savedItem = await repository.CreateItemAsync(inputItem);
+            var outputItemDto = mapper.Map<ItemDto>(savedItem);
+            return Ok(outputItemDto);
         }
 
         [HttpPut("{id}")]
@@ -45,8 +47,10 @@ namespace MongoDbApplication.Controllers
             {
                 return BadRequest();
             }
-            var updatedItem = await repository.UpdateItemAsync(id, itemDto.AsItem());
-            return Ok(updatedItem.AsItemDto());
+            var inputItem = mapper.Map<Item>(itemDto);
+            var updatedItem = await repository.UpdateItemAsync(id, inputItem);
+            var outputItemDto = mapper.Map<ItemDto>(updatedItem);
+            return Ok(outputItemDto);
         }
 
         [HttpDelete("{id}")]
@@ -59,20 +63,22 @@ namespace MongoDbApplication.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<ItemDto>> GetItemAsync(Guid id)
         {
-            var item = await repository.GetItemAsync(id);
-            if(item == null)
+            var savedItem = await repository.GetItemAsync(id);
+            if(savedItem == null)
             {
                 return NotFound();
             }
-            return item.AsItemDto();
+            var outputItemDto = mapper.Map<ItemDto>(savedItem);
+            return Ok(outputItemDto);
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ItemDto>>> GetItemsAsync()
         {
             var items = await repository.GetItemsAsync();
-            var itemDtos = items.Select(item => item.AsItemDto());
-            return Ok(itemDtos);
+            var outputItemDtos = items
+                .Select(item => mapper.Map<ItemDto>(item));
+            return Ok(outputItemDtos);
         }
     }
 }

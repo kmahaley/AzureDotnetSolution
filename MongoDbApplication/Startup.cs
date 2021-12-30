@@ -4,44 +4,27 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization;
-using MongoDB.Bson.Serialization.Serializers;
-using MongoDB.Driver;
-using MongoDbApplication.Configurations;
-using MongoDbApplication.Repositories;
+using MongoDbApplication.DependencyExtensions;
 
 namespace MongoDbApplication
 {
     public class Startup
     {
         private const string SwaggerApiName = "MongoDb application API";
+        public IConfiguration Configuration { get; }
 
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
-
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
-            //Configurations
-            services.Configure<MongoDbConfiguration>(Configuration.GetSection("MongoDbConfiguration"));
-            var mongoDbConfiguration = Configuration.GetSection("MongoDbConfiguration").Get<MongoDbConfiguration>();
-
-            //Serialize item's properties in Mongodb
-            BsonSerializer.RegisterSerializer(new GuidSerializer(BsonType.String));
-            BsonSerializer.RegisterSerializer(new DateTimeOffsetSerializer(BsonType.String));
-
-            //Repositories
-            services.AddSingleton<IMongoClient>(serviceProvider => {
-                return new MongoClient(mongoDbConfiguration.ConnectionString);
-            });
-            services.AddSingleton<IRepository, MongoDbRepository>();
-            //services.AddSingleton<IRepository, InMemoryRepository>();
+            //Added category specific instances
+            services.AddConfigurationInstances(Configuration);
+            services.AddRepositoryInstances(Configuration);
+            services.AddMapperInstances();
 
             services.AddControllers();
             services.AddHealthChecks();
