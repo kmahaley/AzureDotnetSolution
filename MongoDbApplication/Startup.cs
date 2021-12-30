@@ -1,33 +1,47 @@
-using CoreWebApplication.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Serializers;
+using MongoDB.Driver;
+using MongoDbApplication.Configurations;
+using MongoDbApplication.Repositories;
 
-namespace CoreWebApplication
+namespace MongoDbApplication
 {
     public class Startup
     {
-        private const string SwaggerApiName = "Web application API";
-
-        public IConfiguration Configuration { get; }
+        private const string SwaggerApiName = "MongoDb application API";
 
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
+        public IConfiguration Configuration { get; }
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
             //Configurations
+            services.Configure<MongoDbConfiguration>(Configuration.GetSection("MongoDbConfiguration"));
+            var mongoDbConfiguration = Configuration.GetSection("MongoDbConfiguration").Get<MongoDbConfiguration>();
 
             //Serialize item's properties in Mongodb
-            
+            BsonSerializer.RegisterSerializer(new GuidSerializer(BsonType.String));
+            BsonSerializer.RegisterSerializer(new DateTimeOffsetSerializer(BsonType.String));
+
             //Repositories
-            services.AddSingleton<IRepository, InMemoryRepository>();
+            services.AddSingleton<IMongoClient>(serviceProvider => {
+                return new MongoClient(mongoDbConfiguration.ConnectionString);
+            });
+            services.AddSingleton<IRepository, MongoDbRepository>();
+            //services.AddSingleton<IRepository, InMemoryRepository>();
 
             services.AddControllers();
             services.AddHealthChecks();
@@ -40,7 +54,7 @@ namespace CoreWebApplication
                     {
                         Title = SwaggerApiName,
                         Version = "v1",
-                        Description = "Use this application to .Net application"
+                        Description = "Use this application to learn Mongo and Devops"
                     });
             });
         }

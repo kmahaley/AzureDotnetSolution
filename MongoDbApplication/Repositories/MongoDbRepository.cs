@@ -1,4 +1,4 @@
-﻿using CoreWebApplication.Models;
+﻿using MongoDbApplication.Models;
 using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace CoreWebApplication.Repositories
+namespace MongoDbApplication.Repositories
 {
     public class MongoDbRepository : IRepository
     {

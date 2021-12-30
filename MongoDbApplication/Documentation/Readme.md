@@ -77,6 +77,21 @@ you can use `IOptionsSnapshot<> or IOptionsMonitor<> ` to reload values on chang
 ## Logging
 `ILogger<TodoController> logger`
 
+## Docker
+- [Install docker](https://docs.docker.com/get-docker/)
+- Test docker installed by commandline -> `docker info`
+
+## MongoDb
+- command line: 
+  - `docker run -d --rm --name mongodb -p 27017:27017 -v mongodata:/data/db mongo`
+  - Test docker instance: `docker ps`
+  - Test via browser -> `localhost:27017`
+  - Install VSCode extension Mongodb -> provide connection string and connect
+
+### Reference: 
+- [MongoDB APIs](https://chsakell.gitbook.io/mongodb-csharp-docs/getting-started/quick-start/databases)
+- [MongoDB tutorial](https://www.youtube.com/watch?v=ZXdFisA_hOY&t=6943s&ab_channel=freeCodeCamp.org)
+
 ## Secrets
 
 Passwords can not be saved in appsettings.json file. use keyvaults/Environment variables/Command line parameters. here we are using **dotnet secret manager**

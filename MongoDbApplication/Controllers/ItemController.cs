@@ -1,15 +1,15 @@
-﻿using CoreWebApplication.Dtos;
-using CoreWebApplication.Dtos.Extensions;
-using CoreWebApplication.Models.Extensions;
-using CoreWebApplication.Repositories;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using MongoDbApplication.Dtos;
+using MongoDbApplication.Dtos.Extensions;
+using MongoDbApplication.Models.Extensions;
+using MongoDbApplication.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CoreWebApplication.Controllers
+namespace MongoDbApplication.Controllers
 {
     [ApiController]
     [Route("[controller]")]
@@ -19,11 +19,17 @@ namespace CoreWebApplication.Controllers
 
         private readonly ILogger<ItemController> logger;
 
-        public ItemController(IRepository repository, ILogger<ItemController> logger)
+        public ItemController(IEnumerable<IRepository> repositories, ILogger<ItemController> logger)
         {
-            this.repository = repository;
+            this.repository = repositories.FirstOrDefault(repo => string.Equals(repo.GetRepositoryName, nameof(MongoDbRepository)));
             this.logger = logger;
         }
+
+        //public ItemController(IRepository repository, ILogger<ItemController> logger)
+        //{
+        //    this.repository = repository;
+        //    this.logger = logger;
+        //}
 
         [HttpPost]
         public async Task<ActionResult<ItemDto>> CreateAsync(ItemDto itemDto)
@@ -68,7 +74,5 @@ namespace CoreWebApplication.Controllers
             var itemDtos = items.Select(item => item.AsItemDto());
             return Ok(itemDtos);
         }
-
-
     }
 }
