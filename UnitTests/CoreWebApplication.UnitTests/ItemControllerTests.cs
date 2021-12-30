@@ -33,12 +33,12 @@ namespace CoreWebApplication.UnitTests
         [TestInitialize]
         public void Setup()
         {           
-            listOfRepositoriesMock
-                .Setup(repoList => repoList.FirstOrDefault(It.IsAny<Func<IRepository, bool>>()))
-                .Returns(repositoryMock.Object);
+            //listOfRepositoriesMock
+            //    .Setup(repoList => repoList.FirstOrDefault(It.IsAny<Func<IRepository, bool>>()))
+            //    .Returns(repositoryMock.Object);
 
-            controller = new ItemController(listOfRepositoriesMock.Object, loggerMock.Object);
-            //controller = new ItemController(repositoryMock.Object, loggerMock.Object);
+            //controller = new ItemController(listOfRepositoriesMock.Object, loggerMock.Object);
+            controller = new ItemController(repositoryMock.Object, loggerMock.Object);
         }
 
         [TestMethod]
