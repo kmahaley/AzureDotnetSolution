@@ -34,6 +34,7 @@ namespace MongoDbApplication.Controllers
         [HttpPost]
         public async Task<ActionResult<ItemDto>> CreateAsync(ItemDto itemDto)
         {
+            logger.LogInformation("--- Create item");
             var inputItem = mapper.Map<Item>(itemDto);
             var savedItem = await repository.CreateItemAsync(inputItem);
             var outputItemDto = mapper.Map<ItemDto>(savedItem);
@@ -47,6 +48,7 @@ namespace MongoDbApplication.Controllers
             {
                 return BadRequest();
             }
+            logger.LogInformation("--- Update item");
             var inputItem = mapper.Map<Item>(itemDto);
             var updatedItem = await repository.UpdateItemAsync(id, inputItem);
             var outputItemDto = mapper.Map<ItemDto>(updatedItem);
@@ -56,6 +58,7 @@ namespace MongoDbApplication.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteAsync(Guid id)
         {
+            logger.LogInformation("--- Delete item");
             var guid = await repository.DeleteItemAsync(id);
             return Ok(guid);
         }
@@ -63,6 +66,7 @@ namespace MongoDbApplication.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<ItemDto>> GetItemAsync(Guid id)
         {
+            logger.LogInformation("--- Get item");
             var savedItem = await repository.GetItemAsync(id);
             if(savedItem == null)
             {
@@ -75,6 +79,7 @@ namespace MongoDbApplication.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ItemDto>>> GetItemsAsync()
         {
+            logger.LogInformation("--- Get items");
             var items = await repository.GetItemsAsync();
             var outputItemDtos = items
                 .Select(item => mapper.Map<ItemDto>(item));

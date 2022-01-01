@@ -15,21 +15,22 @@ namespace MongoDbApplication.DependencyExtensions
     /// </summary>
     public static class RepositoryInstances
     {
-        public static IServiceCollection AddRepositoryInstances(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddRepositoryInstances(this IServiceCollection services)
         {
             //Serialize item's properties in Mongodb
             BsonSerializer.RegisterSerializer(new GuidSerializer(BsonType.String));
             BsonSerializer.RegisterSerializer(new DateTimeOffsetSerializer(BsonType.String));
 
             //Repositories
-            services.AddSingleton<IMongoClient>(serviceProvider => {
+            services.AddSingleton<IMongoClient>(serviceProvider =>
+            {
                 var mongoDbConfigurationOptions = serviceProvider.GetService<IOptions<MongoDbConfiguration>>();
                 var mongoDbConfiguration = mongoDbConfigurationOptions.Value;
                 return new MongoClient(mongoDbConfiguration.ConnectionString);
             });
 
             services.AddSingleton<IRepository, MongoDbRepository>();
-            
+
             //services.AddSingleton<IRepository, InMemoryRepository>();
 
             return services;

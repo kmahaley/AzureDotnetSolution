@@ -9,9 +9,11 @@ namespace MongoDbApplication.DependencyExtensions
     /// </summary>
     public static class ConfigurationInstances
     {
-        public static IServiceCollection AddConfigurationInstances(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddConfigurationInstances(
+            this IServiceCollection services,
+            IConfiguration configuration)
         {
-            services.Configure<MongoDbConfiguration>(configuration.GetSection("MongoDbConfiguration"));
+            services.Configure<MongoDbConfiguration>(configuration.GetSection(nameof(MongoDbConfiguration)));
 
             return services;
         }

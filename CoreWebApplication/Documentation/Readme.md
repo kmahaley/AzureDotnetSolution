@@ -46,7 +46,7 @@ public class MyService
 **Priority:**
  -  commandline args
  -  environment variables
- -  appsettings.{EnvironmentName}.json -> appsettings.Development.json
+ -  appsettings.[EnvironmentName].json -> appsettings.Development.json
  -  appsettings.json
 
 appsettings.json is kept as `reloadOnChange: true` in HostBuilder
@@ -84,7 +84,7 @@ Passwords can not be saved in appsettings.json file. use keyvaults/Environment v
 - goto commanline of the project and run
 ```
 dotnet user-secrets init
-dotnet user-secrets set {appsettings.json} {VALUE}
+dotnet user-secrets set {NAME} {VALUE}
 eg.
 dotnet user-secrets set MongoDbConfiguration:Password Value123
 ```
