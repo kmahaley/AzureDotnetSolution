@@ -11,27 +11,21 @@ namespace CoreConsoleApplication
     {
         public static async Task Main(string[] args)
         {
-            //await AsyncProgramDemo.startProgram();
-            IDictionary<string, string> d1 = new Dictionary<string, string>();
-            d1.Add("guid1", "m1");
-            d1.Add("guid2", "m2");
-            d1.Add("guid3", "m3");
-            IDictionary<string, string> d2 = new Dictionary<string, string>();
-            d2.Add("guid3", "m31");
-            d2.Add("guid4", "m4");
-            d2.Add("guid5", "m5");
-            IDictionary<string, string> d = null;
+            DateTime now = DateTime.Now;
+            DateTime utc = DateTime.UtcNow;
+            DateTime today = DateTime.Today;
 
-            var val = d1?.Values.Where(x => "m5".Equals(x));
-            Console.WriteLine($"worked {val.Any()}");
+            DateTime com = DateTime.Now;
 
-            var myd = d?.Values.Where(x => "m5".Equals(x));
-            if(myd?.Any() != true)
+            var x = new DateTime(1604611621646);
+            Console.WriteLine($"{now}");
+            Console.WriteLine($"{utc}");
+            Console.WriteLine($"{today}");
+
+            if(DateTime.Compare(now, com) == 0)
             {
-                Console.WriteLine("--------------");
+                Console.WriteLine("trueee");
             }
-            
-
             Console.WriteLine();
         }
 
