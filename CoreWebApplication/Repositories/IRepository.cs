@@ -13,6 +13,7 @@ namespace CoreWebApplication.Repositories
         Task<IEnumerable<Item>> GetItemsAsync();
         Task<Item> CreateItemAsync(Item item);
         Task<Item> UpdateItemAsync(Guid id, Item item);
+        Task<Item> QuickUpdateItemAsync(Guid id, Item item);
         Task<Guid> DeleteItemAsync(Guid id);
     }
 }

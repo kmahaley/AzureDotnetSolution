@@ -1,7 +1,9 @@
 ﻿using CoreWebApplication.Models;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace CoreWebApplication.Repositories
@@ -17,6 +19,13 @@ namespace CoreWebApplication.Repositories
 
         public string GetRepositoryName => nameof(InMemoryRepository);
 
+        private readonly ILogger<InMemoryRepository> logger;
+
+        public InMemoryRepository(ILogger<InMemoryRepository> logger)
+        {
+            this.logger = logger;
+        }
+
         public async Task<Item> CreateItemAsync(Item item)
         {
             items.Add(item);
@@ -28,6 +37,17 @@ namespace CoreWebApplication.Repositories
             var existingItem = await GetItemAsync(id);
             var existingItemIndex = items.IndexOf(existingItem);
             items[existingItemIndex] = item;
+            return item;
+        }
+
+        public async Task<Item> QuickUpdateItemAsync(Guid id, Item item)
+        {
+            var existingItem = await GetItemAsync(id);
+            var existingItemIndex = items.IndexOf(existingItem);
+            logger.LogInformation($"updating item {id}");
+            Thread.Sleep(TimeSpan.FromSeconds(5));
+            items[existingItemIndex] = item;
+            logger.LogInformation($"updated item {id}");
             return item;
         }
 

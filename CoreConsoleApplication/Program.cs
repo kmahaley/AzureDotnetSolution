@@ -11,21 +11,9 @@ namespace CoreConsoleApplication
     {
         public static async Task Main(string[] args)
         {
-            DateTime now = DateTime.Now;
-            DateTime utc = DateTime.UtcNow;
-            DateTime today = DateTime.Today;
-
-            DateTime com = DateTime.Now;
-
-            var x = new DateTime(1604611621646);
-            Console.WriteLine($"{now}");
-            Console.WriteLine($"{utc}");
-            Console.WriteLine($"{today}");
-
-            if(DateTime.Compare(now, com) == 0)
-            {
-                Console.WriteLine("trueee");
-            }
+            //var fileName = @"C:\Users\kamahale.REDMOND\Downloads\da.csv";
+            //var pattern = "fabric";
+            //ReadFileAndReplace.ReadFileAndReplaceString(fileName, pattern);
             Console.WriteLine();
         }
 

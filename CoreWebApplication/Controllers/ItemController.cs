@@ -40,6 +40,17 @@ namespace CoreWebApplication.Controllers
             return Ok(updatedItem);
         }
 
+        [HttpPut("quick/{id}")]
+        public async Task<ActionResult<Item>> QuickUpdateAsync(Guid id, Item item)
+        {
+            if(id != item.Id)
+            {
+                return BadRequest();
+            }
+            _ = repository.QuickUpdateItemAsync(id, item);
+            return Ok();
+        }
+
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteAsync(Guid id)
         {
