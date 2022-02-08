@@ -1,4 +1,5 @@
 using CoreWebApplication.Repositories;
+using CoreWebApplication.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -26,6 +27,7 @@ namespace CoreWebApplication
            
             //Repositories
             services.AddSingleton<IRepository, InMemoryRepository>();
+            services.AddHostedService<BackgroundLongRunningService>();
 
             services.AddControllers();
             services.AddHealthChecks();
