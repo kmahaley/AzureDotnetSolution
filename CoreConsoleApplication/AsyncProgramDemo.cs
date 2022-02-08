@@ -13,16 +13,22 @@ namespace CoreConsoleApplication
             Console.WriteLine($"Start application : {Thread.CurrentThread.ManagedThreadId}");
             var t1 = method1();
             var t2 = method2();
-            var val3 = await method3();
+            var t3 = method3();
 
             // elapseTime = 4099
             //Task.WaitAll(t1, t2);
             // elapseTime = 4099
             //Task.WaitAll(t1, t2, t3);
             // elapseTime = 4099
-            var val1 = await t1;
-            var val2 = await t2;
-            Console.WriteLine($"{val1} {val2} {val3} --- elapseTime = {methodStopWatch.ElapsedMilliseconds}");
+
+            //var val1 = await t1;
+            //var val2 = await t2;
+            //var val3 = await t3;
+            //Console.WriteLine($"{val1} {val2} {val3} ");
+            //Task.WaitAll(t1, t2, t3);
+
+            //Thread.Sleep(TimeSpan.FromSeconds(6));
+            Console.WriteLine($"--- elapseTime = {methodStopWatch.ElapsedMilliseconds}");
             Console.WriteLine();
         }
 

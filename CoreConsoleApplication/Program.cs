@@ -14,6 +14,16 @@ namespace CoreConsoleApplication
             //var fileName = @"C:\Users\kamahale.REDMOND\Downloads\da.csv";
             //var pattern = "fabric";
             //ReadFileAndReplace.ReadFileAndReplaceString(fileName, pattern);
+            var x = Task.Run(() =>
+            {
+                Console.WriteLine("before -----------");
+                for(int i = 0; i < 3; i++)
+                {
+                    Console.WriteLine("sleeeeeeeeeeeeeeeeeeeeeeping");
+                    Thread.Sleep(TimeSpan.FromSeconds(3));
+                }
+                Console.WriteLine("after -----------");
+            });
             Console.WriteLine();
         }
 
