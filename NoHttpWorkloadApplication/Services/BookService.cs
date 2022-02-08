@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -21,6 +22,23 @@ namespace NoHttpWorkloadApplication.Services
         public Task StartAsync(CancellationToken cancellationToken)
         {
             logger.LogInformation("1. StartAsync has been called.");
+            for(int i = 0; i < 3; i++)
+            {
+                logger.LogInformation($"StartAsync : {i}");
+                Thread.Sleep(TimeSpan.FromSeconds(2));
+            }
+
+            return Task.CompletedTask;
+        }
+
+        public Task StopAsync(CancellationToken cancellationToken)
+        {
+            logger.LogInformation("4. StopAsync has been called.");
+            for(int i = 0; i < 3; i++)
+            {
+                logger.LogInformation($"StopAsync : {i}");
+                Thread.Sleep(TimeSpan.FromSeconds(2));
+            }
 
             return Task.CompletedTask;
         }
@@ -35,12 +53,6 @@ namespace NoHttpWorkloadApplication.Services
             logger.LogInformation("3. OnStopping has been called.");
         }
 
-        public Task StopAsync(CancellationToken cancellationToken)
-        {
-            logger.LogInformation("4. StopAsync has been called.");
-
-            return Task.CompletedTask;
-        }
 
         private void OnStopped()
         {
