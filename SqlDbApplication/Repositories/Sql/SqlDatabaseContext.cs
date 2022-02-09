@@ -7,17 +7,17 @@ using SqlDbApplication.Models.Sql;
 
 namespace SqlDbApplication.Repositories.Sql
 {
-    public partial class SqlRepositoryImpl : DbContext
+    public partial class SqlDatabaseContext : DbContext
     {
         public virtual DbSet<Product> Products { get; set; }
 
         public virtual DbSet<Store> Stores { get; set; }
 
-        public SqlRepositoryImpl()
+        public SqlDatabaseContext()
         {
         }
 
-        public SqlRepositoryImpl(DbContextOptions<SqlRepositoryImpl> options) : base(options)
+        public SqlDatabaseContext(DbContextOptions<SqlDatabaseContext> options) : base(options)
         {
         }
 

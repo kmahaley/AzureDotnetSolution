@@ -7,7 +7,7 @@ using SqlDbApplication.Repositories.Sql;
 
 namespace SqlDbApplication.Migrations
 {
-    [DbContext(typeof(SqlRepositoryImpl))]
+    [DbContext(typeof(SqlDatabaseContext))]
     partial class SqlRepositoryImplModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

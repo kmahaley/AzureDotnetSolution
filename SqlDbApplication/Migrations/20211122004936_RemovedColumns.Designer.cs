@@ -8,7 +8,7 @@ using SqlDbApplication.Repositories.Sql;
 
 namespace SqlDbApplication.Migrations
 {
-    [DbContext(typeof(SqlRepositoryImpl))]
+    [DbContext(typeof(SqlDatabaseContext))]
     [Migration("20211122004936_RemovedColumns")]
     partial class RemovedColumns
     {

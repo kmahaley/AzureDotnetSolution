@@ -11,6 +11,10 @@ Application to learn connection to SQL DB and perform CRUD operations
 
 *EntityFrameworkCore packages should be of same version*
 
+## Connect to database
+- Install SQL server and Microsoft SQL server management studio
+- Connect "localhost" database using username and password mentioned in appsetting.json
+
 
 ## Reference links:
 - Scaffolding DB scema to Models

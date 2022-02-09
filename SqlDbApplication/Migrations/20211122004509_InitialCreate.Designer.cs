@@ -8,7 +8,7 @@ using SqlDbApplication.Repositories.Sql;
 
 namespace SqlDbApplication.Migrations
 {
-    [DbContext(typeof(SqlRepositoryImpl))]
+    [DbContext(typeof(SqlDatabaseContext))]
     [Migration("20211122004509_InitialCreate")]
     partial class InitialCreate
     {

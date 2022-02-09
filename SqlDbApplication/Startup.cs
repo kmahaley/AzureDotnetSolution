@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using SqlDbApplication.DependencyExtensions;
 using SqlDbApplication.Repositories.Sql;
 using System;
 using System.Collections.Generic;
@@ -30,6 +31,9 @@ namespace SqlDbApplication
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddDatabaseInstances(Configuration);
+
             services.AddSwaggerGen(options =>
             {
                 options.SwaggerDoc("v1",
@@ -41,8 +45,6 @@ namespace SqlDbApplication
                     });
             });
 
-            services.AddDbContext<SqlRepositoryImpl>(option => 
-                option.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

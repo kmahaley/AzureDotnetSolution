@@ -22,6 +22,5 @@
 
   <ItemGroup>
     <Folder Include="Models\Sql\" />
-    <Folder Include="Repositories\Sql\" />
   </ItemGroup>
 </Project>
