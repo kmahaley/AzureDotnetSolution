@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace CoreWebApplication.Services
 {
+    //public class BackgroundLongRunningService : BackgroundService
     public class BackgroundLongRunningService : BackgroundService
     {
         private readonly ILogger logger;
@@ -20,47 +21,65 @@ namespace CoreWebApplication.Services
 
         private readonly IRepository repository;
 
-        public BackgroundLongRunningService(IServiceProvider services, ILogger<BackgroundLongRunningService> logger, IHostApplicationLifetime appLifetime)
+        public BackgroundLongRunningService(IRepository repository, ILogger<BackgroundLongRunningService> logger)
         {
-            this.repository = services.GetRequiredService<IRepository>();
+            this.repository = repository;
             this.logger = logger;
         }
+        
+        //public BackgroundLongRunningService(IServiceProvider services, ILogger<BackgroundLongRunningService> logger)
+        //{
+        //    this.repository = services.GetRequiredService<IRepository>();
+        //    this.logger = logger;
+        //}
 
         public override Task StartAsync(CancellationToken cancellationToken)
         {
             logger.LogInformation("1. StartAsync has been called.");
-
+            UpsertItems("StartAsync", "apple");
             return Task.CompletedTask;
         }
 
         public override Task StopAsync(CancellationToken cancellationToken)
         {
             logger.LogInformation("4. StopAsync has been called.");
-
             return Task.CompletedTask;
         }
 
-        protected override Task ExecuteAsync(CancellationToken stoppingToken)
+        protected async override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            logger.LogInformation("----- BookService: Processing task");
-            for(int i = 0; i < 2; i++)
-            {
-                var id = Guid.NewGuid();
-                var item = new Item
-                {
-                    Id = id,
-                    Name = $"apple_{i}",
-                    Price = 10,
-                    CreatedDate = DateTime.UtcNow
-                };
-
-                _ = repository.QuickUpdateItemAsync(id, item);
-                Thread.Sleep(TimeSpan.FromSeconds(2));
-            }
-            logger.LogInformation("----- BookService: Completed task");
-            return Task.CompletedTask;
+            logger.LogInformation("finally -----------------");
+            UpsertItems("ExecuteAsync","banana");
+            await Task.CompletedTask;
         }
 
-        
+        private void UpsertItems(string methodName, string name)
+        {
+            try
+            {
+                logger.LogInformation($"----- {methodName}: Processing task");
+                for(int i = 0; i < 2; i++)
+                {
+                    logger.LogInformation($"{repository == null} {i}");
+                    var id = Guid.NewGuid();
+                    var item = new Item
+                    {
+                        Id = id,
+                        Name = $"{name}_{i}",
+                        Price = 10,
+                        CreatedDate = DateTime.UtcNow
+                    };
+
+                    _ = repository.CreateOrUpdateItemAsync(id, item);
+                    Thread.Sleep(TimeSpan.FromSeconds(2));
+                }
+                logger.LogInformation($"----- {methodName}: Completed task");
+            }
+            catch(Exception ex)
+            {
+                logger.LogError($"{methodName} error occured. {ex.GetType().Name}, {ex.Message}");
+                logger.LogError($"{methodName} error occured. {ex}");
+            }
+        }
     }
 }

@@ -27,8 +27,12 @@ namespace CoreWebApplication
            
             //Repositories
             services.AddSingleton<IRepository, InMemoryRepository>();
-            services.AddHostedService<BackgroundLongRunningService>();
 
+            //Services
+            services.AddHostedService<BackgroundLongRunningService>();
+            //services.AddTransient<IHostedService, BackgroundLongRunningService>();
+
+            //Controller
             services.AddControllers();
             services.AddHealthChecks();
 

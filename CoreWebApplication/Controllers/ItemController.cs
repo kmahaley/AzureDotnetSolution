@@ -40,15 +40,22 @@ namespace CoreWebApplication.Controllers
             return Ok(updatedItem);
         }
 
-        [HttpPut("quick/{id}")]
-        public async Task<ActionResult<Item>> QuickUpdateAsync(Guid id, Item item)
+        [HttpPut("upsert/{id}")]
+        public async Task<ActionResult<Item>> CreateOrUpdateItemAsync(Guid id, Item item)
         {
+            logger.LogInformation($"{GetType().Name} started processing...");
             if(id != item.Id)
             {
                 return BadRequest();
             }
-            _ = repository.QuickUpdateItemAsync(id, item);
-            return Ok();
+            var added = await repository.CreateOrUpdateItemAsync(id, item);
+
+            //_ = Task.Run(async () =>
+            //{
+            //    await repository.CreateOrUpdateItemAsync(id, item);
+            //});
+
+            return Ok(added);
         }
 
         [HttpDelete("{id}")]

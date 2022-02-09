@@ -17,7 +17,9 @@ namespace NoHttpWorkloadApplication
                 .UseEnvironment("Development")
                 .ConfigureServices((hostContext, services) =>
                 {
-                    services.AddHostedService<BookService>();
+                    services.AddHostedService<BackgroundHostedBookService>();
+                    services.AddHostedService<BackgroundBookService>();
+                    //services.AddSingleton<IHostedService, BackgroundBookService>();
                 });
     }
 }

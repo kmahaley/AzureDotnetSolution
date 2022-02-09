@@ -40,14 +40,22 @@ namespace CoreWebApplication.Repositories
             return item;
         }
 
-        public async Task<Item> QuickUpdateItemAsync(Guid id, Item item)
+        public async Task<Item> CreateOrUpdateItemAsync(Guid id, Item item)
         {
-            var existingItem = await GetItemAsync(id);
+            logger.LogInformation($"called CreateOrUpdateItemAsync item {id} {item.Name}");
+            var existingItem = await PeekItemAsync(id);
+            if(existingItem == null)
+            {
+                logger.LogInformation($"creating item {id}");
+                Thread.Sleep(TimeSpan.FromSeconds(5));
+                return await CreateItemAsync(item);
+            }
             var existingItemIndex = items.IndexOf(existingItem);
+
             logger.LogInformation($"updating item {id}");
-            Thread.Sleep(TimeSpan.FromSeconds(5));
+            Thread.Sleep(TimeSpan.FromSeconds(1));
             items[existingItemIndex] = item;
-            logger.LogInformation($"updated item {id}");
+
             return item;
         }
 
@@ -58,12 +66,12 @@ namespace CoreWebApplication.Repositories
 
         public async Task<Item> GetItemAsync(Guid id)
         {
-            var existingItem = items.FirstOrDefault(item => id == item.Id);
+            var existingItem = await PeekItemAsync(id);
             if(existingItem == null)
             {
                 throw new ArgumentException($"{nameof(GetItemAsync)}, item not present in repository: {id}");
             }
-            return await Task.FromResult(existingItem);
+            return existingItem;
         }
 
         public async Task<Guid> DeleteItemAsync(Guid id)
@@ -71,6 +79,13 @@ namespace CoreWebApplication.Repositories
             var existingItem = await GetItemAsync(id);
             items.Remove(existingItem);
             return id;
+        }
+
+        private Task<Item> PeekItemAsync(Guid id)
+        {
+            var existingItem = items.FirstOrDefault(item => id == item.Id);
+            
+            return Task.FromResult(existingItem);
         }
     }
 }

@@ -1,16 +1,16 @@
-﻿using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Threading;
+﻿using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using System.Threading;
 
 namespace NoHttpWorkloadApplication.Services
 {
-    public class BookService : IHostedService
+    public class BackgroundHostedBookService : IHostedService
     {
         private readonly ILogger logger;
 
-        public BookService(ILogger<BookService> logger, IHostApplicationLifetime appLifetime)
+        public BackgroundHostedBookService(ILogger<BackgroundHostedBookService> logger, IHostApplicationLifetime appLifetime)
         {
             this.logger = logger;
 
@@ -22,10 +22,10 @@ namespace NoHttpWorkloadApplication.Services
         public Task StartAsync(CancellationToken cancellationToken)
         {
             logger.LogInformation("1. StartAsync has been called.");
-            for(int i = 0; i < 3; i++)
+            for(int i = 0; i < 2; i++)
             {
                 logger.LogInformation($"StartAsync : {i}");
-                Thread.Sleep(TimeSpan.FromSeconds(2));
+                //Thread.Sleep(TimeSpan.FromSeconds(2));
             }
 
             return Task.CompletedTask;
@@ -34,10 +34,10 @@ namespace NoHttpWorkloadApplication.Services
         public Task StopAsync(CancellationToken cancellationToken)
         {
             logger.LogInformation("4. StopAsync has been called.");
-            for(int i = 0; i < 3; i++)
+            for(int i = 0; i < 2; i++)
             {
                 logger.LogInformation($"StopAsync : {i}");
-                Thread.Sleep(TimeSpan.FromSeconds(2));
+                //Thread.Sleep(TimeSpan.FromSeconds(2));
             }
 
             return Task.CompletedTask;
