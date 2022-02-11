@@ -40,7 +40,7 @@ namespace SqlDbApplication.Repositories.Sql
         public async Task<Product> AddProductAsync(Product product)
         {
             var savedProduct = await databaseContext.AddAsync(product);
-            _ = databaseContext.SaveChangesAsync();
+            await databaseContext.SaveChangesAsync();
             return savedProduct.Entity;
         }
 
@@ -51,7 +51,7 @@ namespace SqlDbApplication.Repositories.Sql
             existingProduct.Color = product.Color;
             existingProduct.UnitPrice = product.UnitPrice;
             existingProduct.AvailableQuantity = product.AvailableQuantity;
-            _ = databaseContext.SaveChangesAsync();
+            await databaseContext.SaveChangesAsync();
             return product;
         }
 
@@ -59,7 +59,7 @@ namespace SqlDbApplication.Repositories.Sql
         {
             var existingProduct = await GetProductByIdAsync(id);
             databaseContext.Products.Remove(existingProduct);
-            _ = databaseContext.SaveChangesAsync();
+            await databaseContext.SaveChangesAsync();
             return existingProduct;
         }
     }

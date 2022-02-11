@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using SqlDbApplication.DependencyExtensions;
 using SqlDbApplication.Repositories.Sql;
+using SqlDbApplication.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,7 +33,12 @@ namespace SqlDbApplication
         {
             services.AddControllers();
 
+            //Repository layer
             services.AddDatabaseInstances(Configuration);
+
+            //Service layer
+            services.AddSingleton<IProductService, ProductService>();
+            services.AddSingleton<IFireAndForgetService, FireAndForgetService>();
 
             services.AddSwaggerGen(options =>
             {
