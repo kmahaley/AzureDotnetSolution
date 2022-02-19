@@ -93,9 +93,10 @@ namespace SqlDbApplication.Controllers
         }
 
         /// <summary>
-        /// This API demonstrates, API is adding data and updating in a FireAndForget manner on a new thread.
-        /// - DbContext is scoped instance hence primary thread adds data.
-        /// - new thread does not have DbContext scope instance hence update fails.
+        /// This API demonstrates, API is adding data and updating in a FireAndForget manner.
+        /// Main thread is returned immediatly and not waiting for update to happen
+        /// - Add is done by product service
+        /// - update is done by another service FireAndForget service
         /// </summary>
         [HttpPost("solvedisposecontext")]
         public async Task<ActionResult<Product>> PostSolveDisposeContextIssueAsync([FromBody] Product product)

@@ -37,8 +37,7 @@ namespace SqlDbApplication
             services.AddDatabaseInstances(Configuration);
 
             //Service layer
-            services.AddSingleton<IProductService, ProductService>();
-            services.AddSingleton<IFireAndForgetService, FireAndForgetService>();
+            services.AddServiceInstances();
 
             services.AddSwaggerGen(options =>
             {

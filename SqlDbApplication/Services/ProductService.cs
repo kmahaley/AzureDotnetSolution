@@ -69,14 +69,14 @@ namespace SqlDbApplication.Services
         /// </summary>
         public async Task<Product> DisposeContextIssueAsync(Product product)
         {
-            logger.LogInformation("Adding data.---");
+            logger.LogInformation("--- Adding data.");
             IProductRepository productRepository;
             Product savedProduct;
             using(IServiceScope scope = serviceProvider.CreateScope())
             {
                 productRepository = scope.ServiceProvider.GetRequiredService<IProductRepository>();
                 savedProduct = await productRepository.AddProductAsync(product);
-                logger.LogInformation("Added data.---");
+                logger.LogInformation("--- Added data.");
             }
             /*
              * Cannot access a disposed context instance. A common cause of this error is disposing a context instance that
@@ -96,25 +96,31 @@ namespace SqlDbApplication.Services
                             Color = "Green"
                         };
                         var updated = await productRepository.UpdateProductAsync(product.ProductId, productToBeUpdated);
-                        logger.LogInformation($"updated async product data. {updated.Color}---");
+                        logger.LogInformation($"--- updated data DisposeContextIssueAsync. {updated.Color}");
                     }
                     catch(Exception ex)// InvalidOperationException: Context is disposed and second thread trying to access
                     {
-                        logger.LogError($"error in updating. {ex.Message}");
+                        logger.LogError($"--- Error in updating DisposeContextIssueAsync.\n {ex.Message}");
                     }
                 });
 
             return savedProduct;
         }
 
+        /// <summary>
+        /// This API demonstrates, API is adding data and updating in a FireAndForget manner.
+        /// Main thread is returned immediatly and not waiting for update to happen
+        /// - Add is done by product service
+        /// - update is done by another service FireAndForget service
+        /// </summary>
         public async Task<Product> SolveDisposeContextIssueAsync(Product product)
         {
 
-            logger.LogInformation("Adding data.---");
+            logger.LogInformation("--- Adding data SolveDisposeContextIssueAsync.");
             using IServiceScope scope = serviceProvider.CreateScope();
             IProductRepository productRepository = scope.ServiceProvider.GetRequiredService<IProductRepository>();
             var savedProduct = await productRepository.AddProductAsync(product);
-            logger.LogInformation("Added data.---");
+            logger.LogInformation("--- Added data SolveDisposeContextIssueAsync");
 
             Product productToBeUpdated = new Product
             {
@@ -125,9 +131,9 @@ namespace SqlDbApplication.Services
                 Color = "Green"
             };
 
-            Func<IProductRepository, Task> jobFunction =
+            Func<IProductRepository, Task> updateProductFunction =
                 (reporsitory) => reporsitory.UpdateProductAsync(product.ProductId, productToBeUpdated);
-            fireAndForgetService.ExecuteFireAndForgetJob(jobFunction);
+            fireAndForgetService.ExecuteFireAndForgetJob(updateProductFunction);
 
             return savedProduct;
         }

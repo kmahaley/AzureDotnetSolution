@@ -13,7 +13,7 @@ namespace SqlDbApplication.Models.Sql
         [Required]
         public string Name { get; set; }
         public string Color { get; set; }
-        public decimal UnitPrice { get; set; }
+        public int UnitPrice { get; set; }
         public int AvailableQuantity { get; set; }
     }
 }

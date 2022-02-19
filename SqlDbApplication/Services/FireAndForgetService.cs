@@ -8,6 +8,10 @@ using System.Threading.Tasks;
 
 namespace SqlDbApplication.Services
 {
+    /// <summary>
+    /// FireAndForgetService service is injected with IServiceScopeFactory. We can inject IServiceProvider
+    /// too. Use any method to create scope.
+    /// </summary>
     public class FireAndForgetService : IFireAndForgetService
     {
         private readonly IServiceScopeFactory serviceScopeFactory;
@@ -20,8 +24,12 @@ namespace SqlDbApplication.Services
             this.logger = logger;
         }
 
+        /// <summary>
+        /// serviceScopeFactory create a scope for IProductRepository and updates database
+        /// </summary>
         public void ExecuteFireAndForgetJob(Func<IProductRepository, Task> jobFunction)
         {
+            logger.LogInformation("--- firing fire and forget job");
             try
             {
                 Task.Run(async () =>
@@ -33,7 +41,7 @@ namespace SqlDbApplication.Services
             }
             catch(Exception ex)
             {
-                logger.LogError($"error if fire and forget {ex.Message}");
+                logger.LogError($"--- error if fire and forget.\n {ex.Message}");
                 throw;
             }
 

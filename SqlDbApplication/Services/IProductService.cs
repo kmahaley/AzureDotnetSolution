@@ -8,10 +8,11 @@ namespace SqlDbApplication.Services
     {
         Task<Product> AddProductAsync(Product product);
         Task<Product> DeleteProductByIdAsync(int id);
-        Task<Product> DisposeContextIssueAsync(Product product);
-        Task<Product> SolveDisposeContextIssueAsync(Product product);
         Task<IEnumerable<Product>> GetAllProductsAsync();
         Task<Product> GetProductByIdAsync(int id);
         Task<Product> UpdateProductAsync(int id, Product product);
+        //
+        Task<Product> DisposeContextIssueAsync(Product product);
+        Task<Product> SolveDisposeContextIssueAsync(Product product);
     }
 }

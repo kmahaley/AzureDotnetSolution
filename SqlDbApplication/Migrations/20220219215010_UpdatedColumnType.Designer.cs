@@ -2,15 +2,17 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SqlDbApplication.Repositories.Sql;
 
 namespace SqlDbApplication.Migrations
 {
     [DbContext(typeof(SqlDatabaseContext))]
-    partial class SqlRepositoryImplModelSnapshot : ModelSnapshot
+    [Migration("20220219215010_UpdatedColumnType")]
+    partial class UpdatedColumnType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
