@@ -22,6 +22,9 @@ namespace SqlDbApplication.Services
             this.logger = logger;
         }
 
+        /// <summary>
+        /// Runs all the task as background tasks. 
+        /// </summary>
         protected async override Task ExecuteAsync(CancellationToken stoppingToken)
         {
             logger.LogInformation($"-------- finally {nameof(BackgroundDatabaseService)} is running.");

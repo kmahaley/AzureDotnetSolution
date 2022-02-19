@@ -64,3 +64,24 @@ Application to learn connection to SQL DB and perform CRUD operations
 
 - Add Repository instance 
   - ConfigureServices -> `services.AddDbContext<SqlRepositoryImpl>();`
+
+
+## Demonstrate "DisposeContextIssue"
+- ProductService wants to add and update the product on method `DisposeContextIssueAsync`.
+- Add on main thread and update on new thread
+- Main threads add data but new thread to update product show's error as `Disposed Dbcontext`
+- This happens because DbContext or IProducRepository is scope instance hence new thread does not have access to it
+
+
+## Solve "DisposeContextIssue"
+
+- ProductService wants to add and update the product on method `SolveDisposeContextIssueAsync`.
+- Add on main thread and update on new thread
+- Main threads add data  and task to update product is given to `FireAndForgetService` which is singleton. FireAndForgetService creates scope of `IProductRepository` and update product
+
+## BackgroundDatabaseService
+
+- Implements `BackgroundService`
+- Instance injected as `services.AddHostedService<BackgroundDatabaseService>();`
+- This service starts executing task given to it as soon as application starts.
+- `BackgroundDatabaseService` ExecuteAsync method get a product and starts updating it.
