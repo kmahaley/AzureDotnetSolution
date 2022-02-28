@@ -15,22 +15,49 @@ namespace CoreConsoleApplication
             //var fileName = @"C:\Users\kamahale.REDMOND\Downloads\da.csv";
             //var pattern = "fabric";
             //ReadFileAndReplace.ReadFileAndReplaceString(fileName, pattern);
-            var x = ClusterStatusType.Queued;
-            Console.WriteLine($"---{x}");
+
+            var person = new Person
+            {
+                Id = 20,
+                FirstName = "apple",
+                LastName = "juice"
+            };
+
+            Console.WriteLine($"{person.Id}, {person.FirstName} {person.LastName}");
+
+            UpdatePerson(x => 
+            {
+                person.Id = 40;
+                person.FirstName = "updated";
+                person.LastName = "changed";
+            });
+
+            Console.WriteLine($"{person.Id}, {person.FirstName} {person.LastName}");
+
             Console.WriteLine();
         }
 
-        public enum ClusterStatusType : int
-    {
-        Queued = 1,
-        Creating = 2,
-        Running = 3,
-        Resizing = 4,
-        Terminating = 5,
-        Terminated = 6,
-        Failed = 7,
-        Starting = 8,
-    }
+        public static void UpdatePerson(Action<Person> action)
+        {
+            var p = new Person
+            {
+                Id = 2,
+                FirstName = "banana",
+                LastName = "shake"
+            };
+            Console.WriteLine($"----------{p.Id}, {p.FirstName} {p.LastName}");
+            action(p);
+            Console.WriteLine($"-----------{p.Id}, {p.FirstName} {p.LastName}");
+        }
+
+  
         
+    }
+
+    public class Person
+    {
+        public int Id { get; set; } // primary key
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
     }
 }
