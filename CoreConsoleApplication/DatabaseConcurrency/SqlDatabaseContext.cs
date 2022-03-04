@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 #nullable disable
 
-namespace CoreConsoleApplication
+namespace CoreConsoleApplication.DatabaseConcurrency
 {
     public partial class SqlDatabaseContext : DbContext
     {
