@@ -69,7 +69,7 @@ namespace SqlDbApplication.Services
         /// </summary>
         public async Task<Product> DisposeContextIssueAsync(Product product)
         {
-            logger.LogInformation("--- Adding data.");
+            logger.LogInformation("--- Adding data. DisposeContextIssueAsync");
             IProductRepository productRepository;
             Product savedProduct;
             using(IServiceScope scope = serviceProvider.CreateScope())
@@ -103,6 +103,52 @@ namespace SqlDbApplication.Services
                         logger.LogError($"--- Error in updating DisposeContextIssueAsync.\n {ex.Message}");
                     }
                 });
+
+            return savedProduct;
+        }
+
+        // CORRECT. BUT would be nicer to hide the scope / ioc container references away (i.e no service locator pattern here)
+        /// <summary>
+        /// This method will solve "InvalidOperationException: Context is disposed and second thread trying to access" issue
+        /// Correct approach it would be nice to hide scope and IOC container details.
+        /// Hence refer SolveDisposeContextIssueAsync() approach.
+        /// </summary>
+        public async Task<Product> SolvedDisposeContextIssueDirtyApproachAsync(Product product)
+        {
+            logger.LogInformation("--- Adding data. SolveDisposeContextIssueDirtyApproachAsync");
+            IProductRepository productRepository;
+            Product savedProduct;
+            using(IServiceScope scope = serviceProvider.CreateScope())
+            {
+                productRepository = scope.ServiceProvider.GetRequiredService<IProductRepository>();
+                savedProduct = await productRepository.AddProductAsync(product);
+                logger.LogInformation("--- Added data.");
+            }
+            
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    using(IServiceScope scope = serviceProvider.CreateScope())
+                    {
+                        Product productToBeUpdated = new Product
+                        {
+                            ProductId = product.ProductId,
+                            Name = "movie",
+                            UnitPrice = 1200,
+                            AvailableQuantity = 12,
+                            Color = "Green"
+                        };
+                        var scopedProductRepository = scope.ServiceProvider.GetRequiredService<IProductRepository>();
+                        var updated = await scopedProductRepository.UpdateProductAsync(product.ProductId, productToBeUpdated);
+                        logger.LogInformation($"--- updated data SolveDisposeContextIssueDirtyApproachAsync. {updated.Color}");
+                    }   
+                }
+                catch(Exception ex)
+                {
+                    logger.LogError($"--- Error in updating DisposeContextIssueAsync.\n {ex.Message}");
+                }
+            });
 
             return savedProduct;
         }

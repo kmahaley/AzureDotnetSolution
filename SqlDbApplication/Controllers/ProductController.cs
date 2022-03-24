@@ -93,6 +93,20 @@ namespace SqlDbApplication.Controllers
         }
 
         /// <summary>
+        /// This method will throw exception: Purposefully done
+        /// This API demonstrates, API is adding data and updating in a FireAndForget manner on a new thread.
+        /// - DbContext is scoped instance hence primary thread adds data.
+        /// - new thread does not have DbContext scope instance hence update fails.
+        /// </summary>
+        [HttpPost("solvedisposecontextdirtyapproach")]
+        public async Task<ActionResult<Product>> PostSolveDisposeContextIssueDirtyApproachAsync([FromBody] Product product)
+        {
+            logger.LogInformation("DisposeContextIssue: Adding data.---");
+            var savedProduct = await productService.SolvedDisposeContextIssueDirtyApproachAsync(product);
+            return Ok(savedProduct);
+        }
+
+        /// <summary>
         /// This API demonstrates, API is adding data and updating in a FireAndForget manner.
         /// Main thread is returned immediatly and not waiting for update to happen
         /// - Add is done by product service

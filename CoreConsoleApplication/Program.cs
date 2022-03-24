@@ -17,11 +17,11 @@ namespace CoreConsoleApplication
             //var fileName = @"C:\Users\kamahale.REDMOND\Downloads\da.csv";
             //var pattern = "fabric";
             //ReadFileAndReplace.ReadFileAndReplaceString(fileName, pattern);
+            //DbConcurrencyUtils.CreateDbConcurrenyIssueAndResolution()
+            SqlDatabaseContext context = new SqlDatabaseContext();
+            var x = context.GetType().Name;
 
-            DbConcurrencyUtils.CreateDbConcurrenyIssueAndResolution()
-
-
-
+            Console.WriteLine(x);
             Console.WriteLine();
         }
 
