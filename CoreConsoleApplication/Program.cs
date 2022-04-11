@@ -18,16 +18,39 @@ namespace CoreConsoleApplication
             //var pattern = "fabric";
             //ReadFileAndReplace.ReadFileAndReplaceString(fileName, pattern);
             //DbConcurrencyUtils.CreateDbConcurrenyIssueAndResolution()
-            SqlDatabaseContext context = new SqlDatabaseContext();
-            var x = context.GetType().Name;
-
-            Console.WriteLine(x);
+            FindDifferenceInSubscriptionString();
             Console.WriteLine();
+
         }
 
-  
-        
-    }
+        public static void FindDifferenceInSubscriptionString()
+        {
+            var originalSubscriptionString = "{CommaSeparatedString}";
 
-   
+            var originalSubscriptionArray = originalSubscriptionString.Split(",");
+            List<string> originalSubscription = new List<string>();
+            foreach (var item in originalSubscriptionArray)
+            {
+                originalSubscription.Add(item);
+            }
+
+            var newSubscriptionString = "{CommaSeparatedString}";
+
+            var newSubscriptionArray = newSubscriptionString.Split(",");
+            List<string> newSubscriptions = new List<string>();
+            foreach (var item in newSubscriptionArray)
+            {
+                newSubscriptions.Add(item);
+            }
+
+            var list3 = newSubscriptions.Except(originalSubscription).ToList();
+            foreach (var item in list3)
+            {
+                Console.WriteLine(item);
+            }
+            Console.WriteLine(list3.Count);
+        }
+
+        // End of class
+    }
 }

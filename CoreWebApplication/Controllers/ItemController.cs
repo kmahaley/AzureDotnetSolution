@@ -26,6 +26,8 @@ namespace CoreWebApplication.Controllers
         public async Task<ActionResult<Item>> CreateAsync(Item item)
         {
             var addedItem = await repository.CreateItemAsync(item);
+            return CreatedAtAction("RetrieveValue", new { id = item.Id }, item);
+            
             return Ok(addedItem);
         }
 
@@ -66,6 +68,7 @@ namespace CoreWebApplication.Controllers
         }
 
         [HttpGet("{id}")]
+        [ActionName("RetrieveValue")]
         public async Task<ActionResult<Item>> GetItemAsync(Guid id)
         {
             var item = await repository.GetItemAsync(id);
