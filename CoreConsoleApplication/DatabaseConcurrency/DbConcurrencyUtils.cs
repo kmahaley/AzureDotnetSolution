@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace CoreConsoleApplication.DatabaseConcurrency
@@ -59,6 +60,80 @@ namespace CoreConsoleApplication.DatabaseConcurrency
                 {
                     Console.WriteLine($"Error in database save.{ex.GetType().Name} {ex.Message}");
                 }
+            }
+
+            Console.WriteLine();
+        }
+        
+        public static void HandleDbContextExceptions() 
+        {
+            var p1 = new Product()
+            {
+                Name = "1",
+                AvailableQuantity = 11,
+                Color = "blue",
+                ProductId = 1,
+                UnitPrice = 12,
+            };
+            
+            var p2 = new Product()
+            {
+                Name = "1",
+                AvailableQuantity = 11,
+                Color = "blue",
+                ProductId = 1,
+                UnitPrice = 12,
+            };
+            try
+            {
+                using (SqlDatabaseContext databaseContext = new SqlDatabaseContext())
+                {
+                    databaseContext.Products.Add(p1);
+                    databaseContext.SaveChanges();
+                }
+                using (SqlDatabaseContext databaseContext = new SqlDatabaseContext())
+                {
+                    databaseContext.Products.Add(p2);
+                    databaseContext.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+
+                while (ex != null)
+                {
+                    Console.WriteLine(ex.GetType().Name);
+                    SqlException sqlEx = ex as SqlException;
+                    if (sqlEx == null)
+                    {
+                        // This is not a SQL exception, go to the next
+                        // exception in the chain.
+                        ex = ex.InnerException;
+                        continue;
+                    }
+
+                    foreach (SqlError error in sqlEx.Errors)
+                    {
+                        if (error.Class == 14 &&
+                            (error.Number == 2601 || error.Number == 2627))
+                        {
+                            // These values are from SQL documentation.
+                            // 2601: Class=14, Cannot insert duplicate key row in object
+                            // '<Object Name>' with unique index '<Index Name>'
+                            // 2627: Class=14, Violation of PRIMARY KEY constraint '%.*ls'.
+                            // Cannot insert duplicate key in object '%.*ls'.
+                            // http://www.sql-server-helper.com/error-messages/msg-2601.aspx
+                            Console.WriteLine("true");
+                        }
+                    }
+
+                    // Error code not found in this SQL Exception, try the next
+                    // exception in the chain.
+                    ex = ex.InnerException;
+                }
+
+                
+                Console.WriteLine(ex);
             }
 
             Console.WriteLine();

@@ -18,7 +18,9 @@ namespace CoreConsoleApplication
             //var pattern = "fabric";
             //ReadFileAndReplace.ReadFileAndReplaceString(fileName, pattern);
             //DbConcurrencyUtils.CreateDbConcurrenyIssueAndResolution()
-            FindDifferenceInSubscriptionString();
+            //FindDifferenceInSubscriptionString();
+            //TotalSubscriptionString();
+            DbConcurrencyUtils.HandleDbContextExceptions();
             Console.WriteLine();
 
         }
@@ -49,6 +51,20 @@ namespace CoreConsoleApplication
                 Console.WriteLine(item);
             }
             Console.WriteLine(list3.Count);
+        }
+
+        public static void GetCountOfSubscriptionString()
+        {
+            var originalSubscriptionString = "{CommaSeparatedString}";
+
+            var originalSubscriptionArray = originalSubscriptionString.Split(",");
+            ISet<string> originalSubscription = new HashSet<string>();
+            foreach (var item in originalSubscriptionArray)
+            {
+                originalSubscription.Add(item);
+            }
+            
+            Console.WriteLine(originalSubscription.Count);
         }
 
         // End of class

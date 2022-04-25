@@ -1,8 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-
-#nullable disable
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CoreConsoleApplication.DatabaseConcurrency
 {
@@ -16,6 +16,6 @@ namespace CoreConsoleApplication.DatabaseConcurrency
         public string Name { get; set; }
         public string Color { get; set; }
         public int UnitPrice { get; set; }
-        public int AvailableQuantity { get; set; }
+        public int AvailableQuantity { get; set; } 
     }
 }
