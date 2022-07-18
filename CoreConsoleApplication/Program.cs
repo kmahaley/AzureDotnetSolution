@@ -1,11 +1,7 @@
-﻿using CoreConsoleApplication.DatabaseConcurrency;
-using Microsoft.EntityFrameworkCore;
+﻿using CoreConsoleApplication.Dotnetutilities;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace CoreConsoleApplication
@@ -20,7 +16,12 @@ namespace CoreConsoleApplication
             //DbConcurrencyUtils.CreateDbConcurrenyIssueAndResolution()
             //FindDifferenceInSubscriptionString();
             //TotalSubscriptionString();
-            DbConcurrencyUtils.HandleDbContextExceptions();
+            //DbConcurrencyUtils.HandleDbContextExceptions();
+
+            FrameworkUtilities.GetDotnetFrameworkVersion();
+
+
+
             Console.WriteLine();
 
         }
