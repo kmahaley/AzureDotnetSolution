@@ -17,6 +17,11 @@ namespace CoreConsoleApplication.Dotnetutilities
         /// - Run cmd: dotnet msbuild UserProjectName.csproj /t:GenerateRestoreGraphFile /p:RestoreGraphOutputPath=C:\Users\kamahale\Downloads\UserProjectName.md
         /// - Provide path in 
         /// </summary>
+        /// <example>
+        /// 	dotnet list package
+        /// 	dotnet list UserProjectName.sln package --include-transitive > C:\Users\kamahale\Downloads\UserProjectName_packages.md
+
+        /// </example>
 
         public static void PrintProjectDependencyTree()
         {
