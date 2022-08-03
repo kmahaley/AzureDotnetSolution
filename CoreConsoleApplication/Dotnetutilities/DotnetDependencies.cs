@@ -23,7 +23,7 @@ namespace CoreConsoleApplication.Dotnetutilities
 
         /// </example>
 
-        public static void PrintProjectDependencyTree()
+        public static void PrintProjectDependencyTreeUsingMSBuildGraph()
         {
             var projectGraphOutput = @"C:\Users\kamahale\Downloads\UserProjectName.md";
             string dependencyGraphText = File.ReadAllText(projectGraphOutput);
@@ -44,6 +44,37 @@ namespace CoreConsoleApplication.Dotnetutilities
                 }
             }
         }
+
+        //https://www.jerriepelser.com/blog/analyze-dotnet-project-dependencies-part-2/
+        /*public static void PrintProjectDependencyTreeUsingDotnetRestore()
+        {
+            var projectGraphOutput = @"C:\Users\kamahale\source\repos\kmahaley\AzureDotnetSolution\CoreConsoleApplication\obj\project.assets.json";
+            string dependencyGraphText = File.ReadAllText(projectGraphOutput);
+            var dependencyGraph = DependencyGraphSpec.Load(projectGraphOutput);
+
+            foreach (var project in dependencyGraph.Projects.Where(p => p.RestoreMetadata.ProjectStyle == ProjectStyle.PackageReference))
+            {
+
+                Console.WriteLine(project.Name);
+
+                foreach (var targetFramework in project.TargetFrameworks)
+                {
+                    Console.WriteLine($"  [{targetFramework.FrameworkName}]");
+
+                    var lockFileTargetFramework = lockFile.Targets.FirstOrDefault(t => t.TargetFramework.Equals(targetFramework.FrameworkName));
+                    if (lockFileTargetFramework != null)
+                    {
+                        foreach (var dependency in targetFramework.Dependencies)
+                        {
+                            var projectLibrary = lockFileTargetFramework.Libraries.FirstOrDefault(library => library.Name == dependency.Name);
+
+                            ReportDependency(projectLibrary, lockFileTargetFramework, 1);
+                        }
+                    }
+
+                }
+            }
+        }*/
 
     }
 }

@@ -11,8 +11,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<!--Package to create Dependency tree-->
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
 		<PackageReference Include="NuGet.ProjectModel" Version="6.2.1" />
+		
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
 		
 		<!--Package to create random string-->

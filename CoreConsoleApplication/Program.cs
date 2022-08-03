@@ -23,7 +23,7 @@ namespace CoreConsoleApplication
             //DbConcurrencyUtils.HandleDbContextExceptions();
 
             //FrameworkUtilities.GetDotnetFrameworkVersion();
-            DotnetDependencies.PrintProjectDependencyTree();
+            DotnetDependencies.PrintProjectDependencyTreeUsingMSBuildGraph();
 
             Console.WriteLine();
 
