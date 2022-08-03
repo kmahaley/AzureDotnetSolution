@@ -1,6 +1,10 @@
 ﻿using CoreConsoleApplication.Dotnetutilities;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using NuGet.ProjectModel;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -18,9 +22,8 @@ namespace CoreConsoleApplication
             //TotalSubscriptionString();
             //DbConcurrencyUtils.HandleDbContextExceptions();
 
-            FrameworkUtilities.GetDotnetFrameworkVersion();
-
-
+            //FrameworkUtilities.GetDotnetFrameworkVersion();
+            DotnetDependencies.PrintProjectDependencyTree();
 
             Console.WriteLine();
 
