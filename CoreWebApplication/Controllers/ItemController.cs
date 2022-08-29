@@ -1,7 +1,9 @@
 ﻿using CoreWebApplication.Models;
 using CoreWebApplication.Repositories;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Swashbuckle.AspNetCore.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -23,6 +25,15 @@ namespace CoreWebApplication.Controllers
         }
 
         [HttpPost]
+        [SwaggerOperation(
+            Description = "Create item",
+            OperationId = "CreateAsync")]
+        //[ProducesResponseType(StatusCodes.Status201Created)]
+        //[ProducesResponseType(StatusCodes.Status200OK)]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [SwaggerResponse(StatusCodes.Status201Created, "Item created", typeof(Item))]
+        [SwaggerResponse(StatusCodes.Status200OK, "Item already exists in the system", typeof(Item))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "Incorrect payload", typeof(Item))]
         public async Task<ActionResult<Item>> CreateAsync(Item item)
         {
             var addedItem = await repository.CreateItemAsync(item);
