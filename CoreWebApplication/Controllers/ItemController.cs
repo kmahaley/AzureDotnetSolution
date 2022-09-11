@@ -31,11 +31,12 @@ namespace CoreWebApplication.Controllers
         //[ProducesResponseType(StatusCodes.Status201Created)]
         //[ProducesResponseType(StatusCodes.Status200OK)]
         //[ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [SwaggerResponse(StatusCodes.Status201Created, "Item created", typeof(Item))]
+        //[SwaggerResponse(StatusCodes.Status201Created, "Item created", typeof(Item))]
         [SwaggerResponse(StatusCodes.Status200OK, "Item already exists in the system", typeof(Item))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, "Incorrect payload", typeof(Item))]
         public async Task<ActionResult<Item>> CreateAsync(Item item)
         {
+            logger.LogInformation($"---- {HttpContext.TraceIdentifier}");
             var addedItem = await repository.CreateItemAsync(item);
             return CreatedAtAction("RetrieveValue", new { id = item.Id }, item);
             
