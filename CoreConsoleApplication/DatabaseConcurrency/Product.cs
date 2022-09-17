@@ -17,5 +17,11 @@ namespace CoreConsoleApplication.DatabaseConcurrency
         public string Color { get; set; }
         public int UnitPrice { get; set; }
         public int AvailableQuantity { get; set; } 
+
+        public bool IsImported { get; set; } 
+        public float floatProp { get; set; } 
+        public double doubleProp { get; set; } 
+
+        public IList<string> Companies { get; set; } 
     }
 }
