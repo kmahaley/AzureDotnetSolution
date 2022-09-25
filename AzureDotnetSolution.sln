@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30804.86
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32901.215
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzureKeyVaultApplication", "AzureKeyVaultApplication\AzureKeyVaultApplication.csproj", "{5BD99680-8BFF-42EA-9882-D18C4D3C881D}"
 EndProject
@@ -27,7 +27,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoreWebApplication.UnitTest
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoreWebApplication.IntegrationTests", "IntegrationTests\CoreWebApplication.IntegrationTests\CoreWebApplication.IntegrationTests.csproj", "{71547E0B-A205-46C0-9B04-AB6E817AB94D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MongoDbApplication", "MongoDbApplication\MongoDbApplication.csproj", "{7BBCE0B2-4475-46E4-99DB-ACB927068291}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MongoDbApplication", "MongoDbApplication\MongoDbApplication.csproj", "{7BBCE0B2-4475-46E4-99DB-ACB927068291}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DistributedCacheApplication", "DistributedCacheApplication\DistributedCacheApplication.csproj", "{9830ADC9-3D57-443B-9922-54357CEB9FE7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -125,6 +127,14 @@ Global
 		{7BBCE0B2-4475-46E4-99DB-ACB927068291}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7BBCE0B2-4475-46E4-99DB-ACB927068291}.Release|x64.ActiveCfg = Release|Any CPU
 		{7BBCE0B2-4475-46E4-99DB-ACB927068291}.Release|x64.Build.0 = Release|Any CPU
+		{9830ADC9-3D57-443B-9922-54357CEB9FE7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9830ADC9-3D57-443B-9922-54357CEB9FE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9830ADC9-3D57-443B-9922-54357CEB9FE7}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{9830ADC9-3D57-443B-9922-54357CEB9FE7}.Debug|x64.Build.0 = Debug|Any CPU
+		{9830ADC9-3D57-443B-9922-54357CEB9FE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9830ADC9-3D57-443B-9922-54357CEB9FE7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9830ADC9-3D57-443B-9922-54357CEB9FE7}.Release|x64.ActiveCfg = Release|Any CPU
+		{9830ADC9-3D57-443B-9922-54357CEB9FE7}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

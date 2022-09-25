@@ -7,21 +7,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace CoreConsoleApplication
 {
-    public enum ErrorCode 
-    {
-        ClusterCreationFailed,
-        apple,
-    }
-
-    public class ErrorDetails
-    {
-        public string ExceptionDetail { get; set; }
-    }
-
     public class Program
     {
         public static async Task Main(string[] args)
@@ -34,43 +26,10 @@ namespace CoreConsoleApplication
             //TotalSubscriptionString();
             //DbConcurrencyUtils.HandleDbContextExceptions();
 
-            //FrameworkUtilities.GetDotnetFrameworkVersion();
+            FrameworkUtilities.GetDotnetFrameworkVersion();
             //DotnetDependencies.PrintProjectDependencyTreeUsingMSBuildGraph();
 
-            //string str = "";
-            //var exceptionDetails = JsonConvert.DeserializeObject<Exception>(str);
-            //Console.WriteLine(exceptionDetails);
-            var str = " ";
-            String.Equals("", "", StringComparison.OrdinalIgnoreCase);
-            var errorMessage = $"{ErrorCode.apple} : banana";
-            var stringAsJsonSting = JsonConvert.SerializeObject(errorMessage);
-
-            var exception = new Exception(errorMessage);
-
-            //Console.WriteLine(JsonConvert.SerializeObject(str));
-
-            var actualExAsJsonString = JsonConvert.SerializeObject(exception);
-            Console.WriteLine(JsonConvert.SerializeObject(exception));
-
-            var errorDetails = new ErrorDetails()
-            {
-                ExceptionDetail = str,//actualExAsJsonString,
-            };
-
-            if (!string.IsNullOrWhiteSpace(errorDetails.ExceptionDetail))
-            {
-                try
-                {
-                    var x = JsonConvert.DeserializeObject<Exception>(errorDetails.ExceptionDetail);
-                    Console.WriteLine($"after De ===> {x.Message}");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex);
-                }
-                
-            }
-
+            
             Console.WriteLine();
 
         }
@@ -113,7 +72,7 @@ namespace CoreConsoleApplication
             {
                 originalSubscription.Add(item);
             }
-            
+
             Console.WriteLine(originalSubscription.Count);
         }
 
