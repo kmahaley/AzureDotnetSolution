@@ -9,7 +9,10 @@
         /// <param name="app">application.</param>
         public static void ConfigureApplicationCustomMiddleware(this IApplicationBuilder app)
         {
+            // add to pipeline
             //app.UseMiddleware<HttpEtagMiddleware>();
+
+            // add to pipeline on condition
             app.UseWhen(isPredicateMatched, HandleEtag);
         }
 

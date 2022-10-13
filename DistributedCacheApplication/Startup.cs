@@ -1,4 +1,5 @@
-﻿using DistributedCacheApplication.Middlewares;
+﻿using DistributedCacheApplication.Filters;
+using DistributedCacheApplication.Middlewares;
 using DistributedCacheApplication.Repository;
 using DistributedCacheApplication.Services;
 using Microsoft.OpenApi.Models;
@@ -31,6 +32,14 @@ namespace DistributedCacheApplication
 
             //Controller
             services.AddControllers();
+
+/*
+            services.AddControllers(options =>
+            {
+                options.Filters.Add(new GlobalFilter("GlobalFilter"));
+            });
+*/
+
             services.AddHealthChecks();
 
             //Swagger
@@ -57,9 +66,9 @@ namespace DistributedCacheApplication
 
             app.UseRouting();
             app.UseAuthorization();
-            app.ConfigureApplicationCustomMiddleware();
 
 
+            //app.ConfigureApplicationCustomMiddleware();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

@@ -1,4 +1,5 @@
-﻿using DistributedCacheApplication.Models;
+﻿using DistributedCacheApplication.Filters;
+using DistributedCacheApplication.Models;
 using DistributedCacheApplication.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +8,7 @@ namespace DistributedCacheApplication.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    //[ControllerFilter("ProductController")]
     public class ProductController : ControllerBase
     {
         private readonly IProductService productService;
@@ -30,6 +32,7 @@ namespace DistributedCacheApplication.Controllers
 
         // GET api/<ProductController>/5
         [HttpGet("{id}")]
+        [HttpETagFilter]
         public async Task<ActionResult<Product>> GetAsync(int id)
         {
             try
@@ -45,6 +48,7 @@ namespace DistributedCacheApplication.Controllers
 
         // POST api/<ProductController>
         [HttpPost]
+        [HttpETagFilter]
         public async Task<ActionResult<Product>> PostAsync([FromBody] Product product)
         {
             logger.LogInformation("Adding data.---");
@@ -54,6 +58,7 @@ namespace DistributedCacheApplication.Controllers
 
         // PUT api/<ProductController>/5
         [HttpPut("{id}")]
+        [HttpETagFilter]
         public async Task<ActionResult<Product>> PutAsync(int id, [FromBody] Product product)
         {
             var updatedProduct = await productService.UpdateProductAsync(id, product);

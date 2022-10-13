@@ -9,7 +9,7 @@ namespace DistributedCacheApplication.Middlewares
 
         public HttpEtagMiddleware(ILogger<HttpEtagMiddleware> logger)
         {
-            this.logger = logger;
+            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
 
@@ -20,11 +20,9 @@ namespace DistributedCacheApplication.Middlewares
 
             // user request and headers
             logger.LogInformation("--- after other middleware. inside HttpEtagMiddleware");
+            Endpoint? endpoint = httpContext.GetEndpoint();
             var userRequest = httpContext.Request;
             var serverResponse = httpContext.Response;
-
-            
-            
 
             if (userRequest.Path.ToString().Contains("/api/product"))
             {
