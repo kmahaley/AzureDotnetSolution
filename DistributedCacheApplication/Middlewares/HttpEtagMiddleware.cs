@@ -15,18 +15,24 @@ namespace DistributedCacheApplication.Middlewares
 
         public async Task InvokeAsync(HttpContext httpContext, RequestDelegate next)
         {
-            // user request and headers
-            logger.LogInformation("inside HttpEtagMiddleware");
-            var userRequest = httpContext.Request;
+            logger.LogInformation("--- before HttpEtagMiddleware");
             await next(httpContext);
+
+            // user request and headers
+            logger.LogInformation("--- after other middleware. inside HttpEtagMiddleware");
+            var userRequest = httpContext.Request;
             var serverResponse = httpContext.Response;
 
-            var resultBody = serverResponse.Body;
-            var calculatedEtag = GenerateEtagFromResponseBodyWithHash(resultBody);
+            
+            
 
-            if (userRequest.Method.Equals("GET") && userRequest.Path.Equals("/api/product"))
+            if (userRequest.Path.ToString().Contains("/api/product"))
             {
-                if (userRequest.Headers.ContainsKey(HeaderNames.IfNoneMatch))
+                logger.LogInformation("--- HttpEtagMiddleware. Product endpoint");
+                var resultBody = serverResponse.Body;
+                var calculatedEtag = GenerateEtagFromResponseBodyWithHash(resultBody);
+
+                if (userRequest.Method.Equals("GET") && userRequest.Headers.ContainsKey(HeaderNames.IfNoneMatch))
                 {
                     var userRequestedEtag = userRequest.Headers[HeaderNames.IfNoneMatch].FirstOrDefault();
                     if (string.Equals(userRequestedEtag, calculatedEtag, StringComparison.OrdinalIgnoreCase))
@@ -36,21 +42,29 @@ namespace DistributedCacheApplication.Middlewares
                     }
                 }
 
+                //if (!serverResponse.HasStarted)
+                //{
+                //    serverResponse.Headers[HeaderNames.ETag] = calculatedEtag;
+                //}
+                //else
+                //{
+                //    httpContext.Response.OnStarting(() =>
+                //    {
+                //        serverResponse.Headers[HeaderNames.ETag] = calculatedEtag;
+                //        return Task.CompletedTask;
+                //    });
+                //}
                 
             }
 
-            httpContext.Response.OnStarting(() =>
-            {
-                serverResponse.Headers.Add(HeaderNames.ETag, calculatedEtag);
-                return Task.CompletedTask;
-            });
+            
 
             // next middleware in pipeline
         }
 
         private string GenerateEtagFromResponseBodyWithHash(Stream result)
         {
-            return "";
+            return "banana";
         }
     }
 }
