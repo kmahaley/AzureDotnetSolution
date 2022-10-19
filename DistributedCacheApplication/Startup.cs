@@ -26,19 +26,21 @@ namespace DistributedCacheApplication
             services.AddSingleton<IProductRepository, ProductRepository>();
 
             // Add services to the container
-            services.AddSingleton<HttpEtagMiddleware>();
+            //services.AddSingleton<HttpEtagMiddleware>();
+
+
             services.AddSingleton<ICacheService, InMemoryCacheService>();
             services.AddSingleton<IProductService, ProductService>();
 
             //Controller
             services.AddControllers();
 
-/*
+
             services.AddControllers(options =>
             {
-                options.Filters.Add(new GlobalFilter("GlobalFilter"));
+                options.Filters.Add(new GlobalApplicationFilter());
             });
-*/
+
 
             services.AddHealthChecks();
 
@@ -67,8 +69,9 @@ namespace DistributedCacheApplication
             app.UseRouting();
             app.UseAuthorization();
 
+            // can add middleware here
+            //app.UseMiddleware<HttpEtagMiddleware>();
 
-            //app.ConfigureApplicationCustomMiddleware();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

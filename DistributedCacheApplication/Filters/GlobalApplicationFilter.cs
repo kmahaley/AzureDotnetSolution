@@ -9,13 +9,12 @@ using System.Diagnostics;
 
 namespace DistributedCacheApplication.Filters
 {
-    public class GlobalFilter : ActionFilterAttribute, IAsyncActionFilter
+    public class GlobalApplicationFilter : ActionFilterAttribute, IAsyncActionFilter
     {
-        private readonly string filterName;
+        private readonly string filterName = nameof(GlobalApplicationFilter);
 
-        public GlobalFilter(string filterName)
+        public GlobalApplicationFilter()
         {
-            this.filterName = filterName;
         }
 
         public override async Task OnActionExecutionAsync(ActionExecutingContext executingContext, ActionExecutionDelegate next)

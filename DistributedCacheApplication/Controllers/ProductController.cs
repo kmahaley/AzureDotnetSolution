@@ -8,7 +8,7 @@ namespace DistributedCacheApplication.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[ControllerFilter("ProductController")]
+    [ControllerFilter()]
     public class ProductController : ControllerBase
     {
         private readonly IProductService productService;
@@ -35,6 +35,7 @@ namespace DistributedCacheApplication.Controllers
         [HttpETagFilter]
         public async Task<ActionResult<Product>> GetAsync(int id)
         {
+            logger.LogInformation("Adding data. GetAsync---");
             try
             {
                 var existingEntity = await productService.GetProductAsync(id);
@@ -48,17 +49,15 @@ namespace DistributedCacheApplication.Controllers
 
         // POST api/<ProductController>
         [HttpPost]
-        [HttpETagFilter]
         public async Task<ActionResult<Product>> PostAsync([FromBody] Product product)
         {
-            logger.LogInformation("Adding data.---");
+            logger.LogInformation("Adding data. PostAsync---");
             var savedProduct = await productService.AddProductAsync(product);
             return Ok(savedProduct);
         }
 
         // PUT api/<ProductController>/5
         [HttpPut("{id}")]
-        [HttpETagFilter]
         public async Task<ActionResult<Product>> PutAsync(int id, [FromBody] Product product)
         {
             var updatedProduct = await productService.UpdateProductAsync(id, product);

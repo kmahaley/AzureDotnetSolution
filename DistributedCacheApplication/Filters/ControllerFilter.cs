@@ -5,11 +5,10 @@ namespace DistributedCacheApplication.Filters
 {
     public class ControllerFilter : ActionFilterAttribute, IAsyncActionFilter
     {
-        private readonly string filterName;
+        private readonly string filterName = nameof(ControllerFilter);
 
-        public ControllerFilter(string filterName)
+        public ControllerFilter()
         {
-            this.filterName = filterName;
         }
 
         public override async Task OnActionExecutionAsync(ActionExecutingContext executingContext, ActionExecutionDelegate next)

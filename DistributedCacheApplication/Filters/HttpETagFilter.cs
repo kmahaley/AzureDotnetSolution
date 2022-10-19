@@ -4,31 +4,28 @@ using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Net.Http.Headers;
 using Microsoft.VisualBasic;
+using System.Diagnostics;
 using System.Net;
 
 namespace DistributedCacheApplication.Filters
 {
     public class HttpETagFilter : ActionFilterAttribute, IAsyncActionFilter
     {
+        private readonly string filterName = nameof(HttpETagFilter);
+
         public override async Task OnActionExecutionAsync(ActionExecutingContext executingContext, ActionExecutionDelegate next)
         {
-            var con = executingContext.Controller;
-            var routeData = executingContext.RouteData;
-            routeData.Values.TryGetValue("action", out object actionValue);
-            routeData.Values.TryGetValue("controller", out object controllerValue);
-            var request = executingContext.HttpContext.Request;
-            var path = request.Path.ToString();
-
-
+            Debug.WriteLine($"before action filter. {filterName}");
             var executedContext = await next();
-            var response = executedContext.HttpContext.Response;
+            Debug.WriteLine($"after action filter. {filterName}");
+            //var response = executedContext.HttpContext.Response;
 
             // Computing ETags for Response Caching on GET requests
             //if (request.Method == HttpMethod.Get.Method && response.StatusCode == (int)HttpStatusCode.OK)
-            if (response.StatusCode == (int)HttpStatusCode.OK)
-            {
-                ValidateETagForResponseCaching(executedContext);
-            }
+            //if (response.StatusCode == (int)HttpStatusCode.OK)
+            //{
+            //    ValidateETagForResponseCaching(executedContext);
+            //}
         }
 
         private void ValidateETagForResponseCaching(ActionExecutedContext executedContext)
