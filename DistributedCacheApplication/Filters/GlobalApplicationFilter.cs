@@ -13,18 +13,21 @@ namespace DistributedCacheApplication.Filters
     {
         private readonly string filterName = nameof(GlobalApplicationFilter);
 
-        public GlobalApplicationFilter()
+        private readonly ILogger<GlobalApplicationFilter> logger;
+
+        public GlobalApplicationFilter(ILogger<GlobalApplicationFilter> logger)
         {
+            this.logger = logger;
         }
 
         public override async Task OnActionExecutionAsync(ActionExecutingContext executingContext, ActionExecutionDelegate next)
         {
-            Debug.WriteLine($"before global filter. {filterName}");
+            logger.LogInformation($"--- before global filter. {filterName}");
 
 
             var executedContext = await next();
 
-            Debug.WriteLine($"after global filter. {filterName}");
+            logger.LogInformation($"--- after global filter. {filterName}");
             
         }
 

@@ -7,18 +7,21 @@ namespace DistributedCacheApplication.Filters
     {
         private readonly string filterName = nameof(ControllerFilter);
 
-        public ControllerFilter()
+        private readonly ILogger<ControllerFilter> logger;
+
+        public ControllerFilter(ILogger<ControllerFilter> logger)
         {
+            this.logger = logger;
         }
 
         public override async Task OnActionExecutionAsync(ActionExecutingContext executingContext, ActionExecutionDelegate next)
         {
-            Debug.WriteLine($"before controller filter. {filterName}");
+            logger.LogInformation($"--- before controller filter. {filterName}");
 
 
             var executedContext = await next();
 
-            Debug.WriteLine($"after controller filter. {filterName}");
+            logger.LogInformation($"--- after controller filter. {filterName}");
 
         }
 

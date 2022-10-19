@@ -13,11 +13,20 @@ namespace DistributedCacheApplication.Filters
     {
         private readonly string filterName = nameof(HttpETagFilter);
 
+        private readonly ILogger<HttpETagFilter> logger;
+
+        public HttpETagFilter(ILogger<HttpETagFilter> logger)
+        {
+            this.logger = logger;
+        }
+
         public override async Task OnActionExecutionAsync(ActionExecutingContext executingContext, ActionExecutionDelegate next)
         {
-            Debug.WriteLine($"before action filter. {filterName}");
+            logger.LogInformation($"--- before action filter. {filterName}");
             var executedContext = await next();
-            Debug.WriteLine($"after action filter. {filterName}");
+            logger.LogInformation($"--- after action filter. {filterName}");
+
+
             //var response = executedContext.HttpContext.Response;
 
             // Computing ETags for Response Caching on GET requests

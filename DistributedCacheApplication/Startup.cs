@@ -25,9 +25,11 @@ namespace DistributedCacheApplication
             //Repositories
             services.AddSingleton<IProductRepository, ProductRepository>();
 
-            // Add services to the container
+            // Add middlewares to services
             //services.AddSingleton<HttpEtagMiddleware>();
 
+            // Add filters to services
+            services.AddApplicationFilters();
 
             services.AddSingleton<ICacheService, InMemoryCacheService>();
             services.AddSingleton<IProductService, ProductService>();
@@ -38,7 +40,7 @@ namespace DistributedCacheApplication
 
             services.AddControllers(options =>
             {
-                options.Filters.Add(new GlobalApplicationFilter());
+                options.Filters.AddService(typeof(GlobalApplicationFilter));
             });
 
 
