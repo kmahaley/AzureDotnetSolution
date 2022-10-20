@@ -35,9 +35,7 @@ namespace DistributedCacheApplication
             services.AddSingleton<IProductService, ProductService>();
 
             //Controller
-            services.AddControllers();
-
-
+            //services.AddControllers();
             services.AddControllers(options =>
             {
                 options.Filters.AddService(typeof(GlobalApplicationFilter));
