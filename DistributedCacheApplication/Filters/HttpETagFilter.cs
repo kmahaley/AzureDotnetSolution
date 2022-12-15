@@ -9,7 +9,7 @@ using System.Net;
 
 namespace DistributedCacheApplication.Filters
 {
-    public class HttpETagFilter : ActionFilterAttribute, IAsyncActionFilter
+    public class HttpETagFilter : IAsyncActionFilter
     {
         private readonly string filterName = nameof(HttpETagFilter);
 
@@ -20,7 +20,7 @@ namespace DistributedCacheApplication.Filters
             this.logger = logger;
         }
 
-        public override async Task OnActionExecutionAsync(ActionExecutingContext executingContext, ActionExecutionDelegate next)
+        public async Task OnActionExecutionAsync(ActionExecutingContext executingContext, ActionExecutionDelegate next)
         {
             logger.LogInformation($"--- before action filter. {filterName}");
             var executedContext = await next();
