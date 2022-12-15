@@ -1,20 +1,7 @@
 ﻿using CoreConsoleApplication.BBCProjectUtilities;
 using CoreConsoleApplication.DatabaseConcurrency;
 using CoreConsoleApplication.Dotnetutilities;
-using CoreConsoleApplication.Models;
-using Microsoft.VisualBasic;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using NuGet.ProjectModel;
 using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
-using System.Web;
 
 namespace CoreConsoleApplication
 {
@@ -27,7 +14,7 @@ namespace CoreConsoleApplication
             
 
             
-            Console.WriteLine();
+            Console.WriteLine("hello world");
 
         }
 
