@@ -12,7 +12,6 @@ using System.Threading.Tasks;
 
 namespace CoreWebApplication.Services
 {
-    //public class BackgroundLongRunningService : BackgroundService
     public class BackgroundLongRunningService : BackgroundService
     {
         private readonly ILogger logger;
@@ -49,7 +48,7 @@ namespace CoreWebApplication.Services
         protected async override Task ExecuteAsync(CancellationToken stoppingToken)
         {
             logger.LogInformation("finally -----------------");
-            UpsertItems("ExecuteAsync","banana");
+            UpsertItems("ExecuteAsync", "banana");
             await Task.CompletedTask;
         }
 

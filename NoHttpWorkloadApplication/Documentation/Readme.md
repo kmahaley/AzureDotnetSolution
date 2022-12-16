@@ -11,7 +11,7 @@
 
 ## Fundamentals
 
-  - Http workload:
+- Http workload
 ```
 public static IHostBuilder CreateHostBuilder(string[] args) =>
         Host.CreateDefaultBuilder(args)
@@ -21,15 +21,15 @@ public static IHostBuilder CreateHostBuilder(string[] args) =>
             });  
 ```
 
-  - Non http workload:
+- Non http workload
 ```
 public static IHostBuilder CreateHostBuilder(string[] args) =>
         Host.CreateDefaultBuilder(args)
             .ConfigureServices((hostContext, services) =>
             {
-               services.AddHostedService<Worker>();
+               services.AddHostedService<WorkerService>();
             }); 
 ```
 
 ## References
-  - https://docs.microsoft.com/en-us/aspnet/core/fundamentals/?view=aspnetcore-5.0&tabs=windows
+- https://docs.microsoft.com/en-us/aspnet/core/fundamentals/?view=aspnetcore-5.0&tabs=windows
