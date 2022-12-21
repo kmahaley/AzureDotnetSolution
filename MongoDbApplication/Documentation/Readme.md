@@ -6,7 +6,7 @@
 - [Install docker](https://docs.docker.com/get-docker/)
 - Test docker installed by commandline -> `docker info`
 
-### Commonds
+### Commands
 - start/stop conatiner: docker start/stop {ContainerName/ContainerId}
 - remove container: docker rm {ContainerName/ContainerId}
 - list conatiners: docker ps -a
@@ -15,15 +15,20 @@
 
 
 ## MongoDb
-- command line: 
+
+### Create mongodb docker instance using command line 
   - `docker run -d --name mongodb -p 27017:27017 -v mongodata:/data/db mongo`
-    - if you want to use secured mongodb with username and password then:
-    - `docker run -d --name mongodb -p 27017:27017 -v mongodata:/data/db mongo MONGO_INITDB_ROOT_USERNAME=mongodbadmin MONGO_INITDB_ROOT_PASSWORD=password123` 
+    - if you want to use secured mongodb with username and password then,
+      - `docker run -d --name mongodb -p 27017:27017 -v mongodata:/data/db mongo MONGO_INITDB_ROOT_USERNAME=mongodbadmin MONGO_INITDB_ROOT_PASSWORD=password123` 
   - Test docker instance: `docker ps`
   - Test via browser -> `localhost:27017`
-  - Install VSCode extension Mongodb -> provide connection string and connect
 
-### Reference: 
+### Install VSCode extension Mongodb 
+- provide connection string and connect
+- `mongodb://localhost:27017`
+- with username and password: `mongodb://mongodbadmin:password123@localhost:27017`
+
+## Reference: 
 - [MongoDB APIs](https://chsakell.gitbook.io/mongodb-csharp-docs/getting-started/quick-start/databases)
 - [MongoDB tutorial](https://www.youtube.com/watch?v=ZXdFisA_hOY&t=6943s&ab_channel=freeCodeCamp.org)
 
