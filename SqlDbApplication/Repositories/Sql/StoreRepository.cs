@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using SqlDbApplication.Models.Sql;
+using SqlDbApplication.Repositories.Sql.Interface;
 using System;
 using System.Collections.Generic;
 using System.Data;

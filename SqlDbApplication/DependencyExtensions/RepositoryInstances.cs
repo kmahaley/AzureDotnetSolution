@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions;
 using Microsoft.Extensions.Configuration;
+using SqlDbApplication.Repositories.Sql.Interface;
 
 namespace SqlDbApplication.DependencyExtensions
 {

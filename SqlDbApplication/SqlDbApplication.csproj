@@ -19,8 +19,4 @@
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.11" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Models\Sql\" />
-  </ItemGroup>
 </Project>

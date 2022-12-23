@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using SqlDbApplication.Repositories.Sql;
+using SqlDbApplication.Repositories.Sql.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;

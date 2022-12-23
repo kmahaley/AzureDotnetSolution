@@ -1,4 +1,4 @@
-﻿using SqlDbApplication.Repositories.Sql;
+﻿using SqlDbApplication.Repositories.Sql.Interface;
 using System;
 using System.Threading.Tasks;
 

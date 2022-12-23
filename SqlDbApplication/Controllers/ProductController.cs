@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using SqlDbApplication.Exceptions;
 using SqlDbApplication.Models.Sql;
 using SqlDbApplication.Repositories.Sql;
-using SqlDbApplication.Services;
+using SqlDbApplication.Services.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;

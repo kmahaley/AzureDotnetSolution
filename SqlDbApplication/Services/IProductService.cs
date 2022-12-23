@@ -11,7 +11,7 @@ namespace SqlDbApplication.Services
         Task<IEnumerable<Product>> GetAllProductsAsync();
         Task<Product> GetProductByIdAsync(int id);
         Task<Product> UpdateProductAsync(int id, Product product);
-        
+
         // This method will fail. Purposefully done.
         Task<Product> DisposeContextIssueAsync(Product product);
 

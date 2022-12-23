@@ -60,8 +60,6 @@ Application to learn connection to SQL DB and perform CRUD operations
 ```
 
 
-
-
 - Add Repository instance 
   - ConfigureServices -> `services.AddDbContext<SqlRepositoryImpl>();`
 
