@@ -1,0 +1,69 @@
+2022-12-23 14:33:31.562 -05:00 [INF] 1. StartAsync has been called.
+2022-12-23 14:33:31.627 -05:00 [INF] ----- StartAsync: Processing task
+2022-12-23 14:33:31.628 -05:00 [INF] False 0
+2022-12-23 14:33:31.631 -05:00 [INF] called CreateOrUpdateItemAsync item 13cb5891-8a21-4887-b6c6-02ad46e6813f apple_0
+2022-12-23 14:33:31.633 -05:00 [INF] creating item 13cb5891-8a21-4887-b6c6-02ad46e6813f
+2022-12-23 14:33:38.655 -05:00 [INF] False 1
+2022-12-23 14:33:38.656 -05:00 [INF] called CreateOrUpdateItemAsync item ac11b2e0-0fb3-418b-ae2b-374d0df5b012 apple_1
+2022-12-23 14:33:38.657 -05:00 [INF] creating item ac11b2e0-0fb3-418b-ae2b-374d0df5b012
+2022-12-23 14:33:45.694 -05:00 [INF] ----- StartAsync: Completed task
+2022-12-23 14:33:46.092 -05:00 [INF] Now listening on: http://localhost:5000
+2022-12-23 14:33:46.096 -05:00 [INF] Application started. Press Ctrl+C to shut down.
+2022-12-23 14:33:46.097 -05:00 [INF] Hosting environment: Development
+2022-12-23 14:33:46.098 -05:00 [INF] Content root path: C:\Users\kamahale\source\repos\kmahaley\AzureDotnetSolution\CoreWebApplication
+2022-12-23 14:41:59.211 -05:00 [INF] 1. StartAsync has been called.
+2022-12-23 14:41:59.263 -05:00 [INF] ----- StartAsync: Processing task
+2022-12-23 14:41:59.264 -05:00 [INF] False 0
+2022-12-23 14:41:59.265 -05:00 [INF] called CreateOrUpdateItemAsync item 62bacbf6-8d49-45c7-b7dd-ef7d684d3eef apple_0
+2022-12-23 14:41:59.266 -05:00 [INF] creating item 62bacbf6-8d49-45c7-b7dd-ef7d684d3eef
+2022-12-23 14:42:06.279 -05:00 [INF] False 1
+2022-12-23 14:42:06.284 -05:00 [INF] called CreateOrUpdateItemAsync item e8642679-5165-498a-b6b6-bb35276678e5 apple_1
+2022-12-23 14:42:06.286 -05:00 [INF] creating item e8642679-5165-498a-b6b6-bb35276678e5
+2022-12-23 14:42:13.307 -05:00 [INF] ----- StartAsync: Completed task
+2022-12-23 14:42:13.593 -05:00 [INF] Now listening on: http://localhost:5000
+2022-12-23 14:42:13.597 -05:00 [INF] Application started. Press Ctrl+C to shut down.
+2022-12-23 14:42:13.597 -05:00 [INF] Hosting environment: Development
+2022-12-23 14:42:13.598 -05:00 [INF] Content root path: C:\Users\kamahale\source\repos\kmahaley\AzureDotnetSolution\CoreWebApplication
+2022-12-23 14:42:22.665 -05:00 [INF] Request starting HTTP/1.1 GET http://localhost:5000/item - -
+2022-12-23 14:42:22.719 -05:00 [INF] Executing endpoint 'CoreWebApplication.Controllers.ItemController.GetItemsAsync (CoreWebApplication)'
+2022-12-23 14:42:22.744 -05:00 [INF] Route matched with {action = "GetItems", controller = "Item"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Collections.Generic.IEnumerable`1[CoreWebApplication.Models.Item]]] GetItemsAsync() on controller CoreWebApplication.Controllers.ItemController (CoreWebApplication).
+2022-12-23 14:42:22.808 -05:00 [INF] Executing action method CoreWebApplication.Controllers.ItemController.GetItemsAsync (CoreWebApplication) - Validation state: "Valid"
+2022-12-23 14:42:22.820 -05:00 [INF] Executed action method CoreWebApplication.Controllers.ItemController.GetItemsAsync (CoreWebApplication), returned result Microsoft.AspNetCore.Mvc.OkObjectResult in 1.3287ms.
+2022-12-23 14:42:22.828 -05:00 [INF] Executing OkObjectResult, writing value of type 'System.Collections.Generic.List`1[[CoreWebApplication.Models.Item, CoreWebApplication, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2022-12-23 14:42:22.871 -05:00 [INF] Executed action CoreWebApplication.Controllers.ItemController.GetItemsAsync (CoreWebApplication) in 119.7247ms
+2022-12-23 14:42:22.874 -05:00 [INF] Executed endpoint 'CoreWebApplication.Controllers.ItemController.GetItemsAsync (CoreWebApplication)'
+2022-12-23 14:42:22.876 -05:00 [INF] Request finished HTTP/1.1 GET http://localhost:5000/item - - - 200 - application/json;+charset=utf-8 214.8492ms
+2022-12-23 14:43:26.986 -05:00 [INF] Request starting HTTP/1.1 GET http://localhost:5000/item - -
+2022-12-23 14:43:26.987 -05:00 [INF] Executing endpoint 'CoreWebApplication.Controllers.ItemController.GetItemsAsync (CoreWebApplication)'
+2022-12-23 14:43:26.988 -05:00 [INF] Route matched with {action = "GetItems", controller = "Item"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Collections.Generic.IEnumerable`1[CoreWebApplication.Models.Item]]] GetItemsAsync() on controller CoreWebApplication.Controllers.ItemController (CoreWebApplication).
+2022-12-23 14:43:26.998 -05:00 [INF] Executing action method CoreWebApplication.Controllers.ItemController.GetItemsAsync (CoreWebApplication) - Validation state: "Valid"
+2022-12-23 14:43:27.000 -05:00 [INF] Executed action method CoreWebApplication.Controllers.ItemController.GetItemsAsync (CoreWebApplication), returned result Microsoft.AspNetCore.Mvc.OkObjectResult in 0.1257ms.
+2022-12-23 14:43:27.002 -05:00 [INF] Executing OkObjectResult, writing value of type 'System.Collections.Generic.List`1[[CoreWebApplication.Models.Item, CoreWebApplication, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2022-12-23 14:43:27.003 -05:00 [INF] Executed action CoreWebApplication.Controllers.ItemController.GetItemsAsync (CoreWebApplication) in 14.6618ms
+2022-12-23 14:43:27.005 -05:00 [INF] Executed endpoint 'CoreWebApplication.Controllers.ItemController.GetItemsAsync (CoreWebApplication)'
+2022-12-23 14:43:27.006 -05:00 [INF] Request finished HTTP/1.1 GET http://localhost:5000/item - - - 200 - application/json;+charset=utf-8 20.5305ms
+2022-12-23 14:43:40.288 -05:00 [INF] Request starting HTTP/1.1 GET http://localhost:5000/item/3fa85f64-5717-4562-b3fc-2c963f66afa7 - -
+2022-12-23 14:43:40.290 -05:00 [INF] Executing endpoint 'CoreWebApplication.Controllers.ItemController.GetItemAsync (CoreWebApplication)'
+2022-12-23 14:43:40.315 -05:00 [INF] Route matched with {action = "RetrieveValue", controller = "Item"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[CoreWebApplication.Models.Item]] GetItemAsync(System.Guid) on controller CoreWebApplication.Controllers.ItemController (CoreWebApplication).
+2022-12-23 14:43:40.336 -05:00 [INF] Executing action method CoreWebApplication.Controllers.ItemController.GetItemAsync (CoreWebApplication) - Validation state: "Valid"
+2022-12-23 14:43:40.392 -05:00 [INF] Executed action CoreWebApplication.Controllers.ItemController.GetItemAsync (CoreWebApplication) in 73.9375ms
+2022-12-23 14:43:40.397 -05:00 [INF] Executed endpoint 'CoreWebApplication.Controllers.ItemController.GetItemAsync (CoreWebApplication)'
+2022-12-23 14:43:40.400 -05:00 [ERR] An unhandled exception has occurred while executing the request.
+System.ArgumentException: GetItemAsync, item not present in repository: 3fa85f64-5717-4562-b3fc-2c963f66afa7
+   at CoreWebApplication.Repositories.InMemoryRepository.GetItemAsync(Guid id) in C:\Users\kamahale\source\repos\kmahaley\AzureDotnetSolution\CoreWebApplication\Repositories\InMemoryRepository.cs:line 72
+   at CoreWebApplication.Controllers.ItemController.GetItemAsync(Guid id) in C:\Users\kamahale\source\repos\kmahaley\AzureDotnetSolution\CoreWebApplication\Controllers\ItemController.cs:line 86
+   at lambda_method13(Closure , Object )
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Logged|12_1(ControllerActionInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)
+2022-12-23 14:43:40.464 -05:00 [INF] Request finished HTTP/1.1 GET http://localhost:5000/item/3fa85f64-5717-4562-b3fc-2c963f66afa7 - - - 500 - text/plain;+charset=utf-8 175.2969ms

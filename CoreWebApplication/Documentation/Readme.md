@@ -4,6 +4,7 @@
 - [CSharp Language](https://learn.microsoft.com/en-us/dotnet/csharp/)
 - [Dotnet APIs](https://learn.microsoft.com/en-us/dotnet/api/)
 - [Dotnet core Microsoft docs](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/?view=aspnetcore-5.0&tabs=windows)
+- [Github of aspnetcore source code](https://github.com/dotnet/aspnetcore)
 
 ## Startup class constructor
 
@@ -80,8 +81,55 @@ you can use `IOptionsSnapshot<> or IOptionsMonitor<> ` to reload values on chang
 - IWebHostEnvironment 
 
 ## Logging
+
+### Default logger by
 - `ILogger<TodoController> controllerLogger`
 - `ILogger<TodoService> serviceLogger`
+- You can add new logger provider that can write to file, database or storage account.
+- 
+### Adding Serilog
+
+#### Packages
+- Sink is where to log the data. eg ApplicationInsights, ElasticSearch, file etc
+- we use file and console
+
+```
+<!--Serilog dependency-->
+<PackageReference Include="Serilog.AspNetCore" Version="6.1.0" />
+<PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
+<PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
+```
+
+#### Configuring and using
+
+- Configure logger
+  - Startup.cs
+  - `Logs/CoreWebApplication.txt` is location and name of the file generated daily
+```
+// Serilog configuration
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .WriteTo.Console()
+    .WriteTo.File("Logs/CoreWebApplication.txt", rollingInterval: RollingInterval.Day)
+    .CreateLogger();
+
+OR
+// Add configuration in appsetting.json 
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(configuration)
+    .CreateLogger();
+```
+
+- Instruct application builder to use Serilog, program.cs
+```
+Host
+    .CreateDefaultBuilder(args)
+    .UseSerilog()
+    .ConfigureWebHostDefaults(webBuilder =>
+    {
+        webBuilder.UseStartup<Startup>();
+    });
+```
 
 ## Secrets
 

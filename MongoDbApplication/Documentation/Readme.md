@@ -3,8 +3,14 @@
 [Dotnet core Microsoft docs](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/?view=aspnetcore-5.0&tabs=windows)
 
 ## Docker
+### Is DockerDesktop installed?
+- if windows machine? check docker desktop in apps
+- Start docker desktop if application is installed
+
+### Is DockerDesktop not installed?
 - [Install docker](https://docs.docker.com/get-docker/)
-- Test docker installed by commandline -> `docker info`
+- Test docker installed by commandline
+  - `docker info`
 
 ### Commands
 - start/stop conatiner: docker start/stop {ContainerName/ContainerId}

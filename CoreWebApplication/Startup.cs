@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Serilog;
 
 namespace CoreWebApplication
 {
@@ -23,6 +24,13 @@ namespace CoreWebApplication
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Serilog configuration, uncomment .UseSerilog() in program.cs
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Information()
+                .WriteTo.Console()
+                .WriteTo.File("Logs/CoreWebApplication.txt", rollingInterval: RollingInterval.Day)
+                .CreateLogger();
+
             //Configurations
            
             //Repositories
@@ -35,6 +43,7 @@ namespace CoreWebApplication
             //Controller
             services.AddControllers();
             services.AddHealthChecks();
+
 
             //Swagger
             services.AddSwaggerGen(options =>
