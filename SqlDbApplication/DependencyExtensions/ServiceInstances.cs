@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using SqlDbApplication.Services;
+using SqlDbApplication.Services.Interface;
 
 namespace SqlDbApplication.DependencyExtensions
 {

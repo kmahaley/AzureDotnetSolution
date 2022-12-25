@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace SqlDbApplication.Services
+namespace SqlDbApplication.Services.Interface
 {
     public interface IProductService
     {

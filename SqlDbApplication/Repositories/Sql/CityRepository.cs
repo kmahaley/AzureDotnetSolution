@@ -1,35 +1,65 @@
-﻿using SqlDbApplication.Models.Sql;
-using SqlDbApplication.Services.Interface;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using SqlDbApplication.Models.Sql;
+using SqlDbApplication.Repositories.Sql.Interface;
+using SqlDbApplication.Services;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace SqlDbApplication.Repositories.Sql
 {
-    public class CityRepository : ICityService
+    public class CityRepository : ICityRepository
     {
-        public Task<City> AddCityAsync(City city)
+        private readonly SqlDatabaseContext databaseContext;
+
+        private readonly ILogger<CityRepository> logger;
+
+        public CityRepository(SqlDatabaseContext databaseContext, ILogger<CityRepository> logger) 
         {
-            throw new System.NotImplementedException();
+            this.databaseContext = databaseContext ?? throw new ArgumentNullException(nameof(databaseContext));
+            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public Task<City> DeleteCityByIdAsync(int id)
+        public async Task<City> AddCityAsync(City city)
         {
-            throw new System.NotImplementedException();
+            var savedCity = await databaseContext.Cities.AddAsync(city);
+            await databaseContext.SaveChangesAsync();
+            return savedCity.Entity;
         }
 
-        public Task<IList<City>> GetAllCitiesAsync()
+        public async Task<City> DeleteCityByIdAsync(int id)
         {
-            throw new System.NotImplementedException();
+            var existingCity = await GetCityByIdAsync(id);
+            databaseContext.Cities.Remove(existingCity);
+            await databaseContext.SaveChangesAsync();
+            return existingCity;
         }
 
-        public Task<City> GetCityByIdAsync(int id)
+        public async Task<IEnumerable<City>> GetAllCitiesAsync()
         {
-            throw new System.NotImplementedException();
+            var list = await databaseContext.Cities.ToListAsync();
+            return list;
         }
 
-        public Task<City> UpdateCityAsync(int id, City city)
+        public async Task<City> GetCityByIdAsync(int id)
         {
-            throw new System.NotImplementedException();
+            var city = await databaseContext.Cities.FindAsync(id);
+            if (city == null)
+            {
+                throw new ArgumentException($"City is not present with id {id}");
+            }
+            return city;
+        }
+
+        public async Task<City> UpdateCityAsync(int id, City city)
+        {
+            var existingCity = await GetCityByIdAsync(id);
+            existingCity.Name = city.Name;
+            existingCity.Population = city.Population;
+            existingCity.Description = city.Description;
+            await databaseContext.SaveChangesAsync();
+            return city;
         }
     }
 }

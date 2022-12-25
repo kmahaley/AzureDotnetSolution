@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using SqlDbApplication.Models.Sql;
 using SqlDbApplication.Repositories.Sql.Interface;
+using SqlDbApplication.Services.Interface;
 
 namespace SqlDbApplication.Services
 {

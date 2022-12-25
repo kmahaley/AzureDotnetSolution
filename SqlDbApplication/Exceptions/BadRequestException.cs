@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace SqlDbApplication.Exceptions
 {
-    public class BadRequestException
+    public class BadRequestException : Exception
     {
+        public BadRequestException(string errorMessage, Exception ex) : base(errorMessage, ex)
+        {
+        }
     }
 }

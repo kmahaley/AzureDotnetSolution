@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using SqlDbApplication.DependencyExtensions;
+using SqlDbApplication.Mapper;
 
 namespace SqlDbApplication
 {
@@ -29,6 +30,9 @@ namespace SqlDbApplication
 
             //Service layer
             services.AddServiceInstances();
+
+            // Mapper
+            services.AddAutoMapper(typeof(MapperProfile));
 
             services.AddSwaggerGen(options =>
             {
