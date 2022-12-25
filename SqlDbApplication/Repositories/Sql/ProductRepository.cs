@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using SqlDbApplication.Exceptions;
 using SqlDbApplication.Models.Sql;
 using SqlDbApplication.Repositories.Sql.Interface;
 using System;
@@ -33,7 +34,9 @@ namespace SqlDbApplication.Repositories.Sql
             var existingEntity = await databaseContext.Products.FindAsync(id);
             if(existingEntity == null)
             {
-                throw new ArgumentException($"Product with Id:{id} does not exists.");
+                throw new SqlDbApplicationException(
+                    $"Product with Id:{id} does not exists.",
+                    ErrorCode.IncorrectEntityIdProvided);
             }
             return existingEntity;
         }

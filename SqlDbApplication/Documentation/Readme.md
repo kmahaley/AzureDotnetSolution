@@ -29,7 +29,6 @@ docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=Password123" -p 1433:1433 --
 
 ### Connect to SQL Server
 
-
 - Using Microsoft SQL server management studio
   - Install SSMS and open SSMS, provide below details
   - ServerType: Database engine
@@ -47,6 +46,7 @@ docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=Password123" -p 1433:1433 --
 
 ## Reference links
 - Scaffolding DB scema to Models
+
 ### Using dotnet CLI 
 - Install on dotnet CLI `dotnet tool install --global dotnet-ef`
 - Add connection string configuration as below in appsetting.json
@@ -84,7 +84,26 @@ docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=Password123" -p 1433:1433 --
 - You can you package manager console too instead of dotnet cli.
 - VS2022 -> Tools > NuGet Package Manager > Package Manager Console 
 - https://learn.microsoft.com/en-us/ef/core/cli/powershell
-- `add-migration {NameoFtheMigration}` -> `update-database`
+- Code 1st approach
+  - `add-migration {NameOfTheMigration}`
+  - `update-database`
+
+## Saving ConnectionString or Credentials
+
+### Using AppSettings.json
+- Add connection string configuration as below in appsetting.json
+```
+  "ConnectionStrings": {
+    "DefaultConnection":
+```
+- Based on Environment you can add connection string in different settings.json file
+
+### using Environment Variable
+- Windows -> Environment variable -> system Variable
+- Create env variable
+  - name: `ConnectionStrings:DefaultConnection`
+  - value: connection string value
+- ok and restart Visual studio
 
 ## Add database
 1) Add models in the project. eg. Product, Store etc.

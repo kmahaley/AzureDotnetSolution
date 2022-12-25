@@ -27,9 +27,11 @@ namespace SqlDbApplication.DependencyExtensions
             this IServiceCollection services,
             IConfiguration configuration)
         {
-            services.AddScoped<IProductRepository, ProductRepository>();
+            var databaseConnectionString = configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<SqlDatabaseContext>(option =>
-                option.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+                option.UseSqlServer(databaseConnectionString));
+
+            services.AddScoped<IProductRepository, ProductRepository>();
 
             return services;
         }

@@ -8,7 +8,7 @@ namespace SqlDbApplication.Exceptions
 {
     public class BadRequestException : Exception
     {
-        public BadRequestException(string errorMessage, Exception ex) : base(errorMessage, ex)
+        public BadRequestException(string errorMessage, Exception inner) : base(errorMessage, inner)
         {
         }
     }
