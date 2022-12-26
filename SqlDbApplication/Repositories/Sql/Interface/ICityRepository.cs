@@ -8,7 +8,7 @@ namespace SqlDbApplication.Repositories.Sql.Interface
     {
         Task<City> AddCityAsync(City city);
         Task<City> DeleteCityByIdAsync(int id);
-        Task<IEnumerable<City>> GetAllCitiesAsync();
+        Task<IEnumerable<City>> GetAllCitiesAsync(bool includePoints);
         Task<City> GetCityByIdAsync(int id);
         Task<City> UpdateCityAsync(int id, City city);
     }

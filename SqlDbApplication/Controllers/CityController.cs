@@ -24,9 +24,9 @@ namespace SqlDbApplication.Controllers
 
         // GET: api/<CityController>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CityDto>>> GetAllAsync()
+        public async Task<ActionResult<IEnumerable<CityDto>>> GetAllAsync([FromQuery] bool? includePoints)
         {
-            var listOfCities = await cityService.GetAllCitiesAsync();
+            var listOfCities = await cityService.GetAllCitiesAsync(includePoints);
             return Ok(listOfCities);
         }
 

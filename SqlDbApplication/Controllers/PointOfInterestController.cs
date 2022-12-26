@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
 using SqlDbApplication.Services.Interface;
+using SqlDbApplication.Exceptions;
 
 namespace SqlDbApplication.Controllers
 {
@@ -38,7 +39,7 @@ namespace SqlDbApplication.Controllers
                 var existingCity = await pointOfInterestService.GetPointOfInterestByIdAsync(id);
                 return Ok(existingCity);
             }
-            catch (ArgumentException ex)
+            catch (SqlDbApplicationException ex)
             {
                 return BadRequest();
             }

@@ -37,19 +37,29 @@ namespace SqlDbApplication.Services
             return mapper.Map<CityDto>(city);
         }
 
-        public Task<IList<CityDto>> GetAllCitiesAsync()
+        public async Task<IList<CityDto>> GetAllCitiesAsync(bool? includePoints)
         {
-            throw new System.NotImplementedException();
+            bool isIncludePointOfInterest = false;
+            if (includePoints.HasValue && includePoints.Value)
+            {
+                isIncludePointOfInterest = true;
+            }
+            var cities = await cityRepository.GetAllCitiesAsync(isIncludePointOfInterest);
+            var listOfCities = mapper.Map<IEnumerable<City>, List<CityDto>>(cities);
+            return listOfCities;
         }
 
-        public Task<CityDto> GetCityByIdAsync(int id)
+        public async Task<CityDto> GetCityByIdAsync(int id)
         {
-            throw new System.NotImplementedException();
+            var city = await cityRepository.GetCityByIdAsync(id);
+            return mapper.Map<CityDto>(city);
         }
 
-        public Task<CityDto> UpdateCityAsync(int id, CityDto city)
+        public async Task<CityDto> UpdateCityAsync(int id, CityDto cityDto)
         {
-            throw new System.NotImplementedException();
+            var newCity = mapper.Map<City>(cityDto);
+            var updatedCity = await cityRepository.UpdateCityAsync(id, newCity);
+            return mapper.Map<CityDto>(updatedCity);
         }
     }
 }

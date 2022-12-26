@@ -1,10 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using SqlDbApplication.Exceptions;
 using SqlDbApplication.Models.Sql;
 using SqlDbApplication.Repositories.Sql.Interface;
 using SqlDbApplication.Services;
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace SqlDbApplication.Repositories.Sql
@@ -36,10 +38,17 @@ namespace SqlDbApplication.Repositories.Sql
             return existingCity;
         }
 
-        public async Task<IEnumerable<City>> GetAllCitiesAsync()
+        public async Task<IEnumerable<City>> GetAllCitiesAsync(bool includePoints)
         {
-            var list = await databaseContext.Cities.ToListAsync();
-            return list;
+            if (includePoints)
+            {
+                
+                return await databaseContext
+                    .Cities
+                    .Include(city => city.PointOfInterests)
+                    .ToListAsync();
+            }
+            return await databaseContext.Cities.ToListAsync();
         }
 
         public async Task<City> GetCityByIdAsync(int id)
@@ -47,7 +56,9 @@ namespace SqlDbApplication.Repositories.Sql
             var city = await databaseContext.Cities.FindAsync(id);
             if (city == null)
             {
-                throw new ArgumentException($"City is not present with id {id}");
+                throw new SqlDbApplicationException(
+                    $"City is not present with id {id}",
+                    ErrorCode.IncorrectEntityIdProvided);
             }
             return city;
         }

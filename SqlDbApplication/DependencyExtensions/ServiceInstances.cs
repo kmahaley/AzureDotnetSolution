@@ -15,6 +15,9 @@ namespace SqlDbApplication.DependencyExtensions
             services.AddSingleton<IProductService, ProductService>();
             services.AddSingleton<IFireAndForgetService, FireAndForgetService>();
 
+            services.AddScoped<ICityService, CityService>();
+            services.AddScoped<IPointOfInterestService, PointOfInterestService>();
+
             return services;
         }
     }
