@@ -118,14 +118,16 @@ docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=Password123" -p 1433:1433 --
   - ConfigureServices -> `services.AddDbContext<SqlDatabaseContext>();`
 
 
-## Demonstrate "DisposeContextIssue"
+## Dispose Context Issue
+
+### Demonstrate "DisposeContextIssue"
 - ProductService wants to add and update the product on method `DisposeContextIssueAsync`.
 - Add on main thread and update on new thread
 - Main threads add data but new thread to update product show's error as `Disposed Dbcontext`
 - This happens because DbContext or IProducRepository is scope instance hence new thread does not have access to it
 
 
-## Solve "DisposeContextIssue"
+### Solve "DisposeContextIssue"
 
 - ProductService wants to add and update the product on method `SolveDisposeContextIssueAsync`.
 - Add on main thread and update on new thread
@@ -137,3 +139,37 @@ docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=Password123" -p 1433:1433 --
 - Instance injected as `services.AddHostedService<BackgroundDatabaseService>();`
 - This service starts executing task given to it as soon as application starts.
 - `BackgroundDatabaseService` ExecuteAsync method get a product and starts updating it.
+
+## Deferred Execution and Search
+
+- When user provide search string and we have multiple column to search from use IQueryable<T>
+- This build expression tree by appending multiple searching condition
+- IQueryable<T> is not executed until terminal clause is called
+
+### Using IQueryable<T>
+
+- declared in repository layer as
+`var queryCollection = databaseContext.Cities as IQueryable<City>;`
+- Based on search column used as
+
+```
+if (!string.IsNullOrWhiteSpace(searchQuery))
+{
+    searchQuery = searchQuery.Trim();
+    queryCollection = queryCollection
+    .Where(city => city.Name.Contains(searchQuery) || city.Description.Contains(searchQuery));
+}
+```
+
+- Keep appending using where() clause
+
+### Terminal expression
+
+- foreach loop
+- ToListAsync(), ToArray() etc
+- Singleton expression like
+  - count()
+  - avg()
+
+
+

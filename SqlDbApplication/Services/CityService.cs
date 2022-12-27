@@ -94,5 +94,21 @@ namespace SqlDbApplication.Services
             var cities = await cityRepository.GetAllCitiesUsingSearchAsync(name, searchQuery, includePoints);
             return mapper.Map<IEnumerable<City>, List<CityDto>>(cities);
         }
+
+        public async Task<IList<CityDto>> GetAllCitiesUsingSearchAndPaginationAsync(
+            string? name,
+            string? searchQuery,
+            bool includePoints,
+            int pageNumber,
+            int pageSize)
+        {
+            var cities = await cityRepository.GetAllCitiesUsingSearchAndPaginationAsync(
+                name,
+                searchQuery,
+                includePoints,
+                pageNumber,
+                pageSize);
+            return mapper.Map<IEnumerable<City>, List<CityDto>>(cities);
+        }
     }
 }

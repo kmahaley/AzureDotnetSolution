@@ -117,6 +117,11 @@ namespace SqlDbApplication.Repositories.Sql
 
         }
 
+        /// <summary>
+        /// this is using IQuery which is appended based on user requirement and execute only when terminal
+        /// expression is called like ".ToListAsync()"
+        /// Deferred execution
+        /// </summary>
         public async Task<IEnumerable<City>> GetAllCitiesUsingSearchAsync(string name, string searchQuery, bool includePoints)
         {
 
@@ -125,7 +130,7 @@ namespace SqlDbApplication.Repositories.Sql
             {
                 queryCollection = queryCollection
                 .Include(city => city.PointOfInterests);
-                
+
             }
 
             if (!string.IsNullOrWhiteSpace(name))
@@ -144,6 +149,50 @@ namespace SqlDbApplication.Repositories.Sql
 
             return await queryCollection
                 .OrderBy(city => city.Name)
+                .ToListAsync();
+
+        }
+        
+        /// <summary>
+        /// this is using IQuery which is appended based on user requirement and execute only when terminal
+        /// expression is called like ".ToListAsync()"
+        /// Deferred execution
+        /// </summary>
+        public async Task<IEnumerable<City>> GetAllCitiesUsingSearchAndPaginationAsync(
+            string name,
+            string searchQuery,
+            bool includePoints,
+            int pageNumber,
+            int pageSize)
+        {
+
+            var queryCollection = databaseContext.Cities as IQueryable<City>;
+            
+            if (includePoints)
+            {
+                queryCollection = queryCollection
+                .Include(city => city.PointOfInterests);
+
+            }
+
+            if (!string.IsNullOrWhiteSpace(name))
+            {
+                name = name.Trim();
+                queryCollection = queryCollection
+                .Where(city => city.Name == name);
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchQuery))
+            {
+                searchQuery = searchQuery.Trim();
+                queryCollection = queryCollection
+                .Where(city => city.Name.Contains(searchQuery) || city.Description.Contains(searchQuery));
+            }
+
+            return await queryCollection
+                .OrderBy(city => city.Name)// always use orderBy in pagination
+                .Skip(pageSize * pageNumber) // 0th page 10, 1st page 10, 2nd page 10. skip 2nd page result == (10 * 2), 10 cities skipped
+                .Take(pageSize)
                 .ToListAsync();
 
         }

@@ -18,5 +18,11 @@ namespace SqlDbApplication.Repositories.Sql.Interface
         Task<IEnumerable<City>> GetAllCitiesFilteredUsingNameAsync(string name, bool includePoints);
 
         Task<IEnumerable<City>> GetAllCitiesUsingSearchAsync(string name, string searchQuery, bool includePoints);
+        Task<IEnumerable<City>> GetAllCitiesUsingSearchAndPaginationAsync(
+            string name,
+            string searchQuery,
+            bool includePoints,
+            int pageNumber,
+            int pageSize);
     }
 }

@@ -13,6 +13,7 @@ namespace SqlDbApplication.Controllers
     [ApiController]
     public class CityController : ControllerBase
     {
+        private const int MaxPageSize = 10;
         private readonly ILogger<CityController> logger;
         private readonly ICityService cityService;
 
@@ -95,12 +96,48 @@ namespace SqlDbApplication.Controllers
         /// <param name="includePoints">should include dependent point of interest</param>
         /// <returns>list of cities matching filter.</returns>
         [HttpGet("/search")]
-        public async Task<ActionResult<IEnumerable<CityDto>>> GetAllCitiesFilteredUsingNameAsync(
+        public async Task<ActionResult<IEnumerable<CityDto>>> GetAllCitiesUsingSearchAsync(
             [FromQuery] string? name,
             [FromQuery] string? searchQuery,
             [FromQuery] bool includePoints = false)
         {
             var listOfCities = await cityService.GetAllCitiesUsingSearchAsync(name, searchQuery, includePoints);
+            return Ok(listOfCities);
+        }
+
+        /// <summary>
+        /// Added query params to filter on city name and search on name && description
+        /// once filter is applied using name then search is applied on returned filtered.
+        /// searchQuery gives result containg the user provided string
+        /// </summary>
+        /// <param name="name">name of the city used for filerting</param>
+        /// <param name="searchQuery">name of search query checked in name and description of the city</param>
+        /// <param name="includePoints">should include dependent point of interest</param>
+        /// <param name="pageNumber">skip number of results. value starts from 0.</param>
+        /// <param name="pageSize">how many cities returned in the call</param>
+        /// <returns>list of cities matching filter.</returns>
+        [HttpGet("/pagedSearch")]
+        public async Task<ActionResult<IEnumerable<CityDto>>> GetAllCitiesUsingSearchAndPaginationAsync(
+            [FromQuery] string? name,
+            [FromQuery] string? searchQuery,
+            [FromQuery] bool includePoints = false,
+            [FromQuery] int pageNumber = 0,
+            [FromQuery] int pageSize = 5)
+        {
+            if (pageSize > MaxPageSize)
+            {
+                pageSize = MaxPageSize;
+            }
+            if (pageNumber < 0)
+            {
+                pageNumber = 0;
+            }
+            var listOfCities = await cityService.GetAllCitiesUsingSearchAndPaginationAsync(
+                name,
+                searchQuery,
+                includePoints,
+                pageNumber,
+                pageSize);
             return Ok(listOfCities);
         }
     }

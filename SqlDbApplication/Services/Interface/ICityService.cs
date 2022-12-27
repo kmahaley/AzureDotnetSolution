@@ -14,5 +14,11 @@ namespace SqlDbApplication.Services.Interface
 
         Task<IList<CityDto>> GetAllCitiesFilteredUsingNameAsync(string? name, bool includePoints);
         Task<IList<CityDto>> GetAllCitiesUsingSearchAsync(string? name, string? searchQuery, bool includePoints);
+        Task<IList<CityDto>> GetAllCitiesUsingSearchAndPaginationAsync(
+            string? name,
+            string? searchQuery,
+            bool includePoints,
+            int pageNumber,
+            int pageSize);
     }
 }
