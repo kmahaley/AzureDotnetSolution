@@ -32,11 +32,11 @@ namespace SqlDbApplication.Controllers
 
         // GET api/<CityController>/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<CityDto>> GetAsync(int id)
+        public async Task<ActionResult<CityDto>> GetAsync(int id, [FromQuery] bool? includePoints)
         {
             try
             {
-                var existingCity = await cityService.GetCityByIdAsync(id);
+                var existingCity = await cityService.GetCityByIdAsync(id, includePoints);
                 return Ok(existingCity);
             }
             catch (ArgumentException ex)
@@ -68,6 +68,40 @@ namespace SqlDbApplication.Controllers
         {
             var deletedCity = await cityService.DeleteCityByIdAsync(id);
             return Ok(deletedCity);
+        }
+
+        /// <summary>
+        /// Filter based on name of the city. Filter need exact matching record.
+        /// </summary>
+        /// <param name="name">name of the city used for filtering</param>
+        /// <param name="includePoints">should include dependent point of interest</param>
+        /// <returns>list of cities matching filter.</returns>
+        [HttpGet("/filter")]
+        public async Task<ActionResult<IEnumerable<CityDto>>> GetAllCitiesFilteredUsingNameAsync(
+            [FromQuery] string? name,
+            [FromQuery] bool includePoints = false)
+        {
+            var listOfCities = await cityService.GetAllCitiesFilteredUsingNameAsync(name, includePoints);
+            return Ok(listOfCities);
+        }
+
+        /// <summary>
+        /// Added query params to filter on city name and search on name && description
+        /// once filter is applied using name then search is applied on returned filtered.
+        /// searchQuery gives result containg the user provided string
+        /// </summary>
+        /// <param name="name">name of the city used for filerting</param>
+        /// <param name="searchQuery">name of search query checked in name and description of the city</param>
+        /// <param name="includePoints">should include dependent point of interest</param>
+        /// <returns>list of cities matching filter.</returns>
+        [HttpGet("/search")]
+        public async Task<ActionResult<IEnumerable<CityDto>>> GetAllCitiesFilteredUsingNameAsync(
+            [FromQuery] string? name,
+            [FromQuery] string? searchQuery,
+            [FromQuery] bool includePoints = false)
+        {
+            var listOfCities = await cityService.GetAllCitiesUsingSearchAsync(name, searchQuery, includePoints);
+            return Ok(listOfCities);
         }
     }
 }

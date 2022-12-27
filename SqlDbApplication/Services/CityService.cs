@@ -49,9 +49,14 @@ namespace SqlDbApplication.Services
             return listOfCities;
         }
 
-        public async Task<CityDto> GetCityByIdAsync(int id)
+        public async Task<CityDto> GetCityByIdAsync(int id, bool? includePoints)
         {
-            var city = await cityRepository.GetCityByIdAsync(id);
+            bool isIncludePointOfInterest = false;
+            if (includePoints.HasValue && includePoints.Value == true)
+            {
+                isIncludePointOfInterest = true;
+            }
+            var city = await cityRepository.GetCityByIdAsync(id, isIncludePointOfInterest);
             return mapper.Map<CityDto>(city);
         }
 
@@ -60,6 +65,34 @@ namespace SqlDbApplication.Services
             var newCity = mapper.Map<City>(cityDto);
             var updatedCity = await cityRepository.UpdateCityAsync(id, newCity);
             return mapper.Map<CityDto>(updatedCity);
+        }
+
+        public async Task<IList<CityDto>> GetAllCitiesFilteredUsingNameAsync(string? name, bool includePoints) 
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                return await GetAllCitiesAsync(includePoints);
+            }
+            else
+            {
+                name = name.Trim();
+                var cities = await cityRepository.GetAllCitiesFilteredUsingNameAsync(name, includePoints);
+                var listOfCities = mapper.Map<IEnumerable<City>, List<CityDto>>(cities);
+                return listOfCities;
+            }
+            
+        }
+        
+        public async Task<IList<CityDto>> GetAllCitiesUsingSearchAsync(string? name, string? searchQuery, bool includePoints) 
+        {
+            if (string.IsNullOrWhiteSpace(name)
+                && string.IsNullOrWhiteSpace(searchQuery))
+            {
+                return await GetAllCitiesAsync(includePoints);
+            }
+
+            var cities = await cityRepository.GetAllCitiesUsingSearchAsync(name, searchQuery, includePoints);
+            return mapper.Map<IEnumerable<City>, List<CityDto>>(cities);
         }
     }
 }
