@@ -24,5 +24,12 @@ namespace SqlDbApplication.Repositories.Sql.Interface
             bool includePoints,
             int pageNumber,
             int pageSize);
+        
+        Task<CityPage> GetAllCitiesWithPaginationMetdadataAsync(
+            string name,
+            string searchQuery,
+            bool includePoints,
+            int pageNumber,
+            int pageSize);
     }
 }

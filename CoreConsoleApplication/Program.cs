@@ -2,19 +2,23 @@
 using CoreConsoleApplication.DatabaseConcurrency;
 using CoreConsoleApplication.Dotnetutilities;
 using System;
+using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace CoreConsoleApplication
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
-            
 
-            
 
+            var st = Stopwatch.StartNew();
+            Console.WriteLine("before delay");
+
+            await Task.Delay(5000);
             
-            Console.WriteLine("hello world");
+            Console.WriteLine("hello world {0}", st.Elapsed.TotalSeconds);
 
         }
 

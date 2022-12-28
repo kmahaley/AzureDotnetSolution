@@ -110,5 +110,22 @@ namespace SqlDbApplication.Services
                 pageSize);
             return mapper.Map<IEnumerable<City>, List<CityDto>>(cities);
         }
+        
+        public async Task<CityPageDto> GetAllCitiesWithPaginationMetdadataAsync(
+            string? name,
+            string? searchQuery,
+            bool includePoints,
+            int pageNumber,
+            int pageSize)
+        {
+            var cityPage = await cityRepository.GetAllCitiesWithPaginationMetdadataAsync(
+                name,
+                searchQuery,
+                includePoints,
+                pageNumber,
+                pageSize);
+
+            return mapper.Map<CityPage, CityPageDto>(cityPage);
+        }
     }
 }

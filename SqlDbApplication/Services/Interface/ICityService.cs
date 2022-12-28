@@ -1,4 +1,5 @@
 ﻿using SqlDbApplication.Models.Dtos;
+using SqlDbApplication.Models.Sql;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -17,6 +18,13 @@ namespace SqlDbApplication.Services.Interface
         Task<IList<CityDto>> GetAllCitiesUsingSearchAndPaginationAsync(
             string? name,
             string? searchQuery,
+            bool includePoints,
+            int pageNumber,
+            int pageSize);
+
+        Task<CityPageDto> GetAllCitiesWithPaginationMetdadataAsync(
+            string name,
+            string searchQuery,
             bool includePoints,
             int pageNumber,
             int pageSize);

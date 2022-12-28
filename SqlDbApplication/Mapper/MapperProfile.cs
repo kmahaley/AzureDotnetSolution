@@ -13,7 +13,10 @@ namespace SqlDbApplication.Mapper
 
             CreateMap<PointOfInterestDto, PointOfInterest>()
                 .ReverseMap();
-                
+
+            CreateMap<CityPageDto, CityPage>()
+                .ReverseMap();
+
         }
     }
 }
