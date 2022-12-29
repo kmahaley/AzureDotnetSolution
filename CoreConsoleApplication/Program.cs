@@ -1,4 +1,6 @@
-﻿using CoreConsoleApplication.BBCProjectUtilities;
+﻿using BenchmarkDotNet.Running;
+using CoreConsoleApplication.BBCProjectUtilities;
+using CoreConsoleApplication.Benchmark;
 using CoreConsoleApplication.DatabaseConcurrency;
 using CoreConsoleApplication.Dotnetutilities;
 using System;
@@ -11,13 +13,10 @@ namespace CoreConsoleApplication
     {
         public static async Task Main(string[] args)
         {
-
-
             var st = Stopwatch.StartNew();
-            Console.WriteLine("before delay");
+            var summary = BenchmarkRunner.Run<BechmarkApiDemo>();
 
-            await Task.Delay(5000);
-            
+
             Console.WriteLine("hello world {0}", st.Elapsed.TotalSeconds);
 
         }

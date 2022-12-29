@@ -31,6 +31,9 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.11" />
+
+		<!--Bechmark-->
+		<PackageReference Include="BenchmarkDotNet" Version="0.13.3" />
 	</ItemGroup>
 
 </Project>
