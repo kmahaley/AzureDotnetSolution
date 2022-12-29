@@ -171,5 +171,23 @@ if (!string.IsNullOrWhiteSpace(searchQuery))
   - count()
   - avg()
 
+### Pagination
 
+- PaginationMetadata should contain following data along with the List of the Items/City 
+
+```
+class PaginationMetadata
+{
+public int TotalItemCount { get; set; }
+public int TotalPageCount { get; set; }
+public int PageSize { get; set; }
+public int CurrentPage { get; set; }
+}
+
+class CityPageDto
+{
+public IEnumerable<CityDto> Cities { get; set; }
+public PaginationMetadata PaginationMetadata { get; set; }
+}
+```
 

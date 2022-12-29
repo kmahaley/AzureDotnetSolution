@@ -29,7 +29,7 @@ namespace SqlDbApplication
             services.AddDatabaseInstances(Configuration);
 
             //Service layer
-            services.AddServiceInstances();
+            services.AddServiceInstances(Configuration);
 
             // Mapper
             services.AddAutoMapper(typeof(MapperProfile));
