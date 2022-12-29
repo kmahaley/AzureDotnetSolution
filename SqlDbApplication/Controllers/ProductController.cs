@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 
 namespace SqlDbApplication.Controllers
 {
+    [ApiVersion("1.0")]
     [Route("api/[controller]")]
     [ApiController]
     public class ProductController : ControllerBase

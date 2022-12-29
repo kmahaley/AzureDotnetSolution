@@ -6,6 +6,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using SqlDbApplication.DependencyExtensions;
 using SqlDbApplication.Mapper;
+using System;
+using System.IO;
+using System.Reflection;
 
 namespace SqlDbApplication
 {
@@ -43,8 +46,21 @@ namespace SqlDbApplication
                         Version = "v1",
                         Description = "Use this application to learn SQL DB connection"
                     });
+
+                //Generate comments using XML file
+                var assemblyName = Assembly.GetExecutingAssembly().GetName().Name;
+                var xmlCommentsFile = $"{assemblyName}.xml";
+                var xmlCommentsFullPath = Path.Combine(AppContext.BaseDirectory, xmlCommentsFile);
+                options.IncludeXmlComments(xmlCommentsFullPath);
             });
 
+            // API versioning support from Microsoft MVC
+            services.AddApiVersioning(setupAction =>
+            {
+                setupAction.DefaultApiVersion = new Microsoft.AspNetCore.Mvc.ApiVersion(1, 0);
+                setupAction.ReportApiVersions = true;
+                setupAction.AssumeDefaultVersionWhenUnspecified = true;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

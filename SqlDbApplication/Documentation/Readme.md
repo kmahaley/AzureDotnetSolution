@@ -191,3 +191,78 @@ public PaginationMetadata PaginationMetadata { get; set; }
 }
 ```
 
+## Authentication of API
+
+- In order to authenticate the API, we create JWT token
+
+### JWT Token
+- it contains 3 parts. Algorithm and token type, Payload for which token is generated, hash of the payload(signature)
+- https://jwt.io/
+```
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZ2l2ZW5fbmFtZSI6IkpvaG4iLCJmYW1pbHlfbmFtZSI6IldpY2siLCJjaXR5IjoiU2VhdHRlIiwibmJmIjoxNjcyMzI2MTE1LCJleHAiOjE2NzIzMjk3MTUsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTAwMCIsImF1ZCI6InVzZXIifQ.EdatiUEfBTSZphCnJdBoEsxiz9BceRt4dkVvhInptkg
+```
+
+#### How to create
+
+- For demo I am using keyvault as appsettings.json
+- provide security key in appsettings.json
+- Issuer data in appsettings.json
+- check username/password against database
+- Check `AuthenticationController` example
+- Not for production application.
+- Use OAuth2 and OpenId to secure production application
+
+#### How to use
+- Configure/Add authorization service
+- use authorization middleware
+- Annotate controller with `[Authorize]` attribute
+
+## API Versioning
+
+- Use package
+`<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />`
+- Configure/Add versioning service
+
+```
+services.AddApiVersioning(setupAction =>
+{
+    setupAction.DefaultApiVersion = new Microsoft.AspNetCore.Mvc.ApiVersion(1, 0);
+    setupAction.ReportApiVersions = true;
+    setupAction.AssumeDefaultVersionWhenUnspecified = true;
+});
+```
+- Resonpse will contain `api-supported-versions:1.0`
+
+- Annotate controller with `[ApiVersion("1.0")]`
+
+
+## API documentation
+
+- Add swagger, which is out of the box in dotnet core application
+
+### Generate documentation from XML file
+
+- Properties of the project -> Build 
+- XML documentation file path == NameOfTheProject.xml, example `SqlDbApplication.xml`
+- Add XML documentation on the DTOs, object and controller APIs
+- Configure swagger as below
+
+```
+services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1",
+        new OpenApiInfo()
+        {
+            Title = SwaggerApiName,
+            Version = "v1",
+            Description = "Use this application to learn SQL DB connection"
+        });
+
+    //Generate comments using XML file
+    var assemblyName = Assembly.GetExecutingAssembly().GetName().Name;
+    var xmlCommentsFile = $"{assemblyName}.xml";
+    var xmlCommentsFullPath = Path.Combine(AppContext.BaseDirectory, xmlCommentsFile);
+    options.IncludeXmlComments(xmlCommentsFullPath);
+});
+
+```

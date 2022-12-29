@@ -9,6 +9,7 @@ using SqlDbApplication.Exceptions;
 
 namespace SqlDbApplication.Controllers
 {
+    [ApiVersion("1.0")]
     [Route("api/[controller]")]
     [ApiController]
     public class PointOfInterestController : ControllerBase

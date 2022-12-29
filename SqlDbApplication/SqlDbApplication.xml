@@ -1,0 +1,199 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SqlDbApplication</name>
+    </assembly>
+    <members>
+        <member name="M:SqlDbApplication.Controllers.CityController.GetAllAsync(System.Nullable{System.Boolean})">
+            <summary>
+            Get all cities present in the application
+            </summary>
+            <param name="includePoints">should you include point of interests</param>
+            <returns>List of all Cities with point of interests</returns>
+        </member>
+        <member name="M:SqlDbApplication.Controllers.CityController.GetAsync(System.Int32,System.Nullable{System.Boolean})">
+            <summary>
+            Get city data by city id
+            </summary>
+            <param name="id">city identifier</param>
+            <param name="includePoints">should you include point of interests</param>
+            <returns>return city data for city id provided</returns>
+        </member>
+        <member name="M:SqlDbApplication.Controllers.CityController.GetAllCitiesFilteredUsingNameAsync(System.String,System.Boolean)">
+            <summary>
+            Filter based on name of the city. Filter need exact matching record.
+            </summary>
+            <param name="name">name of the city used for filtering</param>
+            <param name="includePoints">should include dependent point of interest</param>
+            <returns>list of cities matching filter.</returns>
+        </member>
+        <member name="M:SqlDbApplication.Controllers.CityController.GetAllCitiesUsingSearchAsync(System.String,System.String,System.Boolean)">
+            <summary>
+            Added query params to filter on city name and search on name and description
+            once filter is applied using name then search is applied on returned filtered.
+            searchQuery gives result containg the user provided string
+            </summary>
+            <param name="name">name of the city used for filerting</param>
+            <param name="searchQuery">name of search query checked in name and description of the city</param>
+            <param name="includePoints">should include dependent point of interest</param>
+            <returns>list of cities matching filter and search.</returns>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:SqlDbApplication.Controllers.CityController.GetAllCitiesUsingSearchAndPaginationAsync(System.String,System.String,System.Boolean,System.Int32,System.Int32)" -->
+        <!-- Badly formed XML comment ignored for member "M:SqlDbApplication.Controllers.CityController.GetAllCitiesWithPaginationMetdadataAsync(System.String,System.String,System.Boolean,System.Int32,System.Int32)" -->
+        <member name="M:SqlDbApplication.Controllers.ProductController.PostDisposeContextIssueAsync(SqlDbApplication.Models.Sql.Product)">
+            <summary>
+            This method will throw exception: Purposefully done
+            This API demonstrates, API is adding data and updating in a FireAndForget manner on a new thread.
+            - DbContext is scoped instance hence primary thread adds data.
+            - new thread does not have DbContext scope instance hence update fails.
+            </summary>
+        </member>
+        <member name="M:SqlDbApplication.Controllers.ProductController.PostSolveDisposeContextIssueDirtyApproachAsync(SqlDbApplication.Models.Sql.Product)">
+            <summary>
+            This method will throw exception: Purposefully done
+            This API demonstrates, API is adding data and updating in a FireAndForget manner on a new thread.
+            - DbContext is scoped instance hence primary thread adds data.
+            - new thread does not have DbContext scope instance hence update fails.
+            </summary>
+        </member>
+        <member name="M:SqlDbApplication.Controllers.ProductController.PostSolveDisposeContextIssueAsync(SqlDbApplication.Models.Sql.Product)">
+            <summary>
+            This API demonstrates, API is adding data and updating in a FireAndForget manner.
+            Main thread is returned immediatly and not waiting for update to happen
+            - Add is done by product service
+            - update is done by another service FireAndForget service
+            </summary>
+        </member>
+        <member name="T:SqlDbApplication.DependencyExtensions.RepositoryInstances">
+            <summary>
+            Add denpendencies of the database context and repositories
+            </summary>
+        </member>
+        <member name="M:SqlDbApplication.DependencyExtensions.RepositoryInstances.AddDatabaseInstances(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            DbContext is a scope context, hence service consuming DbContext should have lifespan
+            less than scoped[transient or scoped]
+            </summary>
+            <param name="services"></param>
+            <param name="configuration"></param>
+            <returns></returns>
+        </member>
+        <member name="T:SqlDbApplication.Models.Dtos.CityDto">
+            <summary>
+            City data
+            </summary>
+        </member>
+        <member name="P:SqlDbApplication.Models.Dtos.CityDto.CityId">
+            <summary>
+            City identifier
+            </summary>
+        </member>
+        <member name="P:SqlDbApplication.Models.Dtos.CityDto.Name">
+            <summary>
+            Name of the city
+            </summary>
+        </member>
+        <member name="P:SqlDbApplication.Models.Dtos.CityDto.Population">
+            <summary>
+            Population of the city
+            </summary>
+        </member>
+        <member name="P:SqlDbApplication.Models.Dtos.CityDto.Description">
+            <summary>
+            Description of the city
+            </summary>
+        </member>
+        <member name="P:SqlDbApplication.Models.Dtos.CityDto.PointOfInterests">
+            <summary>
+            List of interesting location inside city. Tourist locations
+            </summary>
+        </member>
+        <member name="T:SqlDbApplication.Models.Dtos.PointOfInterestDto">
+            <summary>
+            Tourist locations in the city
+            </summary>
+        </member>
+        <member name="P:SqlDbApplication.Models.Dtos.PointOfInterestDto.PointOfInterestId">
+            <summary>
+            unique identifier of the tourist location
+            </summary>
+        </member>
+        <member name="P:SqlDbApplication.Models.Dtos.PointOfInterestDto.Name">
+            <summary>
+            Name of the tourist location
+            </summary>
+        </member>
+        <member name="P:SqlDbApplication.Models.Dtos.PointOfInterestDto.Description">
+            <summary>
+            Location of the torurist location
+            </summary>
+        </member>
+        <member name="M:SqlDbApplication.Repositories.Sql.CityRepository.GetAllCitiesUsingSearchAsync(System.String,System.String,System.Boolean)">
+            <summary>
+            this is using IQuery which is appended based on user requirement and execute only when terminal
+            expression is called like ".ToListAsync()"
+            Deferred execution
+            </summary>
+        </member>
+        <member name="M:SqlDbApplication.Repositories.Sql.CityRepository.GetAllCitiesUsingSearchAndPaginationAsync(System.String,System.String,System.Boolean,System.Int32,System.Int32)">
+            <summary>
+            this is using IQuery which is appended based on user requirement and execute only when terminal
+            expression is called like ".ToListAsync()"
+            Deferred execution
+            </summary>
+        </member>
+        <member name="M:SqlDbApplication.Repositories.Sql.CityRepository.GetAllCitiesWithPaginationMetdadataAsync(System.String,System.String,System.Boolean,System.Int32,System.Int32)">
+            <summary>
+            this is using IQuery which is appended based on user requirement and execute only when terminal
+            expression is called like ".ToListAsync()"
+            Deferred execution
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:SqlDbApplication.Repositories.Sql.CityRepository.CreateFilterAndSearchQuery(System.String,System.String,System.Boolean)" -->
+        <member name="T:SqlDbApplication.Repositories.Sql.SqlDatabaseContext">
+            <summary>
+            Database context to query the database entities.
+            you can create separate context for each entity or single context for all entities
+            </summary>
+        </member>
+        <member name="M:SqlDbApplication.Services.BackgroundDatabaseService.ExecuteAsync(System.Threading.CancellationToken)">
+            <summary>
+            Runs all the task as background tasks. 
+            </summary>
+        </member>
+        <member name="T:SqlDbApplication.Services.FireAndForgetService">
+            <summary>
+            FireAndForgetService service is injected with IServiceScopeFactory. We can inject IServiceProvider
+            too. Use any method to create scope.
+            </summary>
+        </member>
+        <member name="M:SqlDbApplication.Services.FireAndForgetService.ExecuteFireAndForgetJob(System.Func{SqlDbApplication.Repositories.Sql.Interface.IProductRepository,System.Threading.Tasks.Task})">
+            <summary>
+            serviceScopeFactory create a scope for IProductRepository and updates database
+            </summary>
+        </member>
+        <member name="M:SqlDbApplication.Services.ProductService.DisposeContextIssueAsync(SqlDbApplication.Models.Sql.Product)">
+            <summary>
+            This method will throw exception: Purposefully done
+            This API demonstrates, API is adding data and updating in a FireAndForget manner on a new thread.
+            - DbContext is scoped instance hence primary thread adds data.
+            - new thread does not have DbContext scope instance hence update fails.
+            </summary>
+        </member>
+        <member name="M:SqlDbApplication.Services.ProductService.SolvedDisposeContextIssueDirtyApproachAsync(SqlDbApplication.Models.Sql.Product)">
+            <summary>
+            This method will solve "InvalidOperationException: Context is disposed and second thread trying to access" issue
+            Correct approach it would be nice to hide scope and IOC container details.
+            Hence refer SolveDisposeContextIssueAsync() approach.
+            </summary>
+        </member>
+        <member name="M:SqlDbApplication.Services.ProductService.SolveDisposeContextIssueAsync(SqlDbApplication.Models.Sql.Product)">
+            <summary>
+            This API demonstrates, API is adding data and updating in a FireAndForget manner.
+            Main thread is returned immediatly and not waiting for update to happen
+            - Add is done by product service
+            - update is done by another service FireAndForget service
+            </summary>
+        </member>
+    </members>
+</doc>
