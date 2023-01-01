@@ -150,3 +150,28 @@ dotnet user-secrets set MongoDbConfiguration:Password Value123
 - also mongodb connection string will be `mongodb://{Username}:{Password}@{Host}:{Port}`
 
 
+## Creation of dependency from other dependencies
+
+- if you have 2 service from same interface
+```
+interface IWeatherService {...}
+class HttpWeatherService : IWeatherService {...}
+
+class CacheWeatherService : IWeatherService
+{
+    CacheWeatherService(HttpWeatherService httpWeatherService, IMemoryCache memorycache)
+}
+
+....
+services.AddSingleton<HttpWeatherService>();
+services.AddSingleton<IWeatherService>(
+    sp => { 
+            var hws = sp.GetRequiredService<HttpWeatherService>();
+            var mc = sp.GetRequiredService<ImemoryCache>(); 
+            new CacheWeatherService(hws, mc);
+
+});
+
+
+
+```

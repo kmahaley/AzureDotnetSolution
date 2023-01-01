@@ -96,10 +96,14 @@ namespace SqlDbApplication.Repositories.Sql
 
         public async Task<City> GetCityAsync(int id, CancellationToken cancellationToken)
         {
+            //var city = await databaseContext
+            //    .Cities
+            //    .FirstOrDefaultAsync(city => city.CityId == id, cancellationToken);
+
+            var searchById = new Object[] { id };
             var city = await databaseContext
                 .Cities
-                .Where(city => city.CityId == id)
-                .FirstOrDefaultAsync(cancellationToken);
+                .FindAsync(searchById, cancellationToken);
 
             if (city == null)
             {
