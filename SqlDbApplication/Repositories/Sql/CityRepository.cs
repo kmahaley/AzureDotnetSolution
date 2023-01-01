@@ -35,7 +35,10 @@ namespace SqlDbApplication.Repositories.Sql
 
         public async Task<City> DeleteCityByIdAsync(int id, CancellationToken cancellationToken)
         {
-            var existingCity = await GetCityAsync(id, cancellationToken);
+            var existingCity = await databaseContext
+                .Cities
+                .Include(city => city.PointOfInterests)
+                .FirstOrDefaultAsync(city => id == city.CityId, cancellationToken);
 
             databaseContext.Cities.Remove(existingCity);
             await databaseContext.SaveChangesAsync(cancellationToken);
@@ -90,10 +93,14 @@ namespace SqlDbApplication.Repositories.Sql
             existingCity.Name = city.Name;
             existingCity.Population = city.Population;
             existingCity.Description = city.Description;
+
+            
+            LogDatabaseContextChangeView();
+
             await databaseContext.SaveChangesAsync(cancellationToken);
             return city;
         }
-
+        
         public async Task<City> GetCityAsync(int id, CancellationToken cancellationToken)
         {
             //var city = await databaseContext
@@ -196,6 +203,8 @@ namespace SqlDbApplication.Repositories.Sql
             var countOfItems = await queryCollection.CountAsync(cancellationToken);
             var paginationMatadata = new PaginationMetadata(countOfItems, pageSize, pageNumber);
 
+            LogDatabaseContextChangeView();
+
             var cities = await queryCollection
                 .OrderBy(city => city.Name)// always use orderBy in pagination
                 .Skip(pageSize * (pageNumber - 1)) // 0th page 10, 1st page 10, 2nd page 10. skip 2 pages result == 10 * (2 - 1), 20 cities skipped
@@ -235,6 +244,16 @@ namespace SqlDbApplication.Repositories.Sql
             }
 
             return queryCollection;
+        }
+
+        /// <summary>
+        /// Log database context to view what is changed. This logs what entities are tracked
+        /// and what are the state of the entities and dependent entities
+        /// </summary>
+        private void LogDatabaseContextChangeView()
+        {
+            databaseContext.ChangeTracker.DetectChanges();
+            logger.LogInformation(databaseContext.ChangeTracker.DebugView.LongView);
         }
     }
 }

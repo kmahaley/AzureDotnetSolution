@@ -86,7 +86,7 @@ you can use `IOptionsSnapshot<> or IOptionsMonitor<> ` to reload values on chang
 - `ILogger<TodoController> controllerLogger`
 - `ILogger<TodoService> serviceLogger`
 - You can add new logger provider that can write to file, database or storage account.
-- 
+ 
 ### Adding Serilog
 
 #### Packages

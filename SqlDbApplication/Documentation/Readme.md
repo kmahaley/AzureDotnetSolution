@@ -266,3 +266,93 @@ services.AddSwaggerGen(options =>
 });
 
 ```
+
+## Entity and Child navigation
+
+### Example of 
+- `1 to many`, `1 to 1` and `many to many` relationship
+- Collection navigation
+- Reference navigation
+- Foreign key
+
+```
+public class Blog
+{
+    public int Id { get; set; } // Primary key
+    public string Name { get; set; }
+
+    public IList<Post> Posts { get; } = new List<Post>(); // Collection navigation
+    public BlogAssets Assets { get; set; } // Reference navigation
+}
+
+public class BlogAssets
+{
+    public int Id { get; set; } // Primary key
+    public byte[] Banner { get; set; }
+
+    public int? BlogId { get; set; } // Foreign key
+    public Blog Blog { get; set; } // Reference navigation
+}
+
+public class Post
+{
+    public int Id { get; set; } // Primary key
+    public string Title { get; set; }
+    public string Content { get; set; }
+
+    public int? BlogId { get; set; } // Foreign key
+    public Blog Blog { get; set; } // Reference navigation
+
+    public IList<Tag> Tags { get; } = new List<Tag>(); // Skip collection navigation
+}
+
+public class Tag
+{
+    public int Id { get; set; } // Primary key
+    public string Text { get; set; }
+
+    public IList<Post> Posts { get; } = new List<Post>(); // Skip collection navigation
+}
+```
+
+- Move post from 1 blog to another, 3 ways to acjieve this
+  - collection navigation
+  - reference navigation
+  - FK adjustment
+  
+```
+//collection navigation
+using var context = new BlogsContext();
+
+var dotNetBlog = context.Blogs.Include(e => e.Posts).Single(e => e.Name == ".NET Blog");
+var vsBlog = context.Blogs.Include(e => e.Posts).Single(e => e.Name == "Visual Studio Blog");
+
+Console.WriteLine(context.ChangeTracker.DebugView.LongView);
+
+var post = vsBlog.Posts.Single(e => e.Title.StartsWith("Disassembly improvements"));
+vsBlog.Posts.Remove(post);
+dotNetBlog.Posts.Add(post);
+
+context.ChangeTracker.DetectChanges();
+Console.WriteLine(context.ChangeTracker.DebugView.LongView);
+
+context.SaveChanges();
+```
+
+```
+//reference navigation
+var post = vsBlog.Posts.Single(e => e.Title.StartsWith("Disassembly improvements"));
+post.Blog = dotNetBlog;
+```
+
+```
+//FK value
+var post = vsBlog.Posts.Single(e => e.Title.StartsWith("Disassembly improvements"));
+post.BlogId = dotNetBlog.Id;
+```
+
+## References
+
+- [Change tracking in Database context](https://learn.microsoft.com/en-us/ef/core/change-tracking/)
+- [Relationships model](https://learn.microsoft.com/en-us/ef/core/change-tracking/relationship-changes)
+- [Cascade delete](https://learn.microsoft.com/en-us/ef/core/saving/cascade-delete)

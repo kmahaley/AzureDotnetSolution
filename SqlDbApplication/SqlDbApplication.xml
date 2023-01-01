@@ -151,6 +151,12 @@
             </summary>
         </member>
         <!-- Badly formed XML comment ignored for member "M:SqlDbApplication.Repositories.Sql.CityRepository.CreateFilterAndSearchQuery(System.String,System.String,System.Boolean)" -->
+        <member name="M:SqlDbApplication.Repositories.Sql.CityRepository.LogDatabaseContextChangeView">
+            <summary>
+            Log database context to view what is changed. This logs what entities are tracked
+            and what are the state of the entities and dependent entities
+            </summary>
+        </member>
         <member name="T:SqlDbApplication.Repositories.Sql.SqlDatabaseContext">
             <summary>
             Database context to query the database entities.
