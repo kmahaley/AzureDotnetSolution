@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SqlDbApplication.Repositories.Sql
@@ -25,23 +26,25 @@ namespace SqlDbApplication.Repositories.Sql
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public async Task<City> AddCityAsync(City city)
+        public async Task<City> AddCityAsync(City city, CancellationToken cancellationToken)
         {
-            var savedCity = await databaseContext.Cities.AddAsync(city);
-            await databaseContext.SaveChangesAsync();
+            var savedCity = await databaseContext.Cities.AddAsync(city, cancellationToken);
+            await databaseContext.SaveChangesAsync(cancellationToken);
             return savedCity.Entity;
         }
 
-        public async Task<City> DeleteCityByIdAsync(int id)
+        public async Task<City> DeleteCityByIdAsync(int id, CancellationToken cancellationToken)
         {
-            var existingCity = await GetCityAsync(id);
+            var existingCity = await GetCityAsync(id, cancellationToken);
 
             databaseContext.Cities.Remove(existingCity);
-            await databaseContext.SaveChangesAsync();
+            await databaseContext.SaveChangesAsync(cancellationToken);
             return existingCity;
         }
 
-        public async Task<IEnumerable<City>> GetAllCitiesAsync(bool includePoints)
+        public async Task<IEnumerable<City>> GetAllCitiesAsync(
+            bool includePoints,
+            CancellationToken cancellationToken)
         {
             if (includePoints)
             {
@@ -49,23 +52,24 @@ namespace SqlDbApplication.Repositories.Sql
                 return await databaseContext
                     .Cities
                     .Include(city => city.PointOfInterests)
-                    .ToListAsync();
+                    .ToListAsync(cancellationToken);
             }
-            return await databaseContext.Cities.ToListAsync();
+
+            return await databaseContext.Cities.ToListAsync(cancellationToken);
         }
 
-        public async Task<City> GetCityByIdAsync(int id, bool includePoints)
+        public async Task<City> GetCityByIdAsync(int id, bool includePoints, CancellationToken cancellationToken)
         {
             if(!includePoints)
             {
-                return await GetCityAsync(id);
+                return await GetCityAsync(id, cancellationToken);
             }
 
             var city = await databaseContext
                     .Cities
                     .Where(c => c.CityId == id)
                     .Include(c => c.PointOfInterests)
-                    .FirstOrDefaultAsync();
+                    .FirstOrDefaultAsync(cancellationToken);
 
             if (city == null)
             {
@@ -77,19 +81,26 @@ namespace SqlDbApplication.Repositories.Sql
             return city;
         }
 
-        public async Task<City> UpdateCityAsync(int id, City city)
+        public async Task<City> UpdateCityAsync(
+            int id,
+            City city,
+            CancellationToken cancellationToken)
         {
-            var existingCity = await GetCityAsync(id);
+            var existingCity = await GetCityAsync(id, cancellationToken);
             existingCity.Name = city.Name;
             existingCity.Population = city.Population;
             existingCity.Description = city.Description;
-            await databaseContext.SaveChangesAsync();
+            await databaseContext.SaveChangesAsync(cancellationToken);
             return city;
         }
 
-        public async Task<City> GetCityAsync(int id)
+        public async Task<City> GetCityAsync(int id, CancellationToken cancellationToken)
         {
-            var city = await databaseContext.Cities.FindAsync(id);
+            var city = await databaseContext
+                .Cities
+                .Where(city => city.CityId == id)
+                .FirstOrDefaultAsync(cancellationToken);
+
             if (city == null)
             {
                 throw new SqlDbApplicationException(
@@ -99,7 +110,10 @@ namespace SqlDbApplication.Repositories.Sql
             return city;
         }
 
-        public async Task<IEnumerable<City>> GetAllCitiesFilteredUsingNameAsync(string name, bool includePoints) 
+        public async Task<IEnumerable<City>> GetAllCitiesFilteredUsingNameAsync(
+            string name,
+            bool includePoints,
+            CancellationToken cancellationToken) 
         {
             if (includePoints)
             {
@@ -107,13 +121,13 @@ namespace SqlDbApplication.Repositories.Sql
                 .Cities
                 .Include(city => city.PointOfInterests)
                 .Where(city => city.Name == name)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
             }
 
             return await databaseContext
                 .Cities
                 .Where(city => city.Name == name)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
         }
 
@@ -122,14 +136,18 @@ namespace SqlDbApplication.Repositories.Sql
         /// expression is called like ".ToListAsync()"
         /// Deferred execution
         /// </summary>
-        public async Task<IEnumerable<City>> GetAllCitiesUsingSearchAsync(string name, string searchQuery, bool includePoints)
+        public async Task<IEnumerable<City>> GetAllCitiesUsingSearchAsync(
+            string name,
+            string searchQuery,
+            bool includePoints,
+            CancellationToken cancellationToken)
         {
 
             var queryCollection = CreateFilterAndSearchQuery(name, searchQuery, includePoints);
 
             return await queryCollection
                 .OrderBy(city => city.Name)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
         }
         
@@ -143,7 +161,8 @@ namespace SqlDbApplication.Repositories.Sql
             string searchQuery,
             bool includePoints,
             int pageNumber,
-            int pageSize)
+            int pageSize,
+            CancellationToken cancellationToken)
         {
             IQueryable<City> queryCollection = CreateFilterAndSearchQuery(name, searchQuery, includePoints);
 
@@ -151,7 +170,7 @@ namespace SqlDbApplication.Repositories.Sql
                 .OrderBy(city => city.Name)// always use orderBy in pagination
                 .Skip(pageSize * (pageNumber - 1)) // 0th page 10, 1st page 10, 2nd page 10. skip 2 pages result == 10 * (2 - 1), 20 cities skipped
                 .Take(pageSize)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
         }
         
@@ -165,18 +184,19 @@ namespace SqlDbApplication.Repositories.Sql
             string searchQuery,
             bool includePoints,
             int pageNumber,
-            int pageSize)
+            int pageSize,
+            CancellationToken cancellationToken)
         {
             IQueryable<City> queryCollection = CreateFilterAndSearchQuery(name, searchQuery, includePoints);
 
-            var countOfItems = await queryCollection.CountAsync();
+            var countOfItems = await queryCollection.CountAsync(cancellationToken);
             var paginationMatadata = new PaginationMetadata(countOfItems, pageSize, pageNumber);
 
             var cities = await queryCollection
                 .OrderBy(city => city.Name)// always use orderBy in pagination
                 .Skip(pageSize * (pageNumber - 1)) // 0th page 10, 1st page 10, 2nd page 10. skip 2 pages result == 10 * (2 - 1), 20 cities skipped
                 .Take(pageSize)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
             return new CityPage(cities, paginationMatadata);
 

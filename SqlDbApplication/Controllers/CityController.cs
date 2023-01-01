@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Primitives;
 using SqlDbApplication.Models.Dtos;
 using SqlDbApplication.Models.Sql;
 using SqlDbApplication.Services.Interface;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SqlDbApplication.Controllers
@@ -33,9 +35,11 @@ namespace SqlDbApplication.Controllers
         // GET: api/<CityController>
         [ProducesResponseType(StatusCodes.Status200OK)]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CityDto>>> GetAllAsync([FromQuery] bool? includePoints)
+        public async Task<ActionResult<IEnumerable<CityDto>>> GetAllAsync(
+            [FromQuery] bool? includePoints,
+            CancellationToken cancellationToken)
         {
-            var listOfCities = await cityService.GetAllCitiesAsync(includePoints);
+            var listOfCities = await cityService.GetAllCitiesAsync(includePoints, cancellationToken);
             return Ok(listOfCities);
         }
 
@@ -49,14 +53,17 @@ namespace SqlDbApplication.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [HttpGet("{id}")]
-        public async Task<ActionResult<CityDto>> GetAsync(int id, [FromQuery] bool? includePoints)
+        public async Task<ActionResult<CityDto>> GetAsync(
+            int id,
+            [FromQuery] bool? includePoints,
+            CancellationToken cancellationToken = default)
         {
             try
             {
-                var existingCity = await cityService.GetCityByIdAsync(id, includePoints);
+                var existingCity = await cityService.GetCityByIdAsync(id, includePoints, cancellationToken);
                 return Ok(existingCity);
             }
-            catch (ArgumentException ex)
+            catch (Exception ex)
             {
                 return BadRequest();
             }
@@ -64,26 +71,31 @@ namespace SqlDbApplication.Controllers
 
         // POST api/<CityController>
         [HttpPost]
-        public async Task<ActionResult<CityDto>> PostAsync([FromBody] CityDto city)
+        public async Task<ActionResult<CityDto>> PostAsync(
+            [FromBody] CityDto city,
+            CancellationToken cancellationToken = default)
         {
             logger.LogInformation("Adding data.---");
-            var savedCity = await cityService.AddCityAsync(city);
+            var savedCity = await cityService.AddCityAsync(city,cancellationToken);
             return Ok(savedCity);
         }
 
         // PUT api/<CityController>/5
         [HttpPut("{id}")]
-        public async Task<ActionResult<CityDto>> PutAsync(int id, [FromBody] CityDto city)
+        public async Task<ActionResult<CityDto>> PutAsync(
+            int id,
+            [FromBody] CityDto city,
+            CancellationToken cancellationToken = default)
         {
-            var updatedCity = await cityService.UpdateCityAsync(id, city);
+            var updatedCity = await cityService.UpdateCityAsync(id, city, cancellationToken);
             return Ok(updatedCity);
         }
 
         // DELETE api/<CityController>/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<CityDto>> DeleteAsync(int id)
+        public async Task<ActionResult<CityDto>> DeleteAsync(int id, CancellationToken cancellationToken = default)
         {
-            var deletedCity = await cityService.DeleteCityByIdAsync(id);
+            var deletedCity = await cityService.DeleteCityByIdAsync(id, cancellationToken);
             return Ok(deletedCity);
         }
 
@@ -92,13 +104,15 @@ namespace SqlDbApplication.Controllers
         /// </summary>
         /// <param name="name">name of the city used for filtering</param>
         /// <param name="includePoints">should include dependent point of interest</param>
+        /// <param name="cancellationToken"></param>
         /// <returns>list of cities matching filter.</returns>
         [HttpGet("/filter")]
         public async Task<ActionResult<IEnumerable<CityDto>>> GetAllCitiesFilteredUsingNameAsync(
             [FromQuery] string? name,
-            [FromQuery] bool includePoints = false)
+            [FromQuery] bool includePoints = false,
+            CancellationToken cancellationToken = default)
         {
-            var listOfCities = await cityService.GetAllCitiesFilteredUsingNameAsync(name, includePoints);
+            var listOfCities = await cityService.GetAllCitiesFilteredUsingNameAsync(name, includePoints, cancellationToken);
             return Ok(listOfCities);
         }
 
@@ -115,9 +129,15 @@ namespace SqlDbApplication.Controllers
         public async Task<ActionResult<IEnumerable<CityDto>>> GetAllCitiesUsingSearchAsync(
             [FromQuery] string? name,
             [FromQuery] string? searchQuery,
-            [FromQuery] bool includePoints = false)
+            [FromQuery] bool includePoints = false,
+            CancellationToken cancellationToken = default)
         {
-            var listOfCities = await cityService.GetAllCitiesUsingSearchAsync(name, searchQuery, includePoints);
+            var listOfCities = await cityService.GetAllCitiesUsingSearchAsync(
+                name,
+                searchQuery,
+                includePoints,
+                cancellationToken);
+
             return Ok(listOfCities);
         }
 
@@ -138,7 +158,8 @@ namespace SqlDbApplication.Controllers
             [FromQuery] string? searchQuery,
             [FromQuery] bool includePoints = false,
             [FromQuery] int pageNumber = 1,
-            [FromQuery] int pageSize = 5)
+            [FromQuery] int pageSize = 5,
+            CancellationToken cancellationToken = default)
         {
             if (pageSize > MaxPageSize)
             {
@@ -153,7 +174,8 @@ namespace SqlDbApplication.Controllers
                 searchQuery,
                 includePoints,
                 pageNumber,
-                pageSize);
+                pageSize,
+                cancellationToken);
             return Ok(listOfCities);
         }
 
@@ -174,7 +196,8 @@ namespace SqlDbApplication.Controllers
             [FromQuery] string? searchQuery,
             [FromQuery] bool includePoints = false,
             [FromQuery] int pageNumber = 1,
-            [FromQuery] int pageSize = 5)
+            [FromQuery] int pageSize = 5,
+            CancellationToken cancellationToken = default)
         {
             if (pageSize > MaxPageSize)
             {
@@ -189,7 +212,8 @@ namespace SqlDbApplication.Controllers
                 searchQuery,
                 includePoints,
                 pageNumber,
-                pageSize);
+                pageSize,
+                cancellationToken);
 
             return Ok(cityPageDto);
         }

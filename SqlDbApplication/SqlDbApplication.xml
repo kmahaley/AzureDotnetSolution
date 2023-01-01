@@ -4,14 +4,14 @@
         <name>SqlDbApplication</name>
     </assembly>
     <members>
-        <member name="M:SqlDbApplication.Controllers.CityController.GetAllAsync(System.Nullable{System.Boolean})">
+        <member name="M:SqlDbApplication.Controllers.CityController.GetAllAsync(System.Nullable{System.Boolean},System.Threading.CancellationToken)">
             <summary>
             Get all cities present in the application
             </summary>
             <param name="includePoints">should you include point of interests</param>
             <returns>List of all Cities with point of interests</returns>
         </member>
-        <member name="M:SqlDbApplication.Controllers.CityController.GetAsync(System.Int32,System.Nullable{System.Boolean})">
+        <member name="M:SqlDbApplication.Controllers.CityController.GetAsync(System.Int32,System.Nullable{System.Boolean},System.Threading.CancellationToken)">
             <summary>
             Get city data by city id
             </summary>
@@ -19,15 +19,16 @@
             <param name="includePoints">should you include point of interests</param>
             <returns>return city data for city id provided</returns>
         </member>
-        <member name="M:SqlDbApplication.Controllers.CityController.GetAllCitiesFilteredUsingNameAsync(System.String,System.Boolean)">
+        <member name="M:SqlDbApplication.Controllers.CityController.GetAllCitiesFilteredUsingNameAsync(System.String,System.Boolean,System.Threading.CancellationToken)">
             <summary>
             Filter based on name of the city. Filter need exact matching record.
             </summary>
             <param name="name">name of the city used for filtering</param>
             <param name="includePoints">should include dependent point of interest</param>
+            <param name="cancellationToken"></param>
             <returns>list of cities matching filter.</returns>
         </member>
-        <member name="M:SqlDbApplication.Controllers.CityController.GetAllCitiesUsingSearchAsync(System.String,System.String,System.Boolean)">
+        <member name="M:SqlDbApplication.Controllers.CityController.GetAllCitiesUsingSearchAsync(System.String,System.String,System.Boolean,System.Threading.CancellationToken)">
             <summary>
             Added query params to filter on city name and search on name and description
             once filter is applied using name then search is applied on returned filtered.
@@ -38,8 +39,8 @@
             <param name="includePoints">should include dependent point of interest</param>
             <returns>list of cities matching filter and search.</returns>
         </member>
-        <!-- Badly formed XML comment ignored for member "M:SqlDbApplication.Controllers.CityController.GetAllCitiesUsingSearchAndPaginationAsync(System.String,System.String,System.Boolean,System.Int32,System.Int32)" -->
-        <!-- Badly formed XML comment ignored for member "M:SqlDbApplication.Controllers.CityController.GetAllCitiesWithPaginationMetdadataAsync(System.String,System.String,System.Boolean,System.Int32,System.Int32)" -->
+        <!-- Badly formed XML comment ignored for member "M:SqlDbApplication.Controllers.CityController.GetAllCitiesUsingSearchAndPaginationAsync(System.String,System.String,System.Boolean,System.Int32,System.Int32,System.Threading.CancellationToken)" -->
+        <!-- Badly formed XML comment ignored for member "M:SqlDbApplication.Controllers.CityController.GetAllCitiesWithPaginationMetdadataAsync(System.String,System.String,System.Boolean,System.Int32,System.Int32,System.Threading.CancellationToken)" -->
         <member name="M:SqlDbApplication.Controllers.ProductController.PostDisposeContextIssueAsync(SqlDbApplication.Models.Sql.Product)">
             <summary>
             This method will throw exception: Purposefully done
@@ -128,21 +129,21 @@
             Location of the torurist location
             </summary>
         </member>
-        <member name="M:SqlDbApplication.Repositories.Sql.CityRepository.GetAllCitiesUsingSearchAsync(System.String,System.String,System.Boolean)">
+        <member name="M:SqlDbApplication.Repositories.Sql.CityRepository.GetAllCitiesUsingSearchAsync(System.String,System.String,System.Boolean,System.Threading.CancellationToken)">
             <summary>
             this is using IQuery which is appended based on user requirement and execute only when terminal
             expression is called like ".ToListAsync()"
             Deferred execution
             </summary>
         </member>
-        <member name="M:SqlDbApplication.Repositories.Sql.CityRepository.GetAllCitiesUsingSearchAndPaginationAsync(System.String,System.String,System.Boolean,System.Int32,System.Int32)">
+        <member name="M:SqlDbApplication.Repositories.Sql.CityRepository.GetAllCitiesUsingSearchAndPaginationAsync(System.String,System.String,System.Boolean,System.Int32,System.Int32,System.Threading.CancellationToken)">
             <summary>
             this is using IQuery which is appended based on user requirement and execute only when terminal
             expression is called like ".ToListAsync()"
             Deferred execution
             </summary>
         </member>
-        <member name="M:SqlDbApplication.Repositories.Sql.CityRepository.GetAllCitiesWithPaginationMetdadataAsync(System.String,System.String,System.Boolean,System.Int32,System.Int32)">
+        <member name="M:SqlDbApplication.Repositories.Sql.CityRepository.GetAllCitiesWithPaginationMetdadataAsync(System.String,System.String,System.Boolean,System.Int32,System.Int32,System.Threading.CancellationToken)">
             <summary>
             this is using IQuery which is appended based on user requirement and execute only when terminal
             expression is called like ".ToListAsync()"
