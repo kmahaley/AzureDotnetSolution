@@ -2,7 +2,7 @@
 
 namespace DistributedCacheApplication.Services
 {
-    public class RedisCacheService : ICacheService
+    public class RedisCacheService
     {
         public Task<Employee> GetCacheAsync(int cacheKey)
         {

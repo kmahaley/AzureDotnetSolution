@@ -2,6 +2,7 @@
 using DistributedCacheApplication.Middlewares;
 using DistributedCacheApplication.Repository;
 using DistributedCacheApplication.Services;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 
 namespace DistributedCacheApplication
@@ -26,21 +27,22 @@ namespace DistributedCacheApplication
             services.AddSingleton<IProductRepository, ProductRepository>();
 
             // Add middlewares to services
-            //services.AddSingleton<HttpEtagMiddleware>();
+            services.AddSingleton<HttpEtagMiddleware>();
 
             // Add filters to services
             services.AddApplicationFilters();
 
-            services.AddSingleton<ICacheService, InMemoryCacheService>();
             services.AddSingleton<IProductService, ProductService>();
 
-            //Controller
-            //services.AddControllers();
-            services.AddControllers(options =>
-            {
-                options.Filters.AddService(typeof(GlobalApplicationFilter));
-            });
+            // in memory caching
+            services.AddMemoryCache();
 
+            //Controller
+            services.AddControllers();
+            //services.AddControllers(options =>
+            //{
+            //    options.Filters.AddService(typeof(GlobalApplicationFilter));
+            //});
 
             services.AddHealthChecks();
 

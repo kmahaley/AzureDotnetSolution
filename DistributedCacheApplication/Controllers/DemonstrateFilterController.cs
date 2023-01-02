@@ -9,13 +9,13 @@ namespace DistributedCacheApplication.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [ServiceFilter(typeof(ControllerFilter))]
-    public class ProductController : ControllerBase
+    public class DemonstrateFilterController : ControllerBase
     {
         private readonly IProductService productService;
 
-        private readonly ILogger<ProductController> logger;
+        private readonly ILogger<DemonstrateFilterController> logger;
 
-        public ProductController(ILogger<ProductController> logger, IProductService productService)
+        public DemonstrateFilterController(ILogger<DemonstrateFilterController> logger, IProductService productService)
         {
             this.productService = productService ?? throw new ArgumentNullException(nameof(productService));
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));

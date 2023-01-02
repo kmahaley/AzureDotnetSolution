@@ -1,8 +1,7 @@
 ﻿# DistributedCacheApplication
 
-## Features
 
-### Middleware
+## Middleware
 
 - applicationBuilder.Run(...) 
   - Used for terminating middlerware
@@ -25,10 +24,11 @@ private static bool isPredicateMatched(HttpContext httpContext)
 }
 ```
 
-### Filter attributes
+## Filters
 
-- Attributes can be added after middleware pipeline calls endpoints. We can write code before/after the action
+- Filter can be added after middleware pipeline calls endpoints. We can write code before/after the action
 - Filter attributes are defined using 
+
 ```
 public class HttpETagFilter : ActionFilterAttribute, IAsyncActionFilter
 {
@@ -36,7 +36,7 @@ public class HttpETagFilter : ActionFilterAttribute, IAsyncActionFilter
 }
 ```
 
-#### GlobalFilter
+### GlobalFilter
 - Executes on all controller actions of the applications
 
 ```
@@ -46,7 +46,7 @@ services.AddControllers(options =>
             });
 ```
 
-#### ControllerFilter
+### ControllerFilter
 
 - Can be defined on just individual controller
 
@@ -57,7 +57,7 @@ services.AddControllers(options =>
 public class ProductController : ControllerBase
 ``` 
 
-#### ActionFilter
+### ActionFilter
 - Runs before and after action of the controller
 
 ```
@@ -66,5 +66,7 @@ public class ProductController : ControllerBase
 public async Task<ActionResult<Product>> GetAsync(int id)
 ```
 
-### Redis
+## MemoryCache
+
+## Redis
 

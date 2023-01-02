@@ -22,8 +22,17 @@ namespace DistributedCacheApplication.Repository
 
         public async Task<Product> GetProductAsync(int id)
         {
-            var existingEntity = keyValuePairs[id];
-            return existingEntity;
+            try
+            {
+                var existingEntity = keyValuePairs[id];
+                return existingEntity;
+            }
+            catch (KeyNotFoundException ex)
+            {
+                logger.LogError($"key element not present {id}");
+                throw;
+            }
+            
         }
 
         public async Task<Product> AddProductAsync(Product product)

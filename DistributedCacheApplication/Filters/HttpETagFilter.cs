@@ -26,15 +26,16 @@ namespace DistributedCacheApplication.Filters
             var executedContext = await next();
             logger.LogInformation($"--- after action filter. {filterName}");
 
+            var request = executedContext.HttpContext.Request;
+            var response = executedContext.HttpContext.Response;
 
-            //var response = executedContext.HttpContext.Response;
-
-            // Computing ETags for Response Caching on GET requests
-            //if (request.Method == HttpMethod.Get.Method && response.StatusCode == (int)HttpStatusCode.OK)
-            //if (response.StatusCode == (int)HttpStatusCode.OK)
-            //{
-            //    ValidateETagForResponseCaching(executedContext);
-            //}
+            //Computing ETags for Response Caching on GET requests
+            if (request.Method == HttpMethod.Get.Method
+                && response.StatusCode == (int)HttpStatusCode.OK)
+            {
+                logger.LogInformation("Validate Etag");
+                ValidateETagForResponseCaching(executedContext);
+            }
         }
 
         private void ValidateETagForResponseCaching(ActionExecutedContext executedContext)

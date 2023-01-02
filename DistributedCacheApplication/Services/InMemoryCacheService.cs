@@ -3,30 +3,74 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace DistributedCacheApplication.Services
 {
-    public class InMemoryCacheService : ICacheService
-    {
-        private readonly MemoryCache memoryCache;
+    //public class InMemoryCacheService : ICacheService
+    //{
+    //    private readonly IMemoryCache memoryCache;
 
-        public InMemoryCacheService()
-        {
-            memoryCache = new MemoryCache(new MemoryCacheOptions());
-        }
+    //    private readonly ILogger<InMemoryCacheService> logger;
 
-        public Task<Employee> GetCacheAsync(int cacheKey)
-        {
-            var employee = memoryCache.Get<Employee>(cacheKey);
-            return Task.FromResult(employee);
-        }
+    //    public InMemoryCacheService(ILogger<InMemoryCacheService> logger, IMemoryCache memoryCache)
+    //    {
+    //        this.memoryCache = memoryCache;
+    //        this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+    //    }
 
-        public Task SetCacheAsync(int cacheKey, Employee employee)
-        {
-            memoryCache.Set(cacheKey, employee);
-            return Task.CompletedTask;
-        }
+    //    public Task<Product> GetValueAsync(int cacheKey)
+    //    {
+    //        var Product = memoryCache.Get<Product>(cacheKey);
+    //        return Task.FromResult(Product);
+    //    }
 
-        public Task<IList<Employee>> GetAllCacheDataAsync() 
-        {
-            throw new NotImplementedException();
-        }
-    }
+    //    public Task<bool> TryGetValueAsync(int cacheKey, out Product savedValue)
+    //    {
+    //        var isProductFound = memoryCache.TryGetValue(cacheKey, out Product existingProduct);
+    //        savedValue = existingProduct;
+    //        return Task.FromResult(isProductFound);
+    //    }
+
+    //    public Task AddValueAsync(int cacheKey, Product product)
+    //    {
+    //        try
+    //        {
+    //            memoryCache.Set(cacheKey, product);
+    //        }
+    //        catch (Exception ex)
+    //        {
+    //            logger.LogError(ex.Message);
+    //            throw;
+    //        }
+
+    //        return Task.CompletedTask;
+    //    }
+
+    //    public Task AddValueAsync(int cacheKey, Product product, TimeSpan expiration)
+    //    {
+    //        try
+    //        {
+    //            memoryCache.Set(cacheKey, product, expiration);
+    //        }
+    //        catch (Exception ex)
+    //        {
+    //            logger.LogError(ex.Message);
+    //            throw;
+    //        }
+
+    //        return Task.CompletedTask;
+    //    }
+
+    //    public Task RemoveValueAsync(int cacheKey)
+    //    {
+    //        try
+    //        {
+    //            memoryCache.Remove(cacheKey);
+    //        }
+    //        catch (Exception ex)
+    //        {
+    //            logger.LogError(ex.Message);
+    //            throw;
+    //        }
+
+    //        return Task.CompletedTask;
+    //    }
+    //}
 }

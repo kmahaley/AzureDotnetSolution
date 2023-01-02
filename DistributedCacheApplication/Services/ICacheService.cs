@@ -4,10 +4,15 @@ namespace DistributedCacheApplication.Services
 {
     public interface ICacheService
     {
-        public Task<Employee> GetCacheAsync(int cacheKey);
+        public Task<Product> GetValueAsync(int cacheKey);
 
-        public Task SetCacheAsync(int cacheKey, Employee employee);
+        public Task<bool> TryGetValueAsync(int cacheKey, out Product savedValue);
 
-        public Task<IList<Employee>> GetAllCacheDataAsync();
+        public Task AddValueAsync(int cacheKey, Product product);
+
+        public Task AddValueAsync(int cacheKey, Product product, TimeSpan expiration);
+
+        public Task RemoveValueAsync(int cacheKey);
+
     }
 }

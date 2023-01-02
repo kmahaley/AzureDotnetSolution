@@ -27,7 +27,7 @@ namespace DistributedCacheApplication.Filters
 
             var executedContext = await next();
 
-            logger.LogInformation($"--- after global filter. {filterName}\\\n");
+            logger.LogInformation($"--- after global filter. {filterName} \n");
             
         }
 

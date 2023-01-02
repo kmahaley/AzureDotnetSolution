@@ -354,5 +354,6 @@ post.BlogId = dotNetBlog.Id;
 ## References
 
 - [Change tracking in Database context](https://learn.microsoft.com/en-us/ef/core/change-tracking/)
-- [Relationships model](https://learn.microsoft.com/en-us/ef/core/change-tracking/relationship-changes)
+- [Relationships](https://learn.microsoft.com/en-us/ef/core/modeling/relationships?tabs=fluent-api%2Cfluent-api-simple-key%2Csimple-key)
+- [Relationships changes: Changing Foreign Keys and Navigations](https://learn.microsoft.com/en-us/ef/core/change-tracking/relationship-changes)
 - [Cascade delete](https://learn.microsoft.com/en-us/ef/core/saving/cascade-delete)
