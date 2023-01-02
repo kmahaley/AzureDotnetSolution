@@ -1,9 +1,5 @@
 ﻿using DistributedCacheApplication.DependencyInjection;
-using DistributedCacheApplication.Filters;
-using DistributedCacheApplication.Middlewares;
-using DistributedCacheApplication.Repository;
-using DistributedCacheApplication.Services;
-using Microsoft.Extensions.DependencyInjection;
+using DistributedCacheApplication.HealthCheck;
 using Microsoft.OpenApi.Models;
 
 namespace DistributedCacheApplication
@@ -31,14 +27,17 @@ namespace DistributedCacheApplication
                 .AddMiddlewareDependencies(Configuration)
                 .AddApplicationFilterDependencies(Configuration);
 
-            //Controller
             services.AddControllers();
+            
+            // Add global filter on every controller
             //services.AddControllers(options =>
             //{
             //    options.Filters.AddService(typeof(GlobalApplicationFilter));
             //});
 
-            services.AddHealthChecks();
+            services
+                .AddHealthChecks()
+                .AddCheck<RedisHealthCheck>("Redis");
 
             //Swagger
             services.AddSwaggerGen(options =>
@@ -71,7 +70,7 @@ namespace DistributedCacheApplication
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHealthChecks("/health");
+                //endpoints.MapHealthChecks("/health");
             });
 
             app.UseSwagger();
@@ -79,6 +78,8 @@ namespace DistributedCacheApplication
             {
                 options.SwaggerEndpoint("/swagger/v1/swagger.json", SwaggerApiName);
             });
+
+            app.UseHealthChecks("/health", HealthCheckOptionsCreator.GetHealthCheckOptions());
         }
     }
 }
