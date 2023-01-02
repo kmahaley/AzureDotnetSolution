@@ -81,7 +81,7 @@ namespace DistributedCacheApplication.Controllers
             return NoContent();
         }
 
-        [HttpGet("allCacheData")]
+        [HttpGet("all")]
         public async Task<IActionResult> GetCacheValueAsync(CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();

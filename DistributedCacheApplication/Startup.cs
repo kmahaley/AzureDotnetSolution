@@ -24,7 +24,8 @@ namespace DistributedCacheApplication
         {
             services
                 .AddInMemoryCacheDependencies(Configuration)
-                .AddDistributedCacheDependencies(Configuration)
+                .AddRedisDependencies(Configuration)
+                .AddRedisUsingConnectionMultiplexerDependencies(Configuration)
                 .AddServiceDependencies(Configuration)
                 .AddRepositoryDependencies(Configuration)
                 .AddMiddlewareDependencies(Configuration)

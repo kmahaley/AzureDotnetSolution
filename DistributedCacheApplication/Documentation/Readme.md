@@ -112,7 +112,16 @@ public async Task<ActionResult<Product>> GetAsync(int id)
 
 
 ### NuGet package
-`<PackageReference Include="StackExchange.Redis" Version="2.6.86" />`
+
+- You can use Redis using either of the 2 ways
+  - IDistributedCache 
+    - with restricted datatypes and
+    - `StackExchange.Redis` is included
+    - `<PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="6.0.12" />`
+
+  - IConnectionMultiplexer with all datatypes
+    - `<PackageReference Include="StackExchange.Redis" Version="2.6.86" />`
+
 
 ### Reference
 - [Redis docker](https://docs.redis.com/latest/rs/installing-upgrading/get-started-docker/)
