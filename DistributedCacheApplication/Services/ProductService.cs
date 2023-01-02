@@ -16,35 +16,35 @@ namespace DistributedCacheApplication.Services
             this.productRepository = productRepository ?? throw new ArgumentNullException(nameof(productRepository));
         }
 
-        public async Task<IEnumerable<Product>> GetAllProductsAsync()
+        public async Task<IEnumerable<Product>> GetAllProductsAsync(CancellationToken cancellationToken = default)
         {
             logger.LogInformation("--- called ProductService: Cache missed. GetAllProductsAsync");
-            return await productRepository.GetAllProductsAsync();
+            return await productRepository.GetAllProductsAsync(cancellationToken);
         }
 
-        public async Task<Product> GetProductAsync(int id)
+        public async Task<Product> GetProductAsync(int id, CancellationToken cancellationToken = default)
         {
             logger.LogInformation("--- called ProductService: Cache missed. GetProductAsync");
-            return await productRepository.GetProductAsync(id);
+            return await productRepository.GetProductAsync(id, cancellationToken);
         }
 
-        public async Task<Product> AddProductAsync(Product product)
+        public async Task<Product> AddProductAsync(Product product, CancellationToken cancellationToken = default)
         {
 
             logger.LogInformation("--- called ProductService: Adding product. AddProductAsync");
-            return await productRepository.AddProductAsync(product);
+            return await productRepository.AddProductAsync(product, cancellationToken);
         }
 
-        public async Task<Product> UpdateProductAsync(int id, Product product)
+        public async Task<Product> UpdateProductAsync(int id, Product product, CancellationToken cancellationToken = default)
         {
             logger.LogInformation("--- called ProductService: updating product. UpdateProductAsync");
-            return await productRepository.UpdateProductAsync(id, product);
+            return await productRepository.UpdateProductAsync(id, product, cancellationToken);
         }
 
-        public async Task DeleteProductAsync(int id)
+        public async Task DeleteProductAsync(int id, CancellationToken cancellationToken = default)
         {
             logger.LogInformation("--- called ProductService: delete product. DeleteProductAsync");
-            await productRepository.DeleteProductAsync(id);
+            await productRepository.DeleteProductAsync(id, cancellationToken);
         }
     }
 }

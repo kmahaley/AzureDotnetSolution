@@ -1,0 +1,8 @@
+﻿version: '3.8'
+services:
+ redis:
+  image: redislabs/redis
+  container_name: redis
+  ports: 
+   - "6379:6379"
+   - "12000:12000"

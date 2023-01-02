@@ -37,6 +37,13 @@ namespace DistributedCacheApplication
             // in memory caching
             services.AddMemoryCache();
 
+            // distributed caching
+            services.AddStackExchangeRedisCache(redisOptions => 
+            { 
+                var connectionString = Configuration.GetConnectionString("Redis"); // same as Configuration.GetSection("ConnectionStrings:Redis");
+                redisOptions.Configuration = connectionString;
+            });
+
             //Controller
             services.AddControllers();
             //services.AddControllers(options =>

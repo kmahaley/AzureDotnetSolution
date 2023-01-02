@@ -68,5 +68,51 @@ public async Task<ActionResult<Product>> GetAsync(int id)
 
 ## MemoryCache
 
+- Memory cache is from namespace `Microsoft.Extensions.Caching.Memory`
+ 
+### Add DI for MemoryCache
+- `services.AddMemoryCache();`
+- inject using `IMemoryCache memoryCache`
+
 ## Redis
 
+### Docker
+
+- install docker
+- run `docker ps` and check docker is running
+- create redis container using docker-compose or commandline
+
+#### Docker compose
+- on powershell, `cd DistributedCacheApplication\Docker` 
+- `docker-compose up -d`
+- you should see `redis` container running
+- stop containers => `docker-compose stop`
+- remove containers => `docker-compose down`
+
+#### Docker command
+
+- `docker run -p 6379:6379 --name redis -d redis`
+
+
+#### Test Redis container
+- Check container status
+  - Docker desktop
+    - Open docker desktop from windows app
+    - check containers running
+  - Visual studio code
+    - install docker extension
+    - check containers in left hand side menu. running/stopped status with conatiner name.
+  - powershell
+    - `docker ps`
+
+- Test Redis using Redis CLI
+  - `docker exec -it {conatinerName} bash` => `docker exec -it redis /bin/bash`
+  - `redis-cli` => should connect to `127.0.0.1:6379`
+  - `ping` => response should be `pong`
+
+
+### NuGet package
+`<PackageReference Include="StackExchange.Redis" Version="2.6.86" />`
+
+### Reference
+- [Redis docker](https://docs.redis.com/latest/rs/installing-upgrading/get-started-docker/)

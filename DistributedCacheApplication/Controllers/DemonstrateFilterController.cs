@@ -24,21 +24,21 @@ namespace DistributedCacheApplication.Controllers
 
         // GET: api/<ProductController>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Product>>> GetAllAsync()
+        public async Task<ActionResult<IEnumerable<Product>>> GetAllAsync(CancellationToken cancellationToken = default)
         {
-            var listOfProducts = await productService.GetAllProductsAsync();
+            var listOfProducts = await productService.GetAllProductsAsync(cancellationToken);
             return Ok(listOfProducts);
         }
 
         // GET api/<ProductController>/5
         [HttpGet("{id}")]
         [ServiceFilter(typeof(HttpETagFilter))]
-        public async Task<ActionResult<Product>> GetAsync(int id)
+        public async Task<ActionResult<Product>> GetAsync(int id, CancellationToken cancellationToken = default)
         {
             logger.LogInformation("Action--------------------- > GetAsync API---");
             try
             {
-                var existingEntity = await productService.GetProductAsync(id);
+                var existingEntity = await productService.GetProductAsync(id, cancellationToken);
                 return Ok(existingEntity);
             }
             catch (ArgumentException ex)
@@ -49,26 +49,26 @@ namespace DistributedCacheApplication.Controllers
 
         // POST api/<ProductController>
         [HttpPost]
-        public async Task<ActionResult<Product>> PostAsync([FromBody] Product product)
+        public async Task<ActionResult<Product>> PostAsync([FromBody] Product product, CancellationToken cancellationToken = default)
         {
             logger.LogInformation("Action--------------------- > PostAsync API---");
-            var savedProduct = await productService.AddProductAsync(product);
+            var savedProduct = await productService.AddProductAsync(product, cancellationToken);
             return Ok(savedProduct);
         }
 
         // PUT api/<ProductController>/5
         [HttpPut("{id}")]
-        public async Task<ActionResult<Product>> PutAsync(int id, [FromBody] Product product)
+        public async Task<ActionResult<Product>> PutAsync(int id, [FromBody] Product product, CancellationToken cancellationToken = default)
         {
-            var updatedProduct = await productService.UpdateProductAsync(id, product);
+            var updatedProduct = await productService.UpdateProductAsync(id, product, cancellationToken);
             return Ok(updatedProduct);
         }
 
         // DELETE api/<ProductController>/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Product>> DeleteAsync(int id)
+        public async Task<ActionResult<Product>> DeleteAsync(int id, CancellationToken cancellationToken = default)
         {
-            await productService.DeleteProductAsync(id);
+            await productService.DeleteProductAsync(id, cancellationToken);
             return Ok(id);
         }
 

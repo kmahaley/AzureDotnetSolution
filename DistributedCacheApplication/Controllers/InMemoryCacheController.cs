@@ -7,7 +7,7 @@ namespace DistributedCacheApplication.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class InMemoryCacheController : Controller
+    public class InMemoryCacheController : ControllerBase
     {
         private readonly MemoryCacheEntryOptions Options = 
             new MemoryCacheEntryOptions()
@@ -32,7 +32,7 @@ namespace DistributedCacheApplication.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetCacheValueAsync(int id)
+        public async Task<IActionResult> GetCacheValueAsync(int id, CancellationToken cancellationToken = default)
         {
             Product savedProduct;
             var ispresent = memoryCache.TryGetValue(id, out savedProduct);
@@ -42,7 +42,7 @@ namespace DistributedCacheApplication.Controllers
                 return Ok(savedProduct);
                 
             }
-            var repoSavedProduct = await productService.GetProductAsync(id);
+            var repoSavedProduct = await productService.GetProductAsync(id, cancellationToken);
             if (repoSavedProduct == null)
             {
                 return NotFound();
@@ -51,7 +51,7 @@ namespace DistributedCacheApplication.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddCacheValueAsync([FromBody] Product product)
+        public async Task<IActionResult> AddCacheValueAsync([FromBody] Product product, CancellationToken cancellationToken = default)
         {
             if (product == null)
             {
@@ -59,13 +59,15 @@ namespace DistributedCacheApplication.Controllers
             }
 
             var _ = memoryCache.Set(product.ProductId, product);
-            var savedProduct = await productService.AddProductAsync(product);
+            var savedProduct = await productService.AddProductAsync(product, cancellationToken);
 
             return Ok(savedProduct);
         }
 
         [HttpPost("expiration")]
-        public async Task<IActionResult> AddCacheValueWithExpirationAsync([FromBody] Product product)
+        public async Task<IActionResult> AddCacheValueWithExpirationAsync(
+            [FromBody] Product product,
+            CancellationToken cancellationToken = default)
         {
             if (product == null)
             {
@@ -73,27 +75,29 @@ namespace DistributedCacheApplication.Controllers
             }
 
             var _ = memoryCache.Set(product.ProductId, product, Options);
-            var savedproduct = await productService.AddProductAsync(product);
+            var savedproduct = await productService.AddProductAsync(product, cancellationToken);
 
             return Ok(savedproduct);
         }
 
         [HttpPost("getOrCreate")]
-        public async Task<IActionResult> GetorCreateCacheValueAsync([FromBody] Product product)
+        public async Task<IActionResult> GetorCreateCacheValueAsync(
+            [FromBody] Product product,
+            CancellationToken cancellationToken = default)
         {
             var savedProduct = await memoryCache.GetOrCreateAsync(
                 product.ProductId,
-                async entryKey => await productService.AddProductAsync(product));
+                async entryKey => await productService.AddProductAsync(product, cancellationToken));
             
 
             return Ok(savedProduct);
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCacheValueAsync(int id)
+        public async Task<IActionResult> DeleteCacheValueAsync(int id, CancellationToken cancellationToken = default)
         {
             memoryCache.Remove(id);
-            await productService.DeleteProductAsync(id);
+            await productService.DeleteProductAsync(id, cancellationToken);
 
             return Ok(id);
         }
