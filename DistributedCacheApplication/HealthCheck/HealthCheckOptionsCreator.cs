@@ -4,31 +4,6 @@ using Newtonsoft.Json;
 
 namespace DistributedCacheApplication.HealthCheck
 {
-    public class RedisHealthCheck : IHealthCheck
-    {
-        public Task<HealthCheckResult> CheckHealthAsync(
-            HealthCheckContext context,
-            CancellationToken cancellationToken = default)
-        {
-            var isHealthy = true;
-
-            var data = new Dictionary<string, Object>()
-            {
-                { "RedisHost", "localhost" },
-                { "RedisPort", "6379" }
-            };
-
-            if (isHealthy)
-            {
-                return Task.FromResult(
-                    new HealthCheckResult(HealthStatus.Healthy, "Redis is healthy", null, data));
-            }
-
-            return Task.FromResult(
-                new HealthCheckResult(HealthStatus.Unhealthy, "An unhealthy result.", null, data));
-        }
-
-    }
     public class HealthCheckOptionsCreator
     {
         public static HealthCheckOptions GetHealthCheckOptions()
@@ -69,6 +44,56 @@ namespace DistributedCacheApplication.HealthCheck
                 { HealthStatus.Unhealthy, 200 },
                 { HealthStatus.Degraded, 200 }
             };
+        }
+    }
+
+    public class RedisHealthCheck : IHealthCheck
+    {
+        public Task<HealthCheckResult> CheckHealthAsync(
+            HealthCheckContext context,
+            CancellationToken cancellationToken = default)
+        {
+            var isHealthy = true;
+
+            var data = new Dictionary<string, Object>()
+            {
+                { "RedisHost", "localhost" },
+                { "RedisPort", "6379" }
+            };
+
+            if (isHealthy)
+            {
+                return Task.FromResult(
+                    new HealthCheckResult(HealthStatus.Healthy, "Redis is healthy", null, data));
+            }
+
+            return Task.FromResult(
+                new HealthCheckResult(HealthStatus.Unhealthy, "Redis is unhealthy", null, data));
+        }
+    }
+
+    public class SqlHealthCheck : IHealthCheck
+    {
+        public Task<HealthCheckResult> CheckHealthAsync(
+            HealthCheckContext context,
+            CancellationToken cancellationToken = default)
+        {
+            var isHealthy = false;
+
+            var data = new Dictionary<string, Object>()
+            {
+                { "SqlHost", "localhost" },
+                { "SqlPort", "1443" }
+            };
+
+            if (isHealthy)
+            {
+                return Task.FromResult(
+                    new HealthCheckResult(HealthStatus.Healthy, "Sql is healthy", null, data));
+            }
+
+            return Task.FromResult(
+                new HealthCheckResult(HealthStatus.Unhealthy, "Sql is unhealthy", null, data));
         }
     }
 }

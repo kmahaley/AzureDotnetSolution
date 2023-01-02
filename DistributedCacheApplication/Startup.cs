@@ -37,7 +37,8 @@ namespace DistributedCacheApplication
 
             services
                 .AddHealthChecks()
-                .AddCheck<RedisHealthCheck>("Redis");
+                .AddCheck<RedisHealthCheck>("Redis")
+                .AddCheck<SqlHealthCheck>("SqlServer");
 
             //Swagger
             services.AddSwaggerGen(options =>
