@@ -1,4 +1,5 @@
-﻿using DistributedCacheApplication.Filters;
+﻿using DistributedCacheApplication.DependencyInjection;
+using DistributedCacheApplication.Filters;
 using DistributedCacheApplication.Middlewares;
 using DistributedCacheApplication.Repository;
 using DistributedCacheApplication.Services;
@@ -21,28 +22,13 @@ namespace DistributedCacheApplication
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //Configurations
-
-            //Repositories
-            services.AddSingleton<IProductRepository, ProductRepository>();
-
-            // Add middlewares to services
-            services.AddSingleton<HttpEtagMiddleware>();
-
-            // Add filters to services
-            services.AddApplicationFilters();
-
-            services.AddSingleton<IProductService, ProductService>();
-
-            // in memory caching
-            services.AddMemoryCache();
-
-            // distributed caching
-            services.AddStackExchangeRedisCache(redisOptions => 
-            { 
-                var connectionString = Configuration.GetConnectionString("Redis"); // same as Configuration.GetSection("ConnectionStrings:Redis");
-                redisOptions.Configuration = connectionString;
-            });
+            services
+                .AddInMemoryCacheDependencies(Configuration)
+                .AddDistributedCacheDependencies(Configuration)
+                .AddServiceDependencies(Configuration)
+                .AddRepositoryDependencies(Configuration)
+                .AddMiddlewareDependencies(Configuration)
+                .AddApplicationFilterDependencies(Configuration);
 
             //Controller
             services.AddControllers();
