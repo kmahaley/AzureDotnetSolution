@@ -46,12 +46,12 @@ namespace DistributedCacheApplication.HealthCheck
             var result = JsonConvert.SerializeObject(new
             {
                 status = healthReport.Status.ToString(),
-                errors = healthReport.Entries
+                healthData = healthReport.Entries
                     .Select(e =>
                         new
                         {
-                            key = e.Key,
-                            value = e.Value.Status.ToString(),
+                            member = e.Key,
+                            status = e.Value.Status.ToString(),
                             data = string.Join(", ", e.Value.Data.Select(kv => $"{kv.Key} : {kv.Value}").ToArray()),
                             description = e.Value.Description
                         })
