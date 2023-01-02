@@ -9,6 +9,11 @@ namespace DistributedCacheApplication.Controllers
     [Route("[controller]")]
     public class InMemoryCacheController : Controller
     {
+        private readonly MemoryCacheEntryOptions Options = 
+            new MemoryCacheEntryOptions()
+            .SetAbsoluteExpiration(TimeSpan.FromMilliseconds(10));
+
+
         private readonly ILogger<InMemoryCacheController> logger;
 
         private readonly IMemoryCache memoryCache;
@@ -67,10 +72,21 @@ namespace DistributedCacheApplication.Controllers
                 return BadRequest("Product request data failed validation");
             }
 
-            var _ = memoryCache.Set(product.ProductId, product, TimeSpan.FromSeconds(10));
+            var _ = memoryCache.Set(product.ProductId, product, Options);
             var savedproduct = await productService.AddProductAsync(product);
 
             return Ok(savedproduct);
+        }
+
+        [HttpPost("getOrCreate")]
+        public async Task<IActionResult> GetorCreateCacheValueAsync([FromBody] Product product)
+        {
+            var savedProduct = await memoryCache.GetOrCreateAsync(
+                product.ProductId,
+                async entryKey => await productService.AddProductAsync(product));
+            
+
+            return Ok(savedProduct);
         }
 
         [HttpDelete("{id}")]
@@ -81,6 +97,5 @@ namespace DistributedCacheApplication.Controllers
 
             return Ok(id);
         }
-
     }
 }
