@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Newtonsoft.Json;
+using StackExchange.Redis;
 
 namespace DistributedCacheApplication.HealthCheck
 {
@@ -53,6 +54,10 @@ namespace DistributedCacheApplication.HealthCheck
             HealthCheckContext context,
             CancellationToken cancellationToken = default)
         {
+            //ConnectionMultiplexer _redis = ConnectionMultiplexer.Connect("string");
+            //var db = _redis.GetDatabase();
+            //db.Ping();
+
             var isHealthy = true;
 
             var data = new Dictionary<string, Object>()
@@ -78,6 +83,9 @@ namespace DistributedCacheApplication.HealthCheck
             HealthCheckContext context,
             CancellationToken cancellationToken = default)
         {
+            //var connection = new SqlConnection("");
+            //connection.Open();
+
             var isHealthy = false;
 
             var data = new Dictionary<string, Object>()
