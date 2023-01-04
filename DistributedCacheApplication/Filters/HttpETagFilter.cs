@@ -31,7 +31,8 @@ namespace DistributedCacheApplication.Filters
 
             //Computing ETags for Response Caching on GET requests
             if (request.Method == HttpMethod.Get.Method
-                && response.StatusCode == (int)HttpStatusCode.OK)
+                && IsSuccessStatusCode(response.StatusCode)
+                && (executedContext.Result is ObjectResult))
             {
                 logger.LogInformation("Validate Etag");
                 ValidateETagForResponseCaching(executedContext);
@@ -71,6 +72,11 @@ namespace DistributedCacheApplication.Filters
         private string GenerateEtagFromResponseBodyWithHash(Product? serverProduct)
         {
             return "apple";
+        }
+
+        private static bool IsSuccessStatusCode(int statusCode)
+        {
+            return statusCode >= 200 && statusCode <= 299;
         }
     }
 }
