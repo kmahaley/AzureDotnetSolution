@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Net.Http.Headers;
 using Microsoft.VisualBasic;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Diagnostics;
 using System.Net;
 
@@ -12,6 +14,8 @@ namespace DistributedCacheApplication.Filters
     public class HttpETagFilter : IAsyncActionFilter
     {
         private readonly string filterName = nameof(HttpETagFilter);
+
+        private JTokenEqualityComparer equalityComparer = new JTokenEqualityComparer();
 
         private readonly ILogger<HttpETagFilter> logger;
 
@@ -49,9 +53,19 @@ namespace DistributedCacheApplication.Filters
             var httpContext = executedContext.HttpContext;
             var request = httpContext.Request;
             var response = httpContext.Response;
-            var result = (Product)(executedContext.Result as ObjectResult).Value;
-            // generates ETag from the entire response Content
-            var etag = GenerateEtagFromResponseBodyWithHash(result);
+            var generatedEtag = string.Empty;
+
+            if (executedContext.Result is ObjectResult objectResultFromResponse)
+            {
+                object objectFromControllerApi = objectResultFromResponse.Value;
+                // generates ETag from the entire response Content
+                generatedEtag = GenerateEtagFromResponseBodyWithHash(objectFromControllerApi);
+            }
+            else
+            {
+                return;
+            } 
+            
             if (request.Headers.ContainsKey(HeaderNames.IfNoneMatch))
             {
                 // fetch etag from the incoming request header
@@ -59,19 +73,25 @@ namespace DistributedCacheApplication.Filters
 
                 // if both the etags are equal
                 // raise a 304 Not Modified Response
-                if (incomingEtag.Equals(etag))
+                if (incomingEtag.Equals(generatedEtag))
                 {
                     executedContext.Result = new StatusCodeResult((int)HttpStatusCode.NotModified);
                 }
             }
 
             // add ETag response header 
-            response.Headers.Add(HeaderNames.ETag, new[] { etag });
+            response.Headers.Add(HeaderNames.ETag, new[] { generatedEtag });
         }
 
-        private string GenerateEtagFromResponseBodyWithHash(Product? serverProduct)
+        private string GenerateEtagFromResponseBodyWithHash(Object serverProduct)
         {
-            return "apple";
+            logger.LogInformation($"--- before Json: {serverProduct.GetType().Name}");
+            var serverProductJson = JsonConvert.SerializeObject(serverProduct);
+            logger.LogInformation($"--- After Json: {serverProductJson}");
+            var objToken = JToken.Parse(serverProductJson);
+            var hashCodeString = $"\"{equalityComparer.GetHashCode(objToken)}\"";
+            logger.LogInformation($"--- hashcode string: {hashCodeString}");
+            return hashCodeString;
         }
 
         private static bool IsSuccessStatusCode(int statusCode)

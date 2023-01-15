@@ -73,7 +73,7 @@ namespace DistributedCacheApplication.DependencyInjection
             this IServiceCollection services,
             IConfiguration configuration)
         {
-            services.AddSingleton<HttpEtagMiddleware>();
+            services.AddSingleton<ThrottlingMiddleware>();
 
             return services;
         }

@@ -14,10 +14,16 @@ namespace CoreConsoleApplication
         public static async Task Main(string[] args)
         {
             var st = Stopwatch.StartNew();
-            var summary = BenchmarkRunner.Run<BechmarkApiDemo>();
+            //var summary = BenchmarkRunner.Run<BechmarkApiDemo>();
+
+            object b = new Giraffe();
+            Console.WriteLine(b.GetType());
+
+            Animal a = (Animal)b;
+            Console.WriteLine(a.GetType());
 
 
-            Console.WriteLine("hello world {0}", st.Elapsed.TotalSeconds);
+            Console.WriteLine("\n Finished main {0}", st.Elapsed.TotalSeconds);
 
         }
 
@@ -43,4 +49,9 @@ namespace CoreConsoleApplication
 
         // End of class
     }
+
+    public class Animal { }
+
+    public class Giraffe : Animal { }
+
 }

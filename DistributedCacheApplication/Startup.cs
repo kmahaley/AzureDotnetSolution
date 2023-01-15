@@ -1,5 +1,6 @@
 ﻿using DistributedCacheApplication.DependencyInjection;
 using DistributedCacheApplication.HealthCheck;
+using DistributedCacheApplication.Middlewares;
 using Microsoft.OpenApi.Models;
 
 namespace DistributedCacheApplication
@@ -66,7 +67,7 @@ namespace DistributedCacheApplication
             app.UseAuthorization();
 
             // can add middleware here
-            //app.UseMiddleware<HttpEtagMiddleware>();
+            app.UseMiddleware<ThrottlingMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {

@@ -1,4 +1,5 @@
-﻿using DistributedCacheApplication.Filters;
+﻿using DistributedCacheApplication.Attributes;
+using DistributedCacheApplication.Filters;
 using DistributedCacheApplication.Models;
 using DistributedCacheApplication.Services;
 using Microsoft.AspNetCore.Http;
@@ -24,6 +25,7 @@ namespace DistributedCacheApplication.Controllers
 
         // GET: api/<ProductController>
         [HttpGet]
+        [Throttling("GetAllAsync", "get all products")]
         public async Task<ActionResult<IEnumerable<Product>>> GetAllAsync(CancellationToken cancellationToken = default)
         {
             var listOfProducts = await productService.GetAllProductsAsync(cancellationToken);
@@ -32,9 +34,12 @@ namespace DistributedCacheApplication.Controllers
 
         // GET api/<ProductController>/5
         [HttpGet("{id}")]
+        [Throttling("GetAsync", "get a product", RouteParameter = "id")]
         [ServiceFilter(typeof(HttpETagFilter))]
         public async Task<ActionResult<Product>> GetAsync(int id, CancellationToken cancellationToken = default)
         {
+            var attributeList = HttpContext.GetEndpoint().Metadata.GetOrderedMetadata<ThrottlingAttribute>();
+            var itermList = HttpContext.Items.TryAdd("key", "after hitting API");
             logger.LogInformation("Action--------------------- > GetAsync API---");
             try
             {
