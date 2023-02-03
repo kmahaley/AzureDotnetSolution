@@ -25,7 +25,7 @@ namespace DistributedCacheApplication
                 .AddRedisUsingConnectionMultiplexerDependencies(Configuration)
                 .AddServiceDependencies(Configuration)
                 .AddRepositoryDependencies(Configuration)
-                .AddMiddlewareDependencies(Configuration)
+                //.AddMiddlewareDependencies(Configuration)
                 .AddApplicationFilterDependencies(Configuration);
 
             services.AddControllers();
@@ -67,7 +67,7 @@ namespace DistributedCacheApplication
             app.UseAuthorization();
 
             // can add middleware here
-            app.UseMiddleware<ThrottlingMiddleware>();
+            //app.UseMiddleware<ThrottlingMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {

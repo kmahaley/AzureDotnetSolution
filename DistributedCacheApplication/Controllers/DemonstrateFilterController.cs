@@ -39,7 +39,7 @@ namespace DistributedCacheApplication.Controllers
         public async Task<ActionResult<Product>> GetAsync(int id, CancellationToken cancellationToken = default)
         {
             var attributeList = HttpContext.GetEndpoint().Metadata.GetOrderedMetadata<ThrottlingAttribute>();
-            var itermList = HttpContext.Items.TryAdd("key", "after hitting API");
+            var itermList = HttpContext.Items.TryAdd("key", "after hitting API, Key in items");
             logger.LogInformation("Action--------------------- > GetAsync API---");
             try
             {

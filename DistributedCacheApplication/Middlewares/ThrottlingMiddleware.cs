@@ -17,31 +17,35 @@ namespace DistributedCacheApplication.Middlewares
         public async Task InvokeAsync(HttpContext httpContext, RequestDelegate next)
         {
             logger.LogInformation($"--- before {this.GetType().Name} move to next middleware");
+            
+            // next middleware in pipeline
             await next(httpContext);
 
             // user request and headers
             logger.LogInformation($"--- after {this.GetType().Name}");
-            //var routeValues = httpContext.GetRouteData().Values;
-
-            //routeValues.TryGetValue("id", out var givenRouteId);
-            //logger.LogInformation($"givenRouteId => {givenRouteId}");
+/*
+            httpContext.Items.TryGetValue("key", out var messageLeft);
+            logger.LogInformation($"items messageLeft key => {messageLeft}");
 
             Endpoint? endpoint = httpContext.GetEndpoint();
             var throttlingAttributes = endpoint?.Metadata.GetOrderedMetadata<ThrottlingAttribute>() ?? Array.Empty<ThrottlingAttribute>();
 
             ThrottlingAttribute? att = throttlingAttributes.FirstOrDefault();
-            logger.LogInformation($"Throttling attribute => {att?.ApiName + att?.ApiAlias + att?.RouteParameter}");
+            if (att != null)
+            {
+                logger.LogInformation($"Throttling attribute => {att?.ApiName + att?.ApiAlias + att?.RouteParameter}");
 
-            httpContext.Items.TryGetValue("key", out var messageLeft);
-            logger.LogInformation($"items messageLeft => {messageLeft}");
+                object routeValue = null;
+                var routeData = httpContext.GetRouteData();
+                routeData?.Values.TryGetValue(att.RouteParameter, out routeValue);
+
+                if (routeValue is string givenRouteId)
+                {
+                    logger.LogInformation($"givenRouteId => {givenRouteId}");
+                }
+            }
             
-
-
-            var userRequest = httpContext.Request;
-            var serverResponse = httpContext.Response;
-
-
-            // next middleware in pipeline
+*/
         }
 
     }

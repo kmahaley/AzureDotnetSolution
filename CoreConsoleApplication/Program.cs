@@ -3,8 +3,11 @@ using CoreConsoleApplication.BBCProjectUtilities;
 using CoreConsoleApplication.Benchmark;
 using CoreConsoleApplication.DatabaseConcurrency;
 using CoreConsoleApplication.Dotnetutilities;
+using Microsoft.Extensions.Primitives;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace CoreConsoleApplication
@@ -16,15 +19,26 @@ namespace CoreConsoleApplication
             var st = Stopwatch.StartNew();
             //var summary = BenchmarkRunner.Run<BechmarkApiDemo>();
 
-            object b = new Giraffe();
-            Console.WriteLine(b.GetType());
-
-            Animal a = (Animal)b;
-            Console.WriteLine(a.GetType());
-
+            StringValues val = String.Empty;
+            Console.WriteLine(val.DefaultIfEmpty("banana"));
 
             Console.WriteLine("\n Finished main {0}", st.Elapsed.TotalSeconds);
 
+        }
+
+        public static IEnumerable<int> TakeWhilePositive(IEnumerable<int> numbers)
+        {
+            foreach (int n in numbers)
+            {
+                if (n > 0)
+                {
+                    yield return n;
+                }
+                else
+                {
+                    yield break;
+                }
+            }
         }
 
         /// <summary>

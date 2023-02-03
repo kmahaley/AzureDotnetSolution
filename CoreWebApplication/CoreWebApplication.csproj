@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
-		<!--<Platforms>AnyCPU;x64</Platforms>-->
+		<Platforms>AnyCPU;x64</Platforms>
 		<!--<UserSecretsId>15e47230-9b6d-4cdd-b94c-372652746ef7</UserSecretsId>-->
 	</PropertyGroup>
 
