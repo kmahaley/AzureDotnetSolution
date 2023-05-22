@@ -25,60 +25,50 @@ namespace CoreWebApplication.Services
             this.repository = repository;
             this.logger = logger;
         }
-        
-        //public BackgroundLongRunningService(IServiceProvider services, ILogger<BackgroundLongRunningService> logger)
-        //{
-        //    this.repository = services.GetRequiredService<IRepository>();
-        //    this.logger = logger;
-        //}
 
-        public override Task StartAsync(CancellationToken cancellationToken)
-        {
-            logger.LogInformation("1. StartAsync has been called.");
-            UpsertItems("StartAsync", "apple");
-            return Task.CompletedTask;
-        }
-
-        public override Task StopAsync(CancellationToken cancellationToken)
-        {
-            logger.LogInformation("4. StopAsync has been called.");
-            return Task.CompletedTask;
-        }
 
         protected async override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            logger.LogInformation("finally -----------------");
-            UpsertItems("ExecuteAsync", "banana");
-            await Task.CompletedTask;
+            await UpsertItemsAsync("ExecuteAsync => UpsertItemsAsync", "banana", stoppingToken);
+            if (stoppingToken.IsCancellationRequested)
+            {
+                logger.LogError("------------------------- Long Service stop requested");
+            }
+            //stoppingToken.ThrowIfCancellationRequested();
         }
 
-        private void UpsertItems(string methodName, string name)
+        public override async Task StopAsync(CancellationToken stoppingToken)
         {
-            try
+            logger.LogInformation("BackgroundLongRunningService Hosted Service is stopping.");
+
+            await base.StopAsync(stoppingToken);
+        }
+
+        private async Task UpsertItemsAsync(string methodName, string name, CancellationToken cancellationToken)
+        {
+            while (!cancellationToken.IsCancellationRequested)
             {
-                logger.LogInformation($"----- {methodName}: Processing task");
-                for(int i = 0; i < 2; i++)
+                try
                 {
-                    logger.LogInformation($"{repository == null} {i}");
+                    logger.LogInformation($"----- {methodName}: Processing task");
                     var id = Guid.NewGuid();
                     var item = new Item
                     {
                         Id = id,
-                        Name = $"{name}_{i}",
+                        Name = $"{name}_apple",
                         Price = 10,
                         CreatedDate = DateTime.UtcNow
                     };
 
                     _ = repository.CreateOrUpdateItemAsync(id, item);
-                    Thread.Sleep(TimeSpan.FromSeconds(2));
+                    await Task.Delay(TimeSpan.FromSeconds(3));
                 }
-                logger.LogInformation($"----- {methodName}: Completed task");
-            }
-            catch(Exception ex)
-            {
-                logger.LogError($"{methodName} error occured. {ex.GetType().Name}, {ex.Message}");
-                logger.LogError($"{methodName} error occured. {ex}");
-            }
+                catch (Exception ex)
+                {
+                    logger.LogError($"{methodName} error occured. {ex.GetType().Name}, {ex.Message}");
+                    logger.LogError($"{methodName} error occured. {ex}");
+                }
+            }            
         }
     }
 }

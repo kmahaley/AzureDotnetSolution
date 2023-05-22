@@ -175,3 +175,16 @@ services.AddSingleton<IWeatherService>(
 
 
 ```
+
+## Background and HostedService
+
+### HostedService
+- contains 2 methods startasync(...) and stopasync(...). 
+- for short tasks
+  - bz startasync(...) started before app and server is started
+  - blocks apps until startasync is finished
+- Use `CancellationTokenSource` to gracefully shutdown service and tasks
+
+### BackgroundService
+- long running tasks
+- contains executeasync(..) single method

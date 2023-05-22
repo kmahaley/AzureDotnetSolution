@@ -12,33 +12,57 @@ namespace CoreConsoleApplication.Benchmark
     public class BechmarkApiDemo
     {
         int NumberOfItems = 100000;
-        
+
         //[GlobalSetup]
         //public void GlobalSetup()
         //{
         //}
 
-
         [Benchmark]
-        public string ConcatStringsUsingStringBuilder()
+        public void ListContains()
         {
-            var sb = new StringBuilder();
+            var userStatus = "Running";
+            List<string> statuses = new List<string>() { "Running", "Queued", "Creating" };
             for (int i = 0; i < NumberOfItems; i++)
             {
-                sb.Append("Hello World!" + i);
+                statuses.Contains(userStatus);
             }
-            return sb.ToString();
+
+            //return userStatus;
         }
 
         [Benchmark]
-        public string ConcatStringsUsingGenericList()
+        public void ListAny()
         {
-            var list = new List<string>(NumberOfItems);
+            var userStatus = "Running";
+            List<string> statuses = new List<string>() { "Running", "Queued", "Creating" };
             for (int i = 0; i < NumberOfItems; i++)
             {
-                list.Add("Hello World!" + i);
+                _ = statuses.Any(s => s.Equals(userStatus, StringComparison.OrdinalIgnoreCase));
             }
-            return list.ToString();
+            //return list.ToString();
         }
+
+        //[Benchmark]
+        //public string ConcatStringsUsingStringBuilder()
+        //{
+        //    var sb = new StringBuilder();
+        //    for (int i = 0; i < NumberOfItems; i++)
+        //    {
+        //        sb.Append("Hello World!" + i);
+        //    }
+        //    return sb.ToString();
+        //}
+
+        //[Benchmark]
+        //public string ConcatStringsUsingGenericList()
+        //{
+        //    var list = new List<string>(NumberOfItems);
+        //    for (int i = 0; i < NumberOfItems; i++)
+        //    {
+        //        list.Add("Hello World!" + i);
+        //    }
+        //    return list.ToString();
+        //}
     }
 }
