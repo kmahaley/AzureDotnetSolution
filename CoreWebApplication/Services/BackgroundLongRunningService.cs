@@ -32,16 +32,19 @@ namespace CoreWebApplication.Services
             cancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(stoppingToken);
             try
             {
-                await UpsertItemsAsync("ExecuteAsync => UpsertItemsAsync", "banana", stoppingToken);
+                await UpsertItemsAsync("banana", stoppingToken);
             }
             catch (Exception ex)
             {
-                logger.LogCritical("------- exception from while loop and UpsertItemsAsync method");
+                logger.LogCritical("===> exception from long running task: UpsertItemsAsync method");
+                throw;
             }
+            
+            logger.LogInformation("long running task completed.");
             
             if (stoppingToken.IsCancellationRequested)
             {
-                logger.LogError("------------------------- Long Service stop requested");
+                logger.LogCritical("------------------------- Long Service stop requested");
             }
         }
 
@@ -52,16 +55,17 @@ namespace CoreWebApplication.Services
             await base.StopAsync(stoppingToken);
         }
 
-        private async Task UpsertItemsAsync(string methodName, string name, CancellationToken cancellationToken)
+        private async Task UpsertItemsAsync(string name, CancellationToken cancellationToken)
         {
             int i = 0;
-            while (!cancellationTokenSource.IsCancellationRequested
-                && !cancellationToken.IsCancellationRequested 
-                && i < 10)
+            try
             {
-                try
+                while (!cancellationTokenSource.IsCancellationRequested
+                && !cancellationToken.IsCancellationRequested
+                && i < 10)
                 {
-                    logger.LogInformation($"----- {methodName}: Processing task----------- {i}");
+
+                    logger.LogInformation($"---Processing task ----------- {i}");
                     if (i == 3)
                     {
                         throw new Exception($"manually fail on exception.... {i}");
@@ -77,14 +81,16 @@ namespace CoreWebApplication.Services
 
                     _ = repository.CreateOrUpdateItemAsync(id, item);
                     i++;
-                    await Task.Delay(TimeSpan.FromSeconds(3));
+                    await Task.Delay(TimeSpan.FromSeconds(1));
+
                 }
-                catch (Exception ex)
-                {
-                    logger.LogError($"{methodName} error occured. {ex.GetType().Name}, {ex.Message}");
-                    this.StopAsync(cancellationToken);
-                }
-            }            
+            }
+            catch (Exception ex)
+            {
+                logger.LogError($"--- Error occured in long running task. {ex.GetType().Name}, {ex.Message}");
+                //this.StopAsync(cancellationToken);
+                throw;
+            }
         }
     }
 }
