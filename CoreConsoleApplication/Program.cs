@@ -20,10 +20,8 @@ namespace CoreConsoleApplication
             var st = Stopwatch.StartNew();
             //var summary = BenchmarkRunner.Run<BechmarkApiDemo>();
 
-            
 
-            Console.WriteLine("\n Finished main {0}", st.Elapsed.TotalSeconds);
-
+            await Console.Out.WriteLineAsync($"Finished main {st.Elapsed.Milliseconds}");
         }
 
         /// <summary>

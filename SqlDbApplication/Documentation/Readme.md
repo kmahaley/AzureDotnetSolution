@@ -117,6 +117,13 @@ docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=Password123" -p 1433:1433 --
 - Add Repository instance 
   - ConfigureServices -> `services.AddDbContext<SqlDatabaseContext>();`
 
+## Database query logging
+
+- if we want to test the SQL query and Log the query, we can add below in appsettings.json
+
+```
+"Microsoft.EntityFrameworkCore.Database.Command": "Information"
+```
 
 ## Dispose Context Issue
 

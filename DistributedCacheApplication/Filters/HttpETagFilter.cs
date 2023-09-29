@@ -1,12 +1,8 @@
-﻿using DistributedCacheApplication.Models;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Controllers;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Net.Http.Headers;
-using Microsoft.VisualBasic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System.Diagnostics;
 using System.Net;
 
 namespace DistributedCacheApplication.Filters
