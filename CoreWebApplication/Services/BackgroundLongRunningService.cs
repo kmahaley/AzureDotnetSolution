@@ -41,13 +41,13 @@ namespace CoreWebApplication.Services
             
             if (stoppingToken.IsCancellationRequested)
             {
-                logger.LogError("------------------------- Long Service stop requested");
+                logger.LogWarning($"===> Long Service stop requested: {stoppingToken.IsCancellationRequested}");
             }
         }
 
         public override async Task StopAsync(CancellationToken stoppingToken)
         {
-            logger.LogInformation("BackgroundLongRunningService Hosted Service is stopping.");
+            logger.LogWarning("===> BackgroundLongRunningService Hosted Service is stopping.");
 
             await base.StopAsync(stoppingToken);
         }
@@ -81,8 +81,8 @@ namespace CoreWebApplication.Services
                 }
                 catch (Exception ex)
                 {
-                    logger.LogError($"{methodName} error occured. {ex.GetType().Name}, {ex.Message}");
-                    this.StopAsync(cancellationToken);
+                    logger.LogError($"{methodName} error occured :(. {ex.GetType().Name}, {ex.Message}");
+                    throw;
                 }
             }            
         }

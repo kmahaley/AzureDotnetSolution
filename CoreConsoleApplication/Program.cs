@@ -20,51 +20,10 @@ namespace CoreConsoleApplication
             var st = Stopwatch.StartNew();
             //var summary = BenchmarkRunner.Run<BechmarkApiDemo>();
 
-            HashSet<int> evenNumbers = new HashSet<int>();
-            List<int> oddNumbers = new List<int>();
-
-            evenNumbers.Add(2);
-            for (int i = 0; i < 5; i++)
-            {
-                // Populate numbers with just even numbers.
-                //evenNumbers.Add(i * 2);
-
-                // Populate oddNumbers with just odd numbers.
-                oddNumbers.Add((i * 2));
-            }
-
-            DisplaySet(evenNumbers);
-            DisplaySet(oddNumbers);
-            evenNumbers.UnionWith(oddNumbers);
-            DisplaySet(evenNumbers);
+            
 
             Console.WriteLine("\n Finished main {0}", st.Elapsed.TotalSeconds);
 
-        }
-
-        public static void DisplaySet(ICollection<int> collection)
-        {
-            Console.Write("{");
-            foreach (int i in collection)
-            {
-                Console.Write(" {0}", i);
-            }
-            Console.WriteLine(" }");
-        }
-
-        public static IEnumerable<int> TakeWhilePositive(IEnumerable<int> numbers)
-        {
-            foreach (int n in numbers)
-            {
-                if (n > 0)
-                {
-                    yield return n;
-                }
-                else
-                {
-                    yield break;
-                }
-            }
         }
 
         /// <summary>

@@ -19,28 +19,22 @@ namespace CoreConsoleApplication.Benchmark
         //}
 
         [Benchmark]
-        public void ListContains()
+        public void StringContains()
         {
-            var userStatus = "Running";
-            List<string> statuses = new List<string>() { "Running", "Queued", "Creating" };
-            for (int i = 0; i < NumberOfItems; i++)
-            {
-                statuses.Contains(userStatus);
-            }
+            string vnetType = "AML";
+            string DefaultSupportedVnetTypes = "ADF,ClusterService,MTS,CosmosAzap,Babylon,AML,CosmosAzure,Office365,ExchangeOnline";
+            _ = DefaultSupportedVnetTypes.Contains(vnetType, StringComparison.OrdinalIgnoreCase);
+            
 
-            //return userStatus;
         }
 
         [Benchmark]
-        public void ListAny()
+        public void ListConatins()
         {
-            var userStatus = "Running";
-            List<string> statuses = new List<string>() { "Running", "Queued", "Creating" };
-            for (int i = 0; i < NumberOfItems; i++)
-            {
-                _ = statuses.Any(s => s.Equals(userStatus, StringComparison.OrdinalIgnoreCase));
-            }
-            //return list.ToString();
+            string vnetType = "AML";
+            string DefaultSupportedVnetTypes = "ADF,ClusterService,MTS,CosmosAzap,Babylon,AML,CosmosAzure,Office365,ExchangeOnline";
+            var vnetTypes = DefaultSupportedVnetTypes.Split(',').ToArray();
+            _ = vnetTypes.Contains(vnetType, StringComparer.OrdinalIgnoreCase);
         }
 
         //[Benchmark]
