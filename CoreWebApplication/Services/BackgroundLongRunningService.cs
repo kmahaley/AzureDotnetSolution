@@ -1,12 +1,9 @@
 ﻿
 using CoreWebApplication.Models;
 using CoreWebApplication.Repositories;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -39,9 +36,9 @@ namespace CoreWebApplication.Services
                 logger.LogCritical("===> exception from long running task: UpsertItemsAsync method");
                 throw;
             }
-            
+
             logger.LogInformation("long running task completed.");
-            
+
             if (stoppingToken.IsCancellationRequested)
             {
                 logger.LogWarning($"===> Long Service stop requested: {stoppingToken.IsCancellationRequested}");
@@ -83,12 +80,12 @@ namespace CoreWebApplication.Services
                     i++;
                     await Task.Delay(TimeSpan.FromSeconds(3));
                 }
-                catch (Exception ex)
-                {
-                    logger.LogError($"{methodName} error occured :(. {ex.GetType().Name}, {ex.Message}");
-                    throw;
-                }
-            }            
+            }
+            catch (Exception ex)
+            {
+                logger.LogError($"error occured :(. {ex.GetType().Name}, {ex.Message}");
+                throw;
+            }
         }
     }
 }

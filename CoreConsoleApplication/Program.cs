@@ -1,14 +1,15 @@
-﻿using BenchmarkDotNet.Running;
-using CoreConsoleApplication.BBCProjectUtilities;
-using CoreConsoleApplication.Benchmark;
+﻿using CoreConsoleApplication.BBCProjectUtilities;
 using CoreConsoleApplication.DatabaseConcurrency;
 using CoreConsoleApplication.Dotnetutilities;
-using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
+using NuGet.ContentModel;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
+using System.Runtime.ConstrainedExecution;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace CoreConsoleApplication
@@ -20,10 +21,20 @@ namespace CoreConsoleApplication
             var st = Stopwatch.StartNew();
             //var summary = BenchmarkRunner.Run<BechmarkApiDemo>();
 
-
+            var x = GetErrorSourceFromExceptionMiddlewareHttpStatusCode(500);
+            await Console.Out.WriteLineAsync(x);
             await Console.Out.WriteLineAsync($"Finished main {st.Elapsed.Milliseconds}");
         }
 
+        public static string GetErrorSourceFromExceptionMiddlewareHttpStatusCode(int httpStatusCode)
+        {
+            if (httpStatusCode >= (int)HttpStatusCode.BadRequest && httpStatusCode < (int)HttpStatusCode.InternalServerError)
+            {
+                return "User";
+            }
+
+            return "ClusterService";
+        }
         /// <summary>
         /// Methods can be moved to Main method for utilization. These methods are tested and save
         /// for future use.
@@ -49,6 +60,17 @@ namespace CoreConsoleApplication
 
     public class Animal { }
 
-    public class Giraffe : Animal { }
+    public class Giraffe : Animal 
+    {
+        public int No { get; set; }
+        public string Name { get; set; }
+        public List<string> ListOfRegion { get; set; }
+    }
+    
+    public class Giraffe1 : Animal 
+    {
+        public int No { get; set; }
+        public List<string> ListOfRegion { get; set; }
+    }
 
 }
