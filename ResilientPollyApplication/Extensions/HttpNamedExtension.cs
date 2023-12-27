@@ -21,9 +21,9 @@ namespace ResilientPollyApplication.Extensions
             //network failures, 5xx and 408 responses
             services.AddHttpClient("transientpolicy")
                 .AddHttpMessageHandler<NamedHttpMessageHandler>()
-                .AddPolicyHandler(NamedHttpClientBasedPolicy.CreateTimeoutPolicy(TimeSpan.FromSeconds(5)))
+                .AddPolicyHandler(NamedHttpClientBasedPolicy.CreateTimeoutPolicy(TimeSpan.FromSeconds(60)))
                 .AddPolicyHandler(NamedHttpClientBasedPolicy.CreateWaitAndRetryPolicy())
-                .AddPolicyHandler(NamedHttpClientBasedPolicy.CreateTimeoutPolicy(TimeSpan.FromSeconds(1)))
+                .AddPolicyHandler(NamedHttpClientBasedPolicy.CreateTimeoutPolicy(TimeSpan.FromSeconds(2)))
                 .AddPolicyHandler(NamedHttpClientBasedPolicy.CreateCircuitBreakerPolicy(durationOfTheBreak: TimeSpan.FromSeconds(30)));
 
             //network failures, 5xx and 408 responses

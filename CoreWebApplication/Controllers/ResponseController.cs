@@ -1,4 +1,5 @@
 ﻿using CoreWebApplication.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Swashbuckle.AspNetCore.Annotations;
@@ -37,6 +38,21 @@ namespace CoreWebApplication.Controllers
                 Summary = Summaries[rng.Next(Summaries.Length)]
             })
             .ToArray();
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult> GetById(int id)
+        {
+            _ = Task.Delay(1000);
+            Random random = new Random(id);
+            if (random.Next(0, 101) >= id)
+            {
+                logger.LogError("Failed, generated http 500");
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+
+            logger.LogInformation("Success, generated http 200");
+            return Ok();
         }
     }
 }

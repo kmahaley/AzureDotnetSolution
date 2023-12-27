@@ -31,17 +31,23 @@ namespace UtilityLibrary.PollyProject
         public static IAsyncPolicy<HttpResponseMessage> CreateTimeoutPolicy(TimeSpan timeOutDuration)
         {
             timeOutDuration = timeOutDuration == null ? TimeSpan.FromSeconds(10) : timeOutDuration;
-            return Policy.TimeoutAsync<HttpResponseMessage>(timeOutDuration, onTimeoutAsync: (context, timeSpan, task) =>
-            {
-                if (!context.TryGetLogger(out var logger))
+            return Policy.TimeoutAsync<HttpResponseMessage>(
+                timeOutDuration, 
+                onTimeoutAsync: (context, timeSpan, task) =>
                 {
+                    if (!context.TryGetLogger(out var logger))
+                    {
+                        return Task.CompletedTask;
+                    }
+                    logger.LogError("{id} >>>>>>>>>>> Timeout delegate fired after {timeout} seconds", context.CorrelationId, timeSpan.TotalSeconds);
                     return Task.CompletedTask;
-                }
-                logger.LogError("{id} >>>>>>>>>>> Timeout delegate fired after {timeout} seconds", context.CorrelationId, timeSpan.TotalSeconds);
-                return Task.CompletedTask;
-            });
+                });
         }
 
+        /// <summary>
+        /// wait and retry on transient errors or non success http status
+        /// </summary>
+        /// <returns></returns>
         public static IAsyncPolicy<HttpResponseMessage> CreateWaitAndRetryPolicy()
         {
             return HttpPolicyExtensions
@@ -56,7 +62,9 @@ namespace UtilityLibrary.PollyProject
         /// <param name="retryableStatusCode">specify list of custom error code apart from polly defined transient errors.</param>
         /// <param name="numberOfRetries">Number of retries on failure. Default is 3.</param>
         /// <returns>returns asynchronous retry policy.</returns>
-        public static IAsyncPolicy<HttpResponseMessage> CreateWaitAndRetryPolicy(IList<HttpStatusCode> retryableStatusCode = null, int numberOfRetries = 3)
+        public static IAsyncPolicy<HttpResponseMessage> CreateWaitAndRetryPolicy(
+            IList<HttpStatusCode> retryableStatusCode = null,
+            int numberOfRetries = 3)
         {
             retryableStatusCode ??= new List<HttpStatusCode>();
             return
