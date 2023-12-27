@@ -131,6 +131,10 @@ Host
     });
 ```
 
+#### Location of log file
+
+- `.csproj` Project file -> Logs folder -> `CoreWebApplication20231227.txt`
+
 ## Secrets
 
 - Passwords can not be saved in appsettings.json file. use **keyvaults/Environment variables/Command line parameters**. 

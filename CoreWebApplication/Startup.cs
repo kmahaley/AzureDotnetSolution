@@ -31,22 +31,22 @@ namespace CoreWebApplication
                 .WriteTo.File("Logs/CoreWebApplication.txt", rollingInterval: RollingInterval.Day)
                 .CreateLogger();
 
-            //Configurations
+            // Configurations
            
-            //Repositories
+            // Repositories
             services.AddSingleton<IRepository, InMemoryRepository>();
 
-            //Services
+            // Background Services
             //services.AddSingleton<IHostedService, BackgroundShortRunningService>();
-            services.AddHostedService<BackgroundLongRunningService>();
+            //services.AddHostedService<BackgroundLongRunningService>();
             //services.AddHostedService<BackgroundTimedRunningService>();
 
-            //Controller
+            // Controller
             services.AddControllers();
             services.AddHealthChecks();
 
 
-            //Swagger
+            // Swagger
             services.AddSwaggerGen(options =>
             {
                 options.SwaggerDoc("v1",
