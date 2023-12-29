@@ -41,6 +41,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Compose", "Compose", "{CC7C
 		Docker\DockerCompose.yaml = Docker\DockerCompose.yaml
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{5A02D5DF-B34B-4F1D-9CBC-CB922358E8C7}"
+	ProjectSection(SolutionItems) = preProject
+		Docker\MongoDockerCompose.yaml = Docker\MongoDockerCompose.yaml
+		Docker\SqlDockerCompose.yaml = Docker\SqlDockerCompose.yaml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -153,6 +159,7 @@ Global
 		{5C4E287D-6060-4BAC-8701-9051564C828B} = {B7404996-E492-4B4F-845C-F5E47EA00D00}
 		{71547E0B-A205-46C0-9B04-AB6E817AB94D} = {967AB127-4BA4-4DBF-AE87-6791BAB4E1C2}
 		{CC7CB691-D7B4-4030-947C-0C5762BCB795} = {0407F081-1950-4C8D-97F9-E7CF7237B4BD}
+		{5A02D5DF-B34B-4F1D-9CBC-CB922358E8C7} = {0407F081-1950-4C8D-97F9-E7CF7237B4BD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {61214459-F477-4063-ACD1-C98864239E13}
