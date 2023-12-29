@@ -9,4 +9,5 @@ services:
     environment:
       - ACCEPT_EULA=Y
       - MSSQL_SA_PASSWORD=Password123
+#sql adminName:sa for SSMS login
 
