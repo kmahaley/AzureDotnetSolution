@@ -10,4 +10,10 @@ services:
       - ACCEPT_EULA=Y
       - MSSQL_SA_PASSWORD=Password123
 #sql adminName:sa for SSMS login
+    volumes:
+      - sqlvolume:/var/opt/mssql
+volumes:
+  sqlvolume:
+    driver: local  
+
 
