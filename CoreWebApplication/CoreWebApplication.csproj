@@ -3,6 +3,8 @@
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
 		<Platforms>AnyCPU;x64</Platforms>
+		<UserSecretsId>fcee912e-1728-426c-b86f-fc500b436ea2</UserSecretsId>
+		<DockerDefaultTargetOS>Windows</DockerDefaultTargetOS>
 		<!--<UserSecretsId>15e47230-9b6d-4cdd-b94c-372652746ef7</UserSecretsId>-->
 	</PropertyGroup>
 
@@ -22,6 +24,7 @@
 	<ItemGroup>
 		
 		<!--Swagger dependency-->
+		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.5" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
 		<PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.4.0" />
 		

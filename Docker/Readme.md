@@ -40,3 +40,17 @@
 |run containers|docker compose -f [fileName] up| docker compose -f .\DockerCompose.yaml up -d|
 |stop containers|docker compose -f [fileName] down| docker compose -f .\DockerCompose.yaml down|
 |stop and clean containers|docker compose -f [fileName] down --volumes| docker compose -f .\DockerCompose.yaml down --volumes|
+
+## Docker build image from Dockerfile
+
+|Description| commmad | example|
+|-|-|-|
+|Create image|docker login|docker build -t [AccountName]/[RepositoryName]:[Tag] -f [DockerFileName] .|docker build -t kmahaley/coreapp:1.0 -f Dockerfile .|
+|Create container||docker run -d --name app -p8080:80 kmahaley/coreapp:1.0|
+
+## Docker hub
+
+|Description| commmad | example|
+|-|-|-|
+|Login to Docker hub|docker login||
+|Push image to Docker hub|docker login|docker push [AccountName]/[Repository]:[Tag]|docker push kmahaley/coreapp:1.0|
