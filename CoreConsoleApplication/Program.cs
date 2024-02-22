@@ -21,20 +21,11 @@ namespace CoreConsoleApplication
             var st = Stopwatch.StartNew();
             //var summary = BenchmarkRunner.Run<BechmarkApiDemo>();
 
-            var x = GetErrorSourceFromExceptionMiddlewareHttpStatusCode(500);
-            await Console.Out.WriteLineAsync(x);
+            
             await Console.Out.WriteLineAsync($"Finished main {st.Elapsed.Milliseconds}");
         }
 
-        public static string GetErrorSourceFromExceptionMiddlewareHttpStatusCode(int httpStatusCode)
-        {
-            if (httpStatusCode >= (int)HttpStatusCode.BadRequest && httpStatusCode < (int)HttpStatusCode.InternalServerError)
-            {
-                return "User";
-            }
 
-            return "ClusterService";
-        }
         /// <summary>
         /// Methods can be moved to Main method for utilization. These methods are tested and save
         /// for future use.
@@ -54,6 +45,7 @@ namespace CoreConsoleApplication
             DotnetDependencies.PrintProjectDependencyTreeUsingMSBuildGraph();
         }
         
+
 
         // End of class
     }
