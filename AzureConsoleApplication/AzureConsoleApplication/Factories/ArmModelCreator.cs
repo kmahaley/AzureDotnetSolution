@@ -93,13 +93,15 @@ namespace AzureConsoleApplication.Factories
             int diskSize,
             int logicalDataDiskNumber,
             DiskCreateOptionType diskCreateOptionType,
-            VirtualMachineManagedDisk virtualMachineManagedDisk)
+            VirtualMachineManagedDisk virtualMachineManagedDisk,
+            CachingType cachingType)
         {
             return new VirtualMachineDataDisk(logicalDataDiskNumber, diskCreateOptionType)
             {
                 Name = diskName,
                 DiskSizeGB = diskSize,
                 ManagedDisk = virtualMachineManagedDisk,
+                Caching = cachingType,
             };
         }
 
