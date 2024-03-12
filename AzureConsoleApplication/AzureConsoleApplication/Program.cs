@@ -401,11 +401,8 @@ namespace AzureConsoleApplication
             // Create VM
             Console.WriteLine("--------Start create VM with networkInterfaceId-------- ");
             Console.WriteLine($"{networkInterfaceId}");
-            string x = "Premium_LRS";
-            var st = (StorageAccountType)x;
             var virtualMachineData = new VirtualMachineData(location)
             {
-
                 HardwareProfile = new VirtualMachineHardwareProfile()
                 {
                     VmSize = "Standard_E16bds_v5"
