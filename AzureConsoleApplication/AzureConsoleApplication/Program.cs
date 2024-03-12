@@ -14,6 +14,15 @@ namespace AzureConsoleApplication
 {
     public class Program
     {
+        public static Dictionary<string, StorageAccountType> StorageAccountTypeDict =
+            new Dictionary<string, StorageAccountType>(StringComparer.OrdinalIgnoreCase)
+            {
+                { "StandardLRS", StorageAccountType.StandardLrs },
+                { "PremiumLRS", StorageAccountType.PremiumLrs },
+                { "SStandardSSDLRS", StorageAccountType.StandardSsdLrs },
+                { "UltraSSDLRS", StorageAccountType.UltraSsdLrs },
+            };
+
         /// <summary>
         /// FluenSDk to Arm Sdk migration: https://github.com/Azure/azure-sdk-for-net/blob/main/sdk/resourcemanager/Azure.ResourceManager/docs/MigrationGuide.md#create-a-network-interface
         /// Arm sdk compute: https://github.com/Azure/azure-sdk-for-net/blob/Azure.ResourceManager.Compute_1.1.0/sdk/compute/Azure.ResourceManager.Compute/samples/Sample2_ManagingVirtualMachines.md
@@ -29,9 +38,15 @@ namespace AzureConsoleApplication
         /// <returns></returns>
         public static async Task Main(string[] args)
         {
+            var val = "UltraSSDLRS";
+            var requestedDataDiskSku = GetArmSdkBasedStorageAccountType(val, "vmName123", "clusterName123");
+            await Console.Out.WriteLineAsync($"converted:{requestedDataDiskSku}, type:{requestedDataDiskSku.GetType().FullName} ");
+
+            return;
+
             var location = AzureLocation.EastAsia;
             var rgName = "kam-arm-dev-rg-ea";
-            var vmName = "dev-022701-vm-ea";
+            var vmName = "dev-031224-vm-ea-01";
             var clientId = Environment.GetEnvironmentVariable("ClientId");
             var clientSecret = Environment.GetEnvironmentVariable("ClientSecret");
             var tenantId = Environment.GetEnvironmentVariable("TenantId");
@@ -47,21 +62,36 @@ namespace AzureConsoleApplication
             //var rgResource = await CreateResourceGroup(subscriptionResource, rgName, location);
             //Console.WriteLine("--------Finish create group--------");
 
+            // Create Vnet and Nic
+            var vnetName = "VnetSampleName"; //"VnetSampleName01";
+            var networkInterfaceName = "VnetSampleNameInterfaceName01";
+            var networkInterfaceIpConfigName = "VnetSampleNameInterfaceIpConfigName01";
+            //await CreateVirtualNetworkAsync(subscriptionResource, rgName, location, vnetName);
+            //await CreateVirtualNetworkInterfaceAsync(
+            //    subscriptionResource,
+            //    rgName,
+            //    location,
+            //    vnetName,
+            //    networkInterfaceName,
+            //    networkInterfaceIpConfigName);
+
             // Get all vms
             //Console.WriteLine("--------Get all vms--------");
             //await GetAllVmsAsync(subscriptionResource, rgName);
             //Console.WriteLine("--------Finish Get all vms--------");
-            
+
             // Create a Virtual Machine
             Console.WriteLine("--------Create vm--------");
-            
-            //TODO: Provide arm resource id
+
+            //TODO: Provide arm resource id. we have 2 Nics
             var networkInterfaceArmId = "";
-            var existingManagedDiskArmId = "";
+            //var networkInterfaceArmId = "";
             
+            //var existingManagedDiskArmId = "";
+
             //await CreateVirtualMachineWithNicAsync(subscriptionResource, rgName, location, vmName);
-            await CreateVirtualMachineWithNicAsync(subscriptionResource, rgName, location, vmName, networkInterfaceArmId);
-            
+            //await CreateVirtualMachineWithNicAsync(subscriptionResource, rgName, location, vmName, networkInterfaceArmId);
+
             //await CreateVMWithManagedDiskAndNicResourceProvidedAsync(
             //    subscriptionResource,
             //    rgName,
@@ -73,26 +103,31 @@ namespace AzureConsoleApplication
             /*
              * Below is single group activity VHD - managed disk - VM
              */
-/*
-            //TODO: Provide arm resource id
-            var vhdUri = "";
-            var storageArmId = "";
-            
-            var diskResourceId = await CreateManagedDiskFromVhd(
-                subscriptionResource,
-                rgName,
-                location,
-                vhdUri,
-                storageArmId);
 
-            await CreateVMWithManagedDiskFromVhdAndNicResourceProvidedAsync(
-                subscriptionResource,
-                rgName,
-                location,
-                vmName,
-                networkInterfaceArmId,
-                diskResourceId);
-*/
+
+            //TODO: Provide arm resource id
+            //var vhdUri = "";
+            //var storageArmId = "";
+
+            //var diskName = $"ManagedOsDiskFromVhd_{vmName}";
+            //var diskSize = 256;
+            //var diskResourceId = await CreateManagedDiskFromVhd(
+            //    subscriptionResource,
+            //    rgName,
+            //    diskName,
+            //    location,
+            //    vhdUri,
+            //    storageArmId,
+            //    diskSize);
+
+            //await CreateVMWithManagedDiskFromVhdAndNicResourceProvidedAsync(
+            //    subscriptionResource,
+            //    rgName,
+            //    location,
+            //    vmName,
+            //    networkInterfaceArmId,
+            //    diskResourceId);
+
             Console.WriteLine("--------Finish Create vm--------");
 
             //Delete resource group if necessary
@@ -100,8 +135,6 @@ namespace AzureConsoleApplication
             //await DeleteVirtualMachineAsync(subscriptionResource, rgName, vmName);
             //Console.WriteLine("--------Finish delete vm--------");
         }
-
-        
 
         private async static Task<ResourceGroupResource> CreateResourceGroup(
             SubscriptionResource subscription,
@@ -144,6 +177,74 @@ namespace AzureConsoleApplication
             VirtualMachineCollection vmCollection = resourceGroup.GetVirtualMachines();
             VirtualMachineResource vm = await vmCollection.GetAsync(vmName);
             await vm.DeleteAsync(WaitUntil.Completed);
+        }
+
+        private async static Task<VirtualNetworkResource> CreateVirtualNetworkAsync(
+            SubscriptionResource subscription,
+            string rgName,
+            string location,
+            string virtualNetworkName)
+        {
+            var rgCollections = subscription.GetResourceGroups();
+            var rgResourceResponse = await rgCollections.GetAsync(rgName);
+            var resourceGroup = rgResourceResponse.Value;
+
+            // Create VNet
+            Console.WriteLine("--------Start create VNet--------");
+            var virtualNetworkData = new VirtualNetworkData()
+            {
+
+                Location = location,
+                AddressPrefixes = { "10.0.0.0/16" },
+                Subnets = { new SubnetData() { Name = "SubnetSampleName", AddressPrefix = "10.0.0.0/28" } }
+            };
+
+            VirtualNetworkCollection virtualNetworks = resourceGroup.GetVirtualNetworks();
+            ArmOperation<VirtualNetworkResource> virtualNetworkOperation = await virtualNetworks.CreateOrUpdateAsync(
+                WaitUntil.Completed,
+                virtualNetworkName,
+                virtualNetworkData);
+            VirtualNetworkResource virtualNetwork = virtualNetworkOperation.Value;
+
+            return virtualNetwork;
+        }
+
+        private async static Task<NetworkInterfaceResource> CreateVirtualNetworkInterfaceAsync(
+            SubscriptionResource subscription,
+            string rgName,
+            string location,
+            string vnetName,
+            string networkInterfaceName,
+            string networkInterfaceIpConfigName)
+        {
+            var rgCollections = subscription.GetResourceGroups();
+            var rgResourceResponse = await rgCollections.GetAsync(rgName);
+            var resourceGroup = rgResourceResponse.Value;
+
+            var vnetResourceResponse = await resourceGroup.GetVirtualNetworkAsync(vnetName);
+            var virtualNetwork = vnetResourceResponse.Value;
+
+            // Create Network Interface
+            Console.WriteLine("--------Start create Network Interface--------");
+            var networkInterfaceIPConfiguration = new NetworkInterfaceIPConfigurationData()
+            {
+                Name = networkInterfaceIpConfigName,
+                Primary = true,
+                PrivateIPAllocationMethod = NetworkIPAllocationMethod.Dynamic,
+                Subnet = new SubnetData() { Id = virtualNetwork.Data.Subnets.First().Id }
+            };
+
+            var networkInterfaceData = new NetworkInterfaceData() { Location = location };
+            networkInterfaceData.IPConfigurations.Add(networkInterfaceIPConfiguration);
+            var networkInterfaceCollection = resourceGroup.GetNetworkInterfaces();
+            ArmOperation<NetworkInterfaceResource> networkInterfaceOperation = await networkInterfaceCollection.CreateOrUpdateAsync(
+                WaitUntil.Completed,
+                networkInterfaceName,
+                networkInterfaceData);
+
+            NetworkInterfaceResource networkInterface = networkInterfaceOperation.Value;
+            Console.WriteLine($"--------completed create Network Interface-------- id:{networkInterface.Id}");
+            return networkInterface;
         }
 
         public static async Task CreateVirtualMachineAsync(
@@ -243,13 +344,14 @@ namespace AzureConsoleApplication
                             100,
                             1,
                             DiskCreateOptionType.Empty,
-                            ArmModelCreator.CreateVirtualMachineManagedDisk(StorageAccountType.StandardLrs)),
+                            ArmModelCreator.CreateVirtualMachineManagedDisk(StorageAccountType.StandardLrs),
+                            CachingType.None),
                         /*
                         new VirtualMachineDataDisk(2, DiskCreateOptionType.Empty)
                         {
                             Name = "DataDisk_2",
                             DiskSizeGB = 10,
-                            Caching = CachingType.ReadWrite,
+                            Caching = CachingType.None,
                             ManagedDisk = new VirtualMachineManagedDisk()
                             {
                                 StorageAccountType = StorageAccountType.StandardLrs
@@ -299,8 +401,11 @@ namespace AzureConsoleApplication
             // Create VM
             Console.WriteLine("--------Start create VM with networkInterfaceId-------- ");
             Console.WriteLine($"{networkInterfaceId}");
+            string x = "Premium_LRS";
+            var st = (StorageAccountType)x;
             var virtualMachineData = new VirtualMachineData(location)
             {
+
                 HardwareProfile = new VirtualMachineHardwareProfile()
                 {
                     VmSize = "Standard_E16bds_v5"
@@ -346,7 +451,8 @@ namespace AzureConsoleApplication
                             100,
                             1,
                             DiskCreateOptionType.Empty,
-                            ArmModelCreator.CreateVirtualMachineManagedDisk(StorageAccountType.StandardSsdLrs)),
+                            ArmModelCreator.CreateVirtualMachineManagedDisk(st),
+                            CachingType.None),
                     },
                     ImageReference = ArmModelCreator.CreateImageReference(
                         "MicrosoftWindowsServer",
@@ -412,10 +518,11 @@ namespace AzureConsoleApplication
                     {
                         ArmModelCreator.CreateVirtualMachineDataDisk(
                             $"SampleDataDisk_1_{vmName}",
-                            100,
+                            1000,
                             1,
                             DiskCreateOptionType.Empty,
-                            ArmModelCreator.CreateVirtualMachineManagedDisk(StorageAccountType.StandardLrs)),
+                            ArmModelCreator.CreateVirtualMachineManagedDisk(StorageAccountType.PremiumLrs),
+                            CachingType.None),
                     },
                     DiskControllerType = "NVME",
                 }
@@ -435,28 +542,28 @@ namespace AzureConsoleApplication
         private static async Task<ResourceIdentifier> CreateManagedDiskFromVhd(
             SubscriptionResource subscriptionResource,
             string rgName,
+            string diskName,
             AzureLocation location,
             string vhdUri,
-            string storageAccountArmId)
+            string storageAccountArmId,
+            int diskSize)
         {
             var rgCollections = subscriptionResource.GetResourceGroups();
             var rgResourceResponse = await rgCollections.GetAsync(rgName);
             var resourceGroup = rgResourceResponse.Value;
 
-            var diskName = "ManagedDiskFromVhdBlob";
             ManagedDiskData managedDiskData = new ManagedDiskData(location)
             {
                 Sku = new DiskSku()
                 {
-                    Name = DiskStorageAccountType.StandardLrs
+                    Name = DiskStorageAccountType.PremiumLrs
                 },
                 CreationData = new DiskCreationData(DiskCreateOption.Import)
                 {
                     SourceUri = new Uri(vhdUri),
-                    
                     StorageAccountId = new ResourceIdentifier(storageAccountArmId),
                 },
-                DiskSizeGB = 128,
+                DiskSizeGB = diskSize,
                 HyperVGeneration = HyperVGeneration.V2,
                 OSType = SupportedOperatingSystemType.Windows,
                 SupportedCapabilities = new SupportedCapabilities()
@@ -516,19 +623,19 @@ namespace AzureConsoleApplication
                             Id = managedDiskId,
                         },
                         OSType = SupportedOperatingSystemType.Windows,
-
                     },
                     DataDisks =
                     {
                         ArmModelCreator.CreateVirtualMachineDataDisk(
                             $"SampleDataDisk_1_{vmName}",
-                            100,
-                            1,
+                            2048,
+                            0,
                             DiskCreateOptionType.Empty,
-                            ArmModelCreator.CreateVirtualMachineManagedDisk(StorageAccountType.StandardLrs)),
+                            ArmModelCreator.CreateVirtualMachineManagedDisk(StorageAccountType.PremiumLrs),
+                            CachingType.None),
                     },
-                    DiskControllerType = "NVME",
-                }
+                    DiskControllerType = DiskControllerType.NVMe,
+                },
             };
 
             VirtualMachineCollection vmCollection = resourceGroup.GetVirtualMachines();
@@ -540,6 +647,22 @@ namespace AzureConsoleApplication
 
             Console.WriteLine("VM ID: " + virtualMachine.Id);
             Console.WriteLine("--------Done create VM with networkInterfaceId--------");
+        }
+
+
+        public static StorageAccountType GetArmSdkBasedStorageAccountType(
+            string storageAccountTypeInString,
+            string vmName,
+            string clusterName)
+        {
+            if (!StorageAccountTypeDict.TryGetValue(storageAccountTypeInString, out var requestedDataDiskSku))
+            {
+                string errorMsg = $"Incorrect StorageAccountType mentioned for data disk. reqDataDiskSku={storageAccountTypeInString}, " +
+                    $"vm:{vmName}, clusterName:{clusterName}.";
+                throw new Exception(errorMsg);
+            }
+
+            return requestedDataDiskSku;
         }
     }
 }
