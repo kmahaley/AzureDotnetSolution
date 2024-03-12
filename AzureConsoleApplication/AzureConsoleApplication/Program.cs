@@ -448,7 +448,7 @@ namespace AzureConsoleApplication
                             100,
                             1,
                             DiskCreateOptionType.Empty,
-                            ArmModelCreator.CreateVirtualMachineManagedDisk(st),
+                            ArmModelCreator.CreateVirtualMachineManagedDisk(StorageAccountType.PremiumLrs),
                             CachingType.None),
                     },
                     ImageReference = ArmModelCreator.CreateImageReference(
