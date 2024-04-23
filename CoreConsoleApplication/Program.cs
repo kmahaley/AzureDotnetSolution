@@ -1,6 +1,7 @@
 ﻿using CoreConsoleApplication.BBCProjectUtilities;
 using CoreConsoleApplication.DatabaseConcurrency;
 using CoreConsoleApplication.Dotnetutilities;
+using CoreConsoleApplication.Models;
 using Newtonsoft.Json;
 using NuGet.ContentModel;
 using System;
@@ -11,6 +12,7 @@ using System.Net;
 using System.Runtime.ConstrainedExecution;
 using System.Text.Json;
 using System.Threading.Tasks;
+using static BenchmarkDotNet.Engines.EngineEventSource;
 
 namespace CoreConsoleApplication
 {
@@ -21,16 +23,26 @@ namespace CoreConsoleApplication
             var st = Stopwatch.StartNew();
             //var summary = BenchmarkRunner.Run<BechmarkApiDemo>();
 
-            
-            await Console.Out.WriteLineAsync($"Finished main {st.Elapsed.Milliseconds}");
+            var dic = new Dictionary<string, bool>() 
+            {
+                { "node-agent.fail-node-service-failure.enabled", false },
+                { "vm-generation-based-cluster-creation.enabled", true },
+            };
+
+            var s = JsonConvert.SerializeObject(dic);
+            Console.WriteLine(s);
+
+            await Console.Out.WriteLineAsync($"Finished main {st.Elapsed.Seconds}");
         }
 
 
-        /// <summary>
-        /// Methods can be moved to Main method for utilization. These methods are tested and save
-        /// for future use.
-        /// </summary>
-        public static void ArchievedMethods()
+
+//{"node-agent.fail-node-service-failure.enabled": false, "vm-generation-based-cluster-creation.enabled":true}
+    /// <summary>
+    /// Methods can be moved to Main method for utilization. These methods are tested and save
+    /// for future use.
+    /// </summary>
+    public static void ArchievedMethods()
         {
             var fileName = @"C:\Users\kamahale.REDMOND\Downloads\da.csv";
             var pattern = "fabric";
@@ -43,9 +55,20 @@ namespace CoreConsoleApplication
 
             FrameworkUtilities.GetDotnetFrameworkVersion();
             DotnetDependencies.PrintProjectDependencyTreeUsingMSBuildGraph();
-        }
-        
 
+            TaskBasedUtilities.HandleTaskAsync();
+        }
+
+        public static void PrintList(IEnumerable<string> list) 
+        {
+            foreach (var item in list)
+            {
+                Console.WriteLine(item);
+            }
+
+            Console.WriteLine();
+            Console.WriteLine();
+        }
 
         // End of class
     }
