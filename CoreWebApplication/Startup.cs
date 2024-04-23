@@ -1,7 +1,6 @@
 using CoreWebApplication.Middlewares;
 using CoreWebApplication.Repositories;
 using CoreWebApplication.Services;
-using CoreWebApplication.Swagger;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
