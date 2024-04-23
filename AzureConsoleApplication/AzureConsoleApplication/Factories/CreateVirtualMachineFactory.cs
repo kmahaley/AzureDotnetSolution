@@ -66,15 +66,20 @@ namespace AzureConsoleApplication.Factories
             // TODO: Provide arm resource id. we have 2 Nics
             var networkInterfaceArmId = "";
             //var networkInterfaceArmId = "";
+            
+            //await CreateVirtualMachineWithNicAsync(
+            //    subscriptionResource,
+            //    EbdSku,
+            //    rgName,
+            //    location,
+            //    vmName,
+            //    networkInterfaceArmId);
 
             // TODO: Provide arm resource id. of existing disk
-            //var existingManagedDiskArmId = "";
-
-            //await CreateVirtualMachineWithNicAsync(subscriptionResource, rgName, location, vmName);
-            //await CreateVirtualMachineWithNicAsync(subscriptionResource, EbdSku, rgName, location, vmName, networkInterfaceArmId);
-
+            //var existingManagedDiskArmId = "/subscriptions/bf0cfa3e-3884-49df-b8e8-9715efcc9c00/resourceGroups/KAM-ARM-DEV-RG-EA/providers/Microsoft.Compute/disks/SampleOsDisk";
             //await CreateVMWithManagedDiskAndNicResourceProvidedAsync(
             //    subscriptionResource,
+            //    EbdSku,
             //    rgName,
             //    location,
             //    vmName,
@@ -82,9 +87,8 @@ namespace AzureConsoleApplication.Factories
             //    existingManagedDiskArmId);
 
             /*
-             * Below is single group activity VHD - managed disk - VM
+             * Below is single group activity VHD - Create managed disk - VM
              */
-
 
             //TODO: Provide arm resource id
             //var vhdUri = "";
@@ -295,6 +299,7 @@ namespace AzureConsoleApplication.Factories
         public static async Task CreateVirtualMachineAsync(
             SubscriptionResource subscription,
             string rgName,
+            string skuName,
             string location,
             string vmName)
         {
@@ -346,7 +351,7 @@ namespace AzureConsoleApplication.Factories
             {
                 HardwareProfile = new VirtualMachineHardwareProfile()
                 {
-                    VmSize = "Standard_E16bds_v5"
+                    VmSize = skuName
                 },
                 OSProfile = new VirtualMachineOSProfile()
                 {
@@ -374,19 +379,19 @@ namespace AzureConsoleApplication.Factories
                     OSDisk = new VirtualMachineOSDisk(DiskCreateOptionType.FromImage)
                     {
                         Name = "SampleOsDisk",
-                        DiskSizeGB = 128,
+                        DiskSizeGB = 256,
                         OSType = SupportedOperatingSystemType.Windows,
                         Caching = CachingType.None,
                         ManagedDisk = new VirtualMachineManagedDisk()
                         {
-                            StorageAccountType = StorageAccountType.StandardLrs
+                            StorageAccountType = StorageAccountType.PremiumLrs
                         },
                     },
                     DataDisks =
                     {
                         ArmModelCreator.CreateVirtualMachineDataDisk(
-                            $"DataDisk_1",
-                            100,
+                            $"DataDisk_1_{vmName}",
+                            500,
                             1,
                             DiskCreateOptionType.Empty,
                             ArmModelCreator.CreateVirtualMachineManagedDisk(StorageAccountType.StandardLrs),
@@ -479,19 +484,19 @@ namespace AzureConsoleApplication.Factories
                     OSDisk = new VirtualMachineOSDisk(DiskCreateOptionType.FromImage)
                     {
                         Name = "SampleOsDisk",
-                        DiskSizeGB = 128,
+                        DiskSizeGB = 256,
                         OSType = SupportedOperatingSystemType.Windows,
                         Caching = CachingType.None,
                         ManagedDisk = new VirtualMachineManagedDisk()
                         {
-                            StorageAccountType = StorageAccountType.StandardLrs
+                            StorageAccountType = StorageAccountType.PremiumLrs
                         }
                     },
                     DataDisks =
                     {
                         ArmModelCreator.CreateVirtualMachineDataDisk(
-                            $"DataDisk_1",
-                            100,
+                            $"DataDisk_1_{vmName}",
+                            500,
                             1,
                             DiskCreateOptionType.Empty,
                             ArmModelCreator.CreateVirtualMachineManagedDisk(StorageAccountType.PremiumLrs),
@@ -528,6 +533,7 @@ namespace AzureConsoleApplication.Factories
         public static async Task CreateVMWithManagedDiskAndNicResourceProvidedAsync(
             SubscriptionResource subscription,
             string rgName,
+            string skuName,
             string location,
             string vmName,
             string networkInterfaceId,
@@ -545,7 +551,7 @@ namespace AzureConsoleApplication.Factories
 
             var virtualMachineData = new VirtualMachineData(location)
             {
-                HardwareProfile = ArmModelCreator.CreateVirtualMachineHardwareProfile("Standard_E16bds_v5"),
+                HardwareProfile = ArmModelCreator.CreateVirtualMachineHardwareProfile(skuName),
                 NetworkProfile = ArmModelCreator.CreateVirtualMachineNetworkProfile(networkInterfaceReference),
                 StorageProfile = new VirtualMachineStorageProfile()
                 {
@@ -561,7 +567,7 @@ namespace AzureConsoleApplication.Factories
                     {
                         ArmModelCreator.CreateVirtualMachineDataDisk(
                             $"SampleDataDisk_1_{vmName}",
-                            1000,
+                            500,
                             1,
                             DiskCreateOptionType.Empty,
                             ArmModelCreator.CreateVirtualMachineManagedDisk(StorageAccountType.PremiumLrs),
@@ -671,7 +677,7 @@ namespace AzureConsoleApplication.Factories
                     {
                         ArmModelCreator.CreateVirtualMachineDataDisk(
                             $"SampleDataDisk_1_{vmName}",
-                            2048,
+                            500,
                             0,
                             DiskCreateOptionType.Empty,
                             ArmModelCreator.CreateVirtualMachineManagedDisk(StorageAccountType.PremiumLrs),
