@@ -22,6 +22,8 @@ namespace AzureConsoleApplication.Factories
 
         public static readonly string DaoSku = "Standard_D32aods_v6";
 
+        public static readonly int DataDisk = 500;
+
         public static async Task CreateVirtualMachineInEastAsiaAsync()
         {
             var location = AzureLocation.EastAsia;
@@ -391,7 +393,7 @@ namespace AzureConsoleApplication.Factories
                     {
                         ArmModelCreator.CreateVirtualMachineDataDisk(
                             $"DataDisk_1_{vmName}",
-                            500,
+                            DataDisk,
                             1,
                             DiskCreateOptionType.Empty,
                             ArmModelCreator.CreateVirtualMachineManagedDisk(StorageAccountType.StandardLrs),
@@ -496,7 +498,7 @@ namespace AzureConsoleApplication.Factories
                     {
                         ArmModelCreator.CreateVirtualMachineDataDisk(
                             $"DataDisk_1_{vmName}",
-                            500,
+                            DataDisk,
                             1,
                             DiskCreateOptionType.Empty,
                             ArmModelCreator.CreateVirtualMachineManagedDisk(StorageAccountType.PremiumLrs),
@@ -567,7 +569,7 @@ namespace AzureConsoleApplication.Factories
                     {
                         ArmModelCreator.CreateVirtualMachineDataDisk(
                             $"SampleDataDisk_1_{vmName}",
-                            500,
+                            DataDisk,
                             1,
                             DiskCreateOptionType.Empty,
                             ArmModelCreator.CreateVirtualMachineManagedDisk(StorageAccountType.PremiumLrs),
@@ -677,7 +679,7 @@ namespace AzureConsoleApplication.Factories
                     {
                         ArmModelCreator.CreateVirtualMachineDataDisk(
                             $"SampleDataDisk_1_{vmName}",
-                            500,
+                            DataDisk,
                             0,
                             DiskCreateOptionType.Empty,
                             ArmModelCreator.CreateVirtualMachineManagedDisk(StorageAccountType.PremiumLrs),
