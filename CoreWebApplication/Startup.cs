@@ -1,9 +1,12 @@
+using CoreWebApplication.Middlewares;
 using CoreWebApplication.Repositories;
 using CoreWebApplication.Services;
+using CoreWebApplication.Swagger;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Serilog;
@@ -35,6 +38,7 @@ namespace CoreWebApplication
            
             // Repositories
             services.AddSingleton<IRepository, InMemoryRepository>();
+            services.TryAddSingleton<InspectHttpRequestMiddleware>();
 
             // Background Services
             //services.AddSingleton<IHostedService, BackgroundShortRunningService>();
@@ -49,7 +53,8 @@ namespace CoreWebApplication
             // Swagger
             services.AddSwaggerGen(options =>
             {
-                options.SwaggerDoc("v1",
+                options
+                .SwaggerDoc("v1",
                     new OpenApiInfo()
                     {
                         Title = SwaggerApiName,
@@ -69,6 +74,7 @@ namespace CoreWebApplication
 
             app.UseRouting();
             app.UseAuthorization();
+            app.UseMiddleware<InspectHttpRequestMiddleware>();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
