@@ -81,8 +81,8 @@ namespace AzureConsoleApplication.Factories
             //var existingManagedDiskArmId = "/subscriptions/bf0cfa3e-3884-49df-b8e8-9715efcc9c00/resourceGroups/KAM-ARM-DEV-RG-EA/providers/Microsoft.Compute/disks/SampleOsDisk";
             //await CreateVMWithManagedDiskAndNicResourceProvidedAsync(
             //    subscriptionResource,
-            //    EbdSku,
             //    rgName,
+            //    EbdSku,
             //    location,
             //    vmName,
             //    networkInterfaceArmId,
@@ -109,6 +109,7 @@ namespace AzureConsoleApplication.Factories
 
             //await CreateVMWithManagedDiskFromVhdAndNicResourceProvidedAsync(
             //    subscriptionResource,
+            //    EbdSku,
             //    rgName,
             //    location,
             //    vmName,
@@ -163,15 +164,29 @@ namespace AzureConsoleApplication.Factories
                 var networkInterfaceArmId = "";
                 await CreateVirtualMachineWithNicAsync(subscriptionResource, DaoSku, rgName, location, vmName, networkInterfaceArmId);
 
-                // TODO: Provide arm resource id. of existing disk
-                //var existingManagedDiskArmId = "";
-                //await CreateVMWithManagedDiskAndNicResourceProvidedAsync(
-                //    subscriptionResource,
-                //    rgName,
-                //    location,
-                //    vmName,
-                //    networkInterfaceArmId,
-                //    existingManagedDiskArmId);
+                ///TODO: Provide arm resource id
+                var vhdUri = "";
+                var storageArmId = "";
+
+                var diskName = $"ManagedOsDiskFromVhd_{vmName}";
+                var diskSize = 256;
+                var diskResourceId = await CreateManagedDiskFromVhd(
+                    subscriptionResource,
+                    rgName,
+                    diskName,
+                    location,
+                    vhdUri,
+                    storageArmId,
+                    diskSize);
+
+                await CreateVMWithManagedDiskFromVhdAndNicResourceProvidedAsync(
+                    subscriptionResource,
+                    DaoSku,
+                    rgName,
+                    location,
+                    vmName,
+                    networkInterfaceArmId,
+                    diskResourceId);
 
                 Console.WriteLine("--------Finish Create vm--------");
             } 
@@ -485,7 +500,7 @@ namespace AzureConsoleApplication.Factories
                 {
                     OSDisk = new VirtualMachineOSDisk(DiskCreateOptionType.FromImage)
                     {
-                        Name = "SampleOsDisk",
+                        Name = $"SampleOsDisk_{vmName}",
                         DiskSizeGB = 256,
                         OSType = SupportedOperatingSystemType.Windows,
                         Caching = CachingType.None,
@@ -546,7 +561,7 @@ namespace AzureConsoleApplication.Factories
             var resourceGroup = rgResourceResponse.Value;
 
             // Create VM
-            Console.WriteLine("--------Start create VM with networkInterfaceId-------- ");
+            Console.WriteLine("--------Start create VM with networkInterfaceId and managed disk-------- ");
 
             Console.WriteLine($"{networkInterfaceId}");
             var networkInterfaceReference = ArmModelCreator.CreateVirtualMachineNetworkInterfaceReference(networkInterfaceId);
@@ -587,7 +602,7 @@ namespace AzureConsoleApplication.Factories
             var virtualMachine = virtualMachineOperation.Value;
 
             Console.WriteLine("VM ID: " + virtualMachine.Id);
-            Console.WriteLine("--------Done create VM with networkInterfaceId--------");
+            Console.WriteLine("--------Done create VM with networkInterfaceId and managed disk--------");
         }
 
         private static async Task<ResourceIdentifier> CreateManagedDiskFromVhd(
@@ -603,6 +618,7 @@ namespace AzureConsoleApplication.Factories
             var rgResourceResponse = await rgCollections.GetAsync(rgName);
             var resourceGroup = rgResourceResponse.Value;
 
+            Console.WriteLine("-------- start managed disk creation from VHD --------");
             ManagedDiskData managedDiskData = new ManagedDiskData(location)
             {
                 Sku = new DiskSku()
@@ -631,6 +647,7 @@ namespace AzureConsoleApplication.Factories
 
             ManagedDiskResource disk = managedDisOperation.Value;
 
+            Console.WriteLine("-------- Done: created managed disk from VHD --------");
             return disk.Id;
         }
 
@@ -645,6 +662,7 @@ namespace AzureConsoleApplication.Factories
         /// <returns></returns>
         public static async Task CreateVMWithManagedDiskFromVhdAndNicResourceProvidedAsync(
             SubscriptionResource subscription,
+            string skuName,
             string rgName,
             string location,
             string vmName,
@@ -656,14 +674,14 @@ namespace AzureConsoleApplication.Factories
             var resourceGroup = rgResourceResponse.Value;
 
             // Create VM
-            Console.WriteLine("--------Start create VM with networkInterfaceId-------- ");
+            Console.WriteLine("--------Start create VM with networkInterfaceId and managed disk-------- ");
 
             Console.WriteLine($"{networkInterfaceId}");
             var networkInterfaceReference = ArmModelCreator.CreateVirtualMachineNetworkInterfaceReference(networkInterfaceId);
 
             var virtualMachineData = new VirtualMachineData(location)
             {
-                HardwareProfile = ArmModelCreator.CreateVirtualMachineHardwareProfile("Standard_E16bds_v5"),
+                HardwareProfile = ArmModelCreator.CreateVirtualMachineHardwareProfile(skuName),
                 NetworkProfile = ArmModelCreator.CreateVirtualMachineNetworkProfile(networkInterfaceReference),
                 StorageProfile = new VirtualMachineStorageProfile()
                 {
@@ -697,7 +715,7 @@ namespace AzureConsoleApplication.Factories
             var virtualMachine = virtualMachineOperation.Value;
 
             Console.WriteLine("VM ID: " + virtualMachine.Id);
-            Console.WriteLine("--------Done create VM with networkInterfaceId--------");
+            Console.WriteLine("--------Done create VM with networkInterfaceId and managed disk--------");
         }
 
 
