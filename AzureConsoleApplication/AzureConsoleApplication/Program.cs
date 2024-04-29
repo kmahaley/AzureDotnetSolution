@@ -44,7 +44,7 @@ namespace AzureConsoleApplication
             //var requestedDataDiskSku = GetArmSdkBasedStorageAccountType(val, "vmName123", "clusterName123");
             //await Console.Out.WriteLineAsync($"converted:{requestedDataDiskSku}, type:{requestedDataDiskSku.GetType().FullName} ");
 
-            //CreateVirtualMachineFactory.CreateVirtualMachineInEastAsiaAsync();
+            //await CreateVirtualMachineFactory.CreateVirtualMachineInEastAsiaAsync();
             await CreateVirtualMachineFactory.CreateVirtualMachineInNorthEuropeAsync();
 
             
