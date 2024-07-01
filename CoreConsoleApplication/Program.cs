@@ -23,14 +23,7 @@ namespace CoreConsoleApplication
             var st = Stopwatch.StartNew();
             //var summary = BenchmarkRunner.Run<BechmarkApiDemo>();
 
-            var dic = new Dictionary<string, bool>() 
-            {
-                { "node-agent.fail-node-service-failure.enabled", false },
-                { "vm-generation-based-cluster-creation.enabled", true },
-            };
-
-            var s = JsonConvert.SerializeObject(dic);
-            Console.WriteLine(s);
+            
 
             await Console.Out.WriteLineAsync($"Finished main {st.Elapsed.Seconds}");
         }
