@@ -45,12 +45,10 @@ namespace AzureConsoleApplication
             //await Console.Out.WriteLineAsync($"converted:{requestedDataDiskSku}, type:{requestedDataDiskSku.GetType().FullName} ");
 
             //await CreateVirtualMachineFactory.CreateVirtualMachineInEastAsiaAsync();
-            await CreateVirtualMachineFactory.CreateVirtualMachineInNorthEuropeAsync();
+            //await CreateVirtualMachineFactory.CreateVirtualMachineInNorthEuropeAsync();
 
             
         }
-
-
         public static StorageAccountType GetArmSdkBasedStorageAccountType(
             string storageAccountTypeInString,
             string vmName,
