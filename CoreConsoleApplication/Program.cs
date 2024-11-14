@@ -30,32 +30,11 @@ namespace CoreConsoleApplication
             var st = Stopwatch.StartNew();
             //var summary = BenchmarkRunner.Run<BechmarkApiDemo>();
 
-            var min = 0;
-            var max = 20;
-            var newDeque = new Deque<int>();
-            for (int index = max; index >= min; index--)
-            {
-
-                if (index % 2 == 0)
-                {
-                    newDeque.PushRight(index);
-                }
-                else
-                {
-                    newDeque.PushLeft(index);
-                    
-                }
-            }
-
-            for (int index = min; index <= max; index++)
-            {
-                Console.Write($"{newDeque[index]}-");
-            }
+ 
 
             await Console.Out.WriteLineAsync($"Finished main. time:{st.Elapsed.Seconds}secs");
         }
 
-        
 
 
         //{"node-agent.fail-node-service-failure.enabled": false, "vm-generation-based-cluster-creation.enabled":true}
