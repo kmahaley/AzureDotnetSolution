@@ -14,17 +14,6 @@ namespace AzureConsoleApplication
 {
     public static class Program
     {
-        public static Dictionary<string, StorageAccountType> StorageAccountTypeDict =
-            new Dictionary<string, StorageAccountType>(StringComparer.OrdinalIgnoreCase)
-            {
-                { "StandardLRS", StorageAccountType.StandardLrs },
-                { "PremiumLRS", StorageAccountType.PremiumLrs },
-                { "SStandardSSDLRS", StorageAccountType.StandardSsdLrs },
-                { "UltraSSDLRS", StorageAccountType.UltraSsdLrs },
-            };
-
-        
-
         /// <summary>
         /// FluenSDk to Arm Sdk migration: https://github.com/Azure/azure-sdk-for-net/blob/main/sdk/resourcemanager/Azure.ResourceManager/docs/MigrationGuide.md#create-a-network-interface
         /// Arm sdk compute: https://github.com/Azure/azure-sdk-for-net/blob/Azure.ResourceManager.Compute_1.1.0/sdk/compute/Azure.ResourceManager.Compute/samples/Sample2_ManagingVirtualMachines.md
@@ -40,29 +29,45 @@ namespace AzureConsoleApplication
         /// <returns></returns>
         public static async Task Main(string[] args)
         {
-            //var val = "UltraSSDLRS";
-            //var requestedDataDiskSku = GetArmSdkBasedStorageAccountType(val, "vmName123", "clusterName123");
-            //await Console.Out.WriteLineAsync($"converted:{requestedDataDiskSku}, type:{requestedDataDiskSku.GetType().FullName} ");
 
             //await CreateVirtualMachineFactory.CreateVirtualMachineInEastAsiaAsync();
             //await CreateVirtualMachineFactory.CreateVirtualMachineInNorthEuropeAsync();
+            //await CreateNetworkResourcesFactory.UpdateNetworkSecurityGroupInSubnetAsync();
+            await CreateNetworkResourcesFactory.WestpacVnetTransformationCheck();
 
-            
+            //var x = GetSubnetAddressSpace(2654);
+            Console.WriteLine("--- end of progrem ---");
         }
-        public static StorageAccountType GetArmSdkBasedStorageAccountType(
-            string storageAccountTypeInString,
-            string vmName,
-            string clusterName)
+
+        public static string GetSubnetAddressSpace(int subnetIndex)
         {
-            if (!StorageAccountTypeDict.TryGetValue(storageAccountTypeInString, out var requestedDataDiskSku))
+            int IPv4BitLength = 32;
+            int NumberOfHosts = 4096;
+
+            var zeroBasedSubnetIndex = subnetIndex;
+            var addressSpaceTemplate = "10.{0}.{1}.{2}/{3}";
+            // 2 ^ (32-subnetMask) = numberOfHosts
+            var cidr = IPv4BitLength - (int)Math.Log(NumberOfHosts, 2);
+
+            //10.90.32.0 ie. {p0}:{p1}:{p2}:{p3}
+            int octect2 = 90, octect3 = 32, octect4 = 0;
+            int numberOfHostInEachOctect = 256;
+
+            int numberOfHostIn3rdOctect = octect3 + (subnetIndex * 16);
+            int incrementOctect2By = numberOfHostIn3rdOctect / numberOfHostInEachOctect;
+            octect3 = numberOfHostIn3rdOctect % numberOfHostInEachOctect;
+            if (incrementOctect2By > 0)
             {
-                string errorMsg = $"Incorrect StorageAccountType mentioned for data disk. reqDataDiskSku={storageAccountTypeInString}, " +
-                    $"vm:{vmName}, clusterName:{clusterName}.";
-                throw new Exception(errorMsg);
+                octect2 = octect2 + incrementOctect2By;
+                if (octect2 > 255)
+                {
+                    throw new Exception("AKS based clusters range is not supported. Please Check subnetIndex");
+                }
             }
 
-            return requestedDataDiskSku;
+            return string.Format(addressSpaceTemplate, octect2, octect3, octect4, cidr);
         }
 
+        
     }
 }
