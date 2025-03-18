@@ -8,7 +8,10 @@ using Azure.ResourceManager.Network;
 using Azure.ResourceManager.Network.Models;
 using Azure.ResourceManager.Resources;
 using AzureConsoleApplication.Factories;
+using System.Collections.Concurrent;
 using System.ComponentModel;
+using System.Diagnostics;
+using static Azure.Core.HttpHeader;
 
 namespace AzureConsoleApplication
 {
@@ -29,15 +32,18 @@ namespace AzureConsoleApplication
         /// <returns></returns>
         public static async Task Main(string[] args)
         {
-
+            Stopwatch sw = Stopwatch.StartNew();
             //await CreateVirtualMachineFactory.CreateVirtualMachineInEastAsiaAsync();
             //await CreateVirtualMachineFactory.CreateVirtualMachineInNorthEuropeAsync();
-            //await CreateNetworkResourcesFactory.UpdateNetworkSecurityGroupInSubnetAsync();
-            await CreateNetworkResourcesFactory.WestpacVnetTransformationCheck();
+            await CreateNetworkResourcesFactory.UpdateNetworkSecurityGroupInSubnetAsync();
+            //await CreateNetworkResourcesFactory.WestpacVnetTransformationCheck();
 
-            //var x = GetSubnetAddressSpace(2654);
-            Console.WriteLine("--- end of progrem ---");
+            
+
+            sw.Stop();
+            Console.WriteLine($"--- end of progrem ---time:{sw.ElapsedMilliseconds}");
         }
+
 
         public static string GetSubnetAddressSpace(int subnetIndex)
         {
@@ -69,5 +75,10 @@ namespace AzureConsoleApplication
         }
 
         
+    }
+
+    enum ErrorCode 
+    {
+        InvalidRequest = 1
     }
 }

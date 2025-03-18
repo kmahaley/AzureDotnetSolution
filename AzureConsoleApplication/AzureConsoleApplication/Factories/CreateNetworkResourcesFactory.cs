@@ -17,6 +17,7 @@ namespace AzureConsoleApplication.Factories
         private const string TransformationNsgRgName = "vnet-91cd0ea0-westeurope-transformation-nsg-rg";
 
         private const string TransformationNsgName = "vnet-91cd0ea0-subnet-vm-secure-nsg";
+        //private const string TransformationNsgName = "vnet-91cd0ea0-subnet-vm-dep-nsg";
 
         private const string OriginalNsgRgName = "vnet-91cd0ea0-westeurope-dep-nsg-rg";
 
@@ -48,11 +49,142 @@ namespace AzureConsoleApplication.Factories
             }
             else
             { 
-                //await ListNetworkSecurityGroupOfSubnets(subscriptionResource, vnetRg, vnetName);
+                //await ListNetworkSecurityGroupOfSubnets(subscriptionResource, VnetRg, VnetName);
                 await ResetNetworkSecurityGroupOfSubnets(subscriptionResource, VnetRg, VnetName);
             }
         }
 
+        private static async Task UpdateNetworkSecurityGroupOfSubnets(
+            SubscriptionResource subscriptionResource,
+            NetworkSecurityGroupData nsgData,
+            string vnetRg,
+            string vnetName)
+        {
+            var vnetRgResource = (await subscriptionResource.GetResourceGroupAsync(vnetRg)).Value;
+            var vnetResource = (await vnetRgResource.GetVirtualNetworkAsync(vnetName)).Value;
+            var vnetData = vnetResource.Data;
+
+            var subnetCollection = vnetData.Subnets;//vnetResource.GetSubnets();
+            int i = 0;
+            var sw = new Stopwatch();
+            foreach (var subnet in subnetCollection)
+            {
+                var subnetData = subnet;
+                var subnetName = subnetData.Name;
+                if (string.Equals("PrivateEndpointsSubnet", subnetName, StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
+                sw.Start();
+                var current = subnetData.NetworkSecurityGroup.Id.Name;
+                if (!string.Equals(subnetData.NetworkSecurityGroup.Id.Name, nsgData.Name, StringComparison.OrdinalIgnoreCase))
+                {
+                    subnetData.NetworkSecurityGroup.Id = nsgData.Id;
+                }
+            }
+
+            try
+            {
+                await vnetRgResource.GetVirtualNetworks().CreateOrUpdateAsync(
+                    WaitUntil.Completed,
+                    vnetName,
+                    vnetData);
+                sw.Stop();
+                Console.WriteLine($"completed update:{sw.Elapsed.Milliseconds}ms, totalSubnets:{i}, vnet:{vnetName} ---> nsg:{nsgData.Name}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to update subnets. time:{sw.ElapsedMilliseconds}ms, i:{i}, ex:{ex.Message}");
+                Console.WriteLine();
+            }
+
+        }
+
+        private static async Task ResetNetworkSecurityGroupOfSubnets(
+            SubscriptionResource subscriptionResource,
+            string vnetRg,
+            string vnetName)
+        {
+            var vnetRgResource = (await subscriptionResource.GetResourceGroupAsync(vnetRg)).Value;
+            var vnetResource = (await vnetRgResource.GetVirtualNetworkAsync(vnetName)).Value;
+            var vnetData = vnetResource.Data;
+            var subnetCollection = vnetData.Subnets;
+            var filteredSubnetCollection = subnetCollection
+                .Where(subnetData => 
+                {
+                    return (!string.Equals("PrivateEndpointsSubnet", subnetData.Name, StringComparison.OrdinalIgnoreCase)
+                    && subnetData.NetworkSecurityGroup.Id.Name.Equals(TransformationNsgName, StringComparison.OrdinalIgnoreCase));
+                })
+                .ToList();
+
+            var subnetNames = filteredSubnetCollection
+                .Select(x => x.Name)
+                .ToList();
+            var names = string.Join(", ", subnetNames);
+            Console.WriteLine($"count of subnet to be reset. totalCount:{subnetCollection.Count()}, filterCount:{filteredSubnetCollection.Count}, subnetNames:{names}");
+                
+            var sw = new Stopwatch();
+            foreach (var subnetData in filteredSubnetCollection)
+            {
+                var subnetName = subnetData.Name;
+                try
+                {
+                    var nsgNameTobeAttachedToSubnet = CreateNsgNameFromSubnet(subnetName);
+                    var nsgData = await GetNetworkSecurityGroupData(
+                        subscriptionResource,
+                        OriginalNsgRgName,
+                        nsgNameTobeAttachedToSubnet);
+                    subnetData.NetworkSecurityGroup.Id = nsgData.Id;
+                    sw.Start();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Exceptionduring subnet reset. subnetName:{subnetName}, ex:{ex.Message}");
+                    continue;
+                }
+            }
+
+            try
+            {
+                await vnetRgResource.GetVirtualNetworks().CreateOrUpdateAsync(
+                    WaitUntil.Completed,
+                    vnetName,
+                    vnetData);
+                sw.Stop();
+                Console.WriteLine($"Reset vnet completed:{sw.Elapsed.Milliseconds}ms, totalSubnets:{filteredSubnetCollection.Count}, vnet:{vnetName}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to reset subnets from vnet. time:{sw.ElapsedMilliseconds}ms, ex:{ex.Message}");
+                Console.WriteLine();
+            }
+        }
+
+        private static async Task ListNetworkSecurityGroupOfSubnets(
+            SubscriptionResource subscriptionResource,
+            string vnetRg,
+            string vnetName)
+        {
+            var vnetRgResource = (await subscriptionResource.GetResourceGroupAsync(vnetRg)).Value;
+            var vnetResource = (await vnetRgResource.GetVirtualNetworkAsync(vnetName)).Value;
+            var subnetCollection = vnetResource.GetSubnets();
+            var filteredSubnetCollection = subnetCollection
+                .Where(subnet =>
+                {
+                    var subnetData = subnet.Data;
+                    return !string.Equals("PrivateEndpointsSubnet", subnetData.Name, StringComparison.OrdinalIgnoreCase)
+                    && subnetData.NetworkSecurityGroup.Id.Name.Equals(TransformationNsgName, StringComparison.OrdinalIgnoreCase);
+                })
+                .ToList();
+
+            var subnetNames = filteredSubnetCollection
+                .Select(x => x.Data.Name)
+                .ToList();
+            var names = string.Join(", ", subnetNames);
+            Console.WriteLine($"count of subnet to be reset. totalCount:{subnetCollection.Count()}, filterCount:{filteredSubnetCollection.Count}, subnetNames:{names}");
+
+        }
         public static async Task WestpacVnetTransformationCheck()
         {
             var clientSecret = Environment.GetEnvironmentVariable("ClientSecret");
@@ -98,134 +230,6 @@ namespace AzureConsoleApplication.Factories
                         var nsg = subnetData.NetworkSecurityGroup.Id;
                         Console.WriteLine($"Name of the subnet. subnetName:{subnetName}, nsg:{nsg}");
                     }
-                }
-            }
-        }
-
-        private static async Task UpdateNetworkSecurityGroupOfSubnets(
-            SubscriptionResource subscriptionResource,
-            NetworkSecurityGroupData nsgData,
-            string vnetRg,
-            string vnetName)
-        {
-            var vnetRgResource = (await subscriptionResource.GetResourceGroupAsync(vnetRg)).Value;
-            var vnetResource = (await vnetRgResource.GetVirtualNetworkAsync(vnetName)).Value;
-            
-            var subnetCollection = vnetResource.GetSubnets();
-            int i = 0;
-            var sw = new Stopwatch();
-            foreach (var subnet in subnetCollection)
-            {
-                var subnetData = subnet.Data;
-                var subnetName = subnetData.Name;
-                if (string.Equals("PrivateEndpointsSubnet", subnetName, StringComparison.OrdinalIgnoreCase))
-                {
-                    continue;
-                }
-
-                sw.Start();
-                var current = subnetData.NetworkSecurityGroup.Id.Name;
-                if (!string.Equals(subnetData.NetworkSecurityGroup.Id.Name, nsgData.Name, StringComparison.OrdinalIgnoreCase))
-                {
-                    subnetData.NetworkSecurityGroup = nsgData;
-
-                }
-
-                try
-                {
-                    await subnet.UpdateAsync(WaitUntil.Completed, subnetData);
-                    sw.Stop();
-                    Console.WriteLine($"completed update: {sw.Elapsed.Milliseconds}ms, i:{i}, {subnetData.Name} ---> {subnetData.NetworkSecurityGroup.Id}");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Failed to update subnets. time:{sw.ElapsedMilliseconds}ms, i:{i}, ex:{ex.Message}");
-                    Console.WriteLine();
-                }
-                
-
-                Console.WriteLine();
-                i++;
-                if (i == 5)
-                {
-                    break;
-                }
-            }
-
-            
-        }
-
-        private static async Task ListNetworkSecurityGroupOfSubnets(
-            SubscriptionResource subscriptionResource,
-            string vnetRg,
-            string vnetName)
-        {
-            var vnetRgResource = (await subscriptionResource.GetResourceGroupAsync(vnetRg)).Value;
-            var vnetResource = (await vnetRgResource.GetVirtualNetworkAsync(vnetName)).Value;
-            var subnetCollection = vnetResource.GetSubnets();
-            var filteredSubnetCollection = subnetCollection
-                .Where(subnet => 
-                {
-                    var subnetData = subnet.Data;
-                    return !string.Equals("PrivateEndpointsSubnet", subnetData.Name, StringComparison.OrdinalIgnoreCase)
-                    && subnetData.NetworkSecurityGroup.Id.Name.Equals(TransformationNsgName, StringComparison.OrdinalIgnoreCase);
-                })
-                .ToList();
-
-            var subnetNames = filteredSubnetCollection
-                .Select(x => x.Data.Name)
-                .ToList();
-            var names = string.Join(", ", subnetNames);
-            Console.WriteLine($"count of subnet to be reset. totalCount:{subnetCollection.Count()}, filterCount:{filteredSubnetCollection.Count}, subnetNames:{names}");
-             
-        }
-        
-        private static async Task ResetNetworkSecurityGroupOfSubnets(
-            SubscriptionResource subscriptionResource,
-            string vnetRg,
-            string vnetName)
-        {
-            var vnetRgResource = (await subscriptionResource.GetResourceGroupAsync(vnetRg)).Value;
-            var vnetResource = (await vnetRgResource.GetVirtualNetworkAsync(vnetName)).Value;
-            var subnetCollection = vnetResource.GetSubnets();
-            var filteredSubnetCollection = subnetCollection
-                .Where(subnet => 
-                {
-                    var subnetData = subnet.Data;
-                    return (!string.Equals("PrivateEndpointsSubnet", subnetData.Name, StringComparison.OrdinalIgnoreCase)
-                    && subnetData.NetworkSecurityGroup.Id.Name.Equals(TransformationNsgName, StringComparison.OrdinalIgnoreCase));
-                })
-                .ToList();
-
-            var subnetNames = filteredSubnetCollection
-                .Select(x => x.Data.Name)
-                .ToList();
-            var names = string.Join(", ", subnetNames);
-            Console.WriteLine($"count of subnet to be reset. totalCount:{subnetCollection.Count()}, filterCount:{filteredSubnetCollection.Count}, subnetNames:{names}");
-                
-            var sw = new Stopwatch();
-            foreach (var subnet in filteredSubnetCollection)
-            {
-                var subnetData = subnet.Data;
-                var subnetName = subnetData.Name;
-                try
-                {
-                    var nsgNameTobeAttachedToSubnet = CreateNsgNameFromSubnet(subnetName);
-                    var nsgData = await GetNetworkSecurityGroupData(
-                        subscriptionResource,
-                        OriginalNsgRgName,
-                        nsgNameTobeAttachedToSubnet);
-                    subnetData.NetworkSecurityGroup = nsgData;
-                    sw.Start();
-                    await subnet.UpdateAsync(WaitUntil.Completed, subnetData);
-
-                    Console.WriteLine($"time:{sw.Elapsed.Milliseconds}ms, subnet:{subnetName} ---> nsg:{nsgNameTobeAttachedToSubnet}");
-                    Console.WriteLine();
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Exceptionduring subnet reset. subnetName:{subnetName}, ex:{ex.Message}");
-                    continue;
                 }
             }
         }
