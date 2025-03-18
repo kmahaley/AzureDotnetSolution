@@ -67,6 +67,13 @@ namespace CoreWebApplication.Repositories
 
         public async Task<Item> GetItemAsync(Guid id)
         {
+            var existingItem = await PeekItemAsync(id);
+            if (existingItem == null)
+            {
+                throw new ArgumentException($"{nameof(GetItemAsync)}, item not present in repository: {id}");
+            }
+            return existingItem;
+
             /* 
                 /// this is to test async call and process from controller.
                 var t = new Stopwatch();
@@ -77,12 +84,6 @@ namespace CoreWebApplication.Repositories
                 t.Stop();
                 return null;
             */
-            var existingItem = await PeekItemAsync(id);
-            if (existingItem == null)
-            {
-                throw new ArgumentException($"{nameof(GetItemAsync)}, item not present in repository: {id}");
-            }
-            return existingItem;
         }
 
         public async Task<Guid> DeleteItemAsync(Guid id)
