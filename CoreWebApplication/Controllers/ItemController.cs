@@ -6,6 +6,8 @@ using Microsoft.Extensions.Logging;
 using Swashbuckle.AspNetCore.Annotations;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Metrics;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace CoreWebApplication.Controllers
@@ -84,11 +86,36 @@ namespace CoreWebApplication.Controllers
         public async Task<ActionResult<Item>> GetItemAsync(Guid id)
         {
             var item = await repository.GetItemAsync(id);
-            if(item == null)
+            if (item == null)
             {
                 return NotFound();
             }
             return Ok(item);
+
+            /*
+                        /// this is to test async call and process from controller to inmemoryrepository.GetItemAsync.
+                        var m = new Stopwatch();
+                        m.Start();
+                        logger.LogInformation($"===> Method started. timeInMs:{m.ElapsedMilliseconds}");
+                        _ = Task.Run(() =>
+                        {
+                            var t = new Stopwatch();
+                            t.Start();
+                            try
+                            {
+                                repository.GetItemAsync(id);
+                            }
+                            catch 
+                            { }
+                            logger.LogInformation($"-------- --- hobo async task completed. timeInMs:{t.ElapsedMilliseconds} -----");
+                            t.Stop();
+                        });
+                        //repository.GetItemAsync(id);
+                        await Task.Delay(2000);
+                        logger.LogInformation($"===> Method returning to caller. timeInMs:{m.ElapsedMilliseconds}");
+                        m.Stop();
+                        return Ok(null);
+            */
         }
 
         [HttpGet]
