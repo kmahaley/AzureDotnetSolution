@@ -7,6 +7,9 @@ namespace CoreConsoleApplication.DatabaseConcurrency
 {
     public static class DbConcurrencyUtils
     {
+        private const string ServerName = "synapse-cluster-service-dev-westeurope-server.database.windows.net";
+        private const string DatabaseName = "synapse-cluster-service-database";
+
         public static void CreateDbConcurrenyIssueAndResolution() 
         {
             SqlDatabaseContext databaseContext = new SqlDatabaseContext();
@@ -137,6 +140,53 @@ namespace CoreConsoleApplication.DatabaseConcurrency
             }
 
             Console.WriteLine();
+        }
+
+        public static void TestOnMicrosoftEntraEnabledDatabase() 
+        {
+            try
+            {
+                //COnnect - azaccount
+                //get - azaccesstoken - ResourceUrl "https://database.windows.net/"
+                //az account get-access-token --resource "https://database.windows.net/"//https://vault.azure.net
+                var builder = new SqlConnectionStringBuilder();
+                builder.DataSource = ServerName;
+                builder.InitialCatalog = DatabaseName;
+                //builder.Authentication = SqlAuthenticationMethod.ActiveDirectoryPassword;
+                builder.ConnectTimeout = 30;
+                //string username = "kamahale@microsoft.com";
+                //string password = Environment.GetEnvironmentVariable("DeleteThisVariable");
+
+                using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+                {
+                    connection.AccessToken = "";
+                    Console.WriteLine("\nQuery data example:");
+                    Console.WriteLine("=========================================\n");
+
+                    String sql = "SELECT name, client_id FROM vnet_private_endpoint";
+
+                    using (SqlCommand command = new SqlCommand(sql, connection))
+                    {
+                        //connection.Credential = new SqlCredential(username, ToSecureString(password));
+                        connection.Open();
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                Console.WriteLine("{0} {1}", reader.GetString(0), reader.GetString(1));
+                            }
+                        }
+                    }
+                }
+            }
+            catch (SqlException e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
         }
     }
 }
