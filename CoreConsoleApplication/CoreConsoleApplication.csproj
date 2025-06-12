@@ -35,6 +35,9 @@
 
 		<!--Bechmark-->
 		<PackageReference Include="BenchmarkDotNet" Version="0.13.5" />
+
+		<!--Deque package-->
+		<PackageReference Include="DequeNET" Version="1.0.2" />
 	</ItemGroup>
 
 </Project>

@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -67,11 +68,22 @@ namespace CoreWebApplication.Repositories
         public async Task<Item> GetItemAsync(Guid id)
         {
             var existingItem = await PeekItemAsync(id);
-            if(existingItem == null)
+            if (existingItem == null)
             {
                 throw new ArgumentException($"{nameof(GetItemAsync)}, item not present in repository: {id}");
             }
             return existingItem;
+
+            /* 
+                /// this is to test async call and process from controller.
+                var t = new Stopwatch();
+                t.Start();
+                await Task.Delay(TimeSpan.FromSeconds(5));
+                throw new Exception("------ user testing -----");
+                logger.LogInformation($"===> repo layer call finished, returning now----- timeinms:{t.ElapsedMilliseconds}");
+                t.Stop();
+                return null;
+            */
         }
 
         public async Task<Guid> DeleteItemAsync(Guid id)
