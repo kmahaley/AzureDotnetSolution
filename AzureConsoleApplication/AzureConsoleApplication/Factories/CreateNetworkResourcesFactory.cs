@@ -2,6 +2,7 @@
 using Azure.Identity;
 using Azure.ResourceManager;
 using Azure.ResourceManager.Network;
+using Azure.ResourceManager.Network.Models;
 using Azure.ResourceManager.Resources;
 using System;
 using System.Collections.Generic;
@@ -16,8 +17,8 @@ namespace AzureConsoleApplication.Factories
     {
         private const string TransformationNsgRgName = "vnet-91cd0ea0-westeurope-transformation-nsg-rg";
 
-        private const string TransformationNsgName = "vnet-91cd0ea0-subnet-vm-secure-nsg";
-        //private const string TransformationNsgName = "vnet-91cd0ea0-subnet-vm-dep-nsg";
+        //private const string TransformationNsgName = "vnet-91cd0ea0-subnet-vm-secure-nsg";
+        private const string TransformationNsgName = "vnet-91cd0ea0-subnet-vm-dep-nsg";
 
         private const string OriginalNsgRgName = "vnet-91cd0ea0-westeurope-dep-nsg-rg";
 
@@ -43,15 +44,79 @@ namespace AzureConsoleApplication.Factories
             //var vnet = (await subscriptionResource.GetResourceGroupAsync(vnetRg)).Value;
 
             var shouldUpdateSubnetNsg = false;
-            if (shouldUpdateSubnetNsg)
+            //if (shouldUpdateSubnetNsg)
+            //{
+            //    await UpdateNetworkSecurityGroupOfSubnets(subscriptionResource, nsgData, VnetRg, VnetName);
+            //}
+            //else
+            //{
+            //    //await ListNetworkSecurityGroupOfSubnets(subscriptionResource, VnetRg, VnetName);
+            //    await ResetNetworkSecurityGroupOfSubnets(subscriptionResource, VnetRg, VnetName);
+            //}
+            await CheckNsgRulesAsync(subscriptionResource);
+        }
+
+        private static async Task CheckNsgRulesAsync(SubscriptionResource subscriptionResource)
+        {
+            try
             {
-                await UpdateNetworkSecurityGroupOfSubnets(subscriptionResource, nsgData, VnetRg, VnetName);
+                var rgResource = (await subscriptionResource.GetResourceGroupAsync(TransformationNsgRgName)).Value;
+
+                var nsgResourceBool = (await rgResource.GetNetworkSecurityGroups().ExistsAsync(TransformationNsgRgName));
+                if (!nsgResourceBool && nsgResourceBool.Value == true)
+                {
+                    Console.WriteLine($"NSG does not exist. nsgName:{nsgResourceBool.Value}");
+                }
+
+                var nsgResource = (await rgResource.GetNetworkSecurityGroupAsync(TransformationNsgName)).Value;
+                var nsgData = nsgResource.Data;
+
+                var listOfRules = nsgData
+                    .SecurityRules
+                    .Where(x =>
+                        x.Name.Equals("DenyAllOutbound")
+                        && x.Priority == 3000
+                        && x.Direction.Equals(SecurityRuleDirection.Outbound)
+                        && (x.SourceAddressPrefix.Equals("*"))
+                        && x.DestinationAddressPrefix.Equals("*"))
+                    .ToList();
+
+                listOfRules
+                    .ForEach(x =>
+                    {
+                        Console.WriteLine($"nsgRuleName:{x.Name}, nsgRuleId:{x.Id}, nsgRulePriority:{x.Priority}, nsgRuleDirection:{x.Direction}");
+                    });
+
+                var deny = new SecurityRuleData()
+                {
+                    Name = "DenyVnToVnInboundTestRule",
+                    Description = "DenyVnToVnInbound Test rule",
+                    SourceAddressPrefix = "VirtualNetwork",
+                    DestinationAddressPrefix = "VirtualNetwork",
+
+                    Access = SecurityRuleAccess.Deny,
+                    Direction = SecurityRuleDirection.Inbound,
+                    Priority = 3000
+                };
+
+                deny.SourcePortRange = "*";
+                deny.DestinationPortRange = "*";
+                deny.Protocol = SecurityRuleProtocol.Ah;
+
+                nsgData.SecurityRules.Add(deny);
+
+                await rgResource.GetNetworkSecurityGroups().CreateOrUpdateAsync(WaitUntil.Completed, TransformationNsgName, nsgData);
             }
-            else
-            { 
-                //await ListNetworkSecurityGroupOfSubnets(subscriptionResource, VnetRg, VnetName);
-                await ResetNetworkSecurityGroupOfSubnets(subscriptionResource, VnetRg, VnetName);
+            catch (RequestFailedException ex)
+            {
+
+                Console.WriteLine($"Exception during NSG rule check. {ex.ErrorCode}Err ex:{ex.Message}");
             }
+            catch (Exception ex) 
+            {
+                Console.WriteLine($"Exception during NSG rule check. ex:{ex.Message}");
+            }
+            
         }
 
         private static async Task UpdateNetworkSecurityGroupOfSubnets(
@@ -101,6 +166,13 @@ namespace AzureConsoleApplication.Factories
 
         }
 
+        /// <summary>
+        /// Reset subnet NSG rules to default synapse based rules which are created by Deployment service.
+        /// example: 
+        /// vnet-91cd0ea0-westeurope-dep-nsg-rg
+        /// vnet-91cd0ea0-westeurope-nsg-rg
+        /// vnet-91cd0ea0-westeurope-secure-nsg-rg
+        /// </summary>
         private static async Task ResetNetworkSecurityGroupOfSubnets(
             SubscriptionResource subscriptionResource,
             string vnetRg,
@@ -246,8 +318,15 @@ namespace AzureConsoleApplication.Factories
 
         public static string CreateNsgNameFromSubnet(string subnetName)
         {
+            var postfix = "-dep-nsg";
+            if (TransformationNsgName.EndsWith("secure-nsg"))
+            {
+                postfix = "-secure-nsg";
+
+            }
+
             var arrayOfSubnet = subnetName.Split('-', StringSplitOptions.TrimEntries);
-            var nsgName = string.Concat(arrayOfSubnet[0], '-', arrayOfSubnet[1], "-subnet-", arrayOfSubnet[5], "-dep-nsg");
+            var nsgName = string.Concat(arrayOfSubnet[0], '-', arrayOfSubnet[1], "-subnet-", arrayOfSubnet[5], postfix);
             return nsgName;
         }
     }

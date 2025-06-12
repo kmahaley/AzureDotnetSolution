@@ -202,6 +202,106 @@ namespace AzureConsoleApplication.Factories
             //Console.WriteLine("--------Finish delete vm--------");
         }
 
+        public static async Task CreateVirtualMachineInWestUS2Async()
+        {
+            var location = AzureLocation.WestUS2;
+            var rgName = "kam-dev-rg-wus2";
+            var vmName = "kam-dev-vm-wus2";
+            var clientId = Environment.GetEnvironmentVariable("ClientId");
+            var clientSecret = Environment.GetEnvironmentVariable("ClientSecret");
+            var tenantId = Environment.GetEnvironmentVariable("TenantId");
+            var subscription = Environment.GetEnvironmentVariable("SubscriptionId");
+            //ClientSecretCredential credential = new ClientSecretCredential(tenantId, clientId, clientSecret);
+
+            VisualStudioCredential credential = new VisualStudioCredential();
+            ArmClient client = new ArmClient(credential, subscription);
+
+            // Create Resource Group
+            SubscriptionResource subscriptionResource = await client.GetDefaultSubscriptionAsync();
+            //Console.WriteLine("--------Start create group--------");
+            //var rgResource = await CreateResourceGroup(subscriptionResource, rgName, location);
+            //Console.WriteLine("--------Finish create group--------");
+
+            // Create Vnet and Nic
+            var vnetName = "VnetSampleName"; //"VnetSampleName01";
+            var networkInterfaceName = "VnetSampleNameInterfaceName01";
+            var networkInterfaceIpConfigName = "VnetSampleNameInterfaceIpConfigName01";
+            await CreateVirtualNetworkAsync(subscriptionResource, rgName, location, vnetName);
+            await CreateVirtualNetworkInterfaceAsync(
+                subscriptionResource,
+                rgName,
+                location,
+                vnetName,
+                networkInterfaceName,
+                networkInterfaceIpConfigName);
+
+            // Get all vms
+            //Console.WriteLine("--------Get all vms--------");
+            //await GetAllVmsAsync(subscriptionResource, rgName);
+            //Console.WriteLine("--------Finish Get all vms--------");
+
+            // Create a Virtual Machine
+            Console.WriteLine("--------Create vm--------");
+
+            // TODO: Provide arm resource id. we have 2 Nics
+            var networkInterfaceArmId = "";
+            //var networkInterfaceArmId = "";
+
+            //await CreateVirtualMachineWithNicAsync(
+            //    subscriptionResource,
+            //    EbdSku,
+            //    rgName,
+            //    location,
+            //    vmName,
+            //    networkInterfaceArmId);
+
+            // TODO: Provide arm resource id. of existing disk
+            //var existingManagedDiskArmId = "/subscriptions/bf0cfa3e-3884-49df-b8e8-9715efcc9c00/resourceGroups/KAM-ARM-DEV-RG-EA/providers/Microsoft.Compute/disks/SampleOsDisk";
+            //await CreateVMWithManagedDiskAndNicResourceProvidedAsync(
+            //    subscriptionResource,
+            //    rgName,
+            //    EbdSku,
+            //    location,
+            //    vmName,
+            //    networkInterfaceArmId,
+            //    existingManagedDiskArmId);
+
+            /*
+             * Below is single group activity VHD - Create managed disk - VM
+             */
+
+            //TODO: Provide arm resource id
+            //var vhdUri = "";
+            //var storageArmId = "";
+
+            //var diskName = $"ManagedOsDiskFromVhd_{vmName}";
+            //var diskSize = 256;
+            //var diskResourceId = await CreateManagedDiskFromVhd(
+            //    subscriptionResource,
+            //    rgName,
+            //    diskName,
+            //    location,
+            //    vhdUri,
+            //    storageArmId,
+            //    diskSize);
+
+            //await CreateVMWithManagedDiskFromVhdAndNicResourceProvidedAsync(
+            //    subscriptionResource,
+            //    EbdSku,
+            //    rgName,
+            //    location,
+            //    vmName,
+            //    networkInterfaceArmId,
+            //    diskResourceId);
+
+            Console.WriteLine("--------Finish Create vm--------");
+
+            //Delete resource group if necessary
+            //Console.WriteLine("--------Start delete vm--------");
+            //await DeleteVirtualMachineAsync(subscriptionResource, rgName, vmName);
+            //Console.WriteLine("--------Finish delete vm--------");
+        }
+
         private async static Task<ResourceGroupResource> CreateResourceGroup(
             SubscriptionResource subscription,
             string rgName,
