@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SqlDbApplication.Repositories.Sql;
 
@@ -11,9 +12,10 @@ using SqlDbApplication.Repositories.Sql;
 namespace SqlDbApplication.Migrations
 {
     [DbContext(typeof(SqlDatabaseContext))]
-    partial class SqlRepositoryImplModelSnapshot : ModelSnapshot
+    [Migration("20250517163639_PrivateEndpointMetadata")]
+    partial class PrivateEndpointMetadata
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,9 +31,6 @@ namespace SqlDbApplication.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CityId"), 1L, 1);
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
                         .HasMaxLength(200)
@@ -126,84 +125,6 @@ namespace SqlDbApplication.Migrations
                     b.ToTable("Stores");
                 });
 
-            modelBuilder.Entity("SqlDbApplication.Models.Sql.VnetPrivateEndpointMetadata", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ClientId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ErrorMsg")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("LastUpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Status")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("PrivateEndpointMetadatas");
-                });
-
-            modelBuilder.Entity("SqlDbApplication.Models.Sql.VnetPrivateEndpointReferenceMetadata", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("PrivateEndpointId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ReferenceName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PrivateEndpointId");
-
-                    b.ToTable("PrivateEndpointReferenceMetadatas");
-                });
-
-            modelBuilder.Entity("SqlDbApplication.Models.Sql.VnetPrivateEndpointTargetResourceMetadata", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("id");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("GroupId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("PrivateEndpointId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PrivateEndpointId");
-
-                    b.ToTable("PrivateEndpointTargetResourceMetadatas");
-                });
-
             modelBuilder.Entity("SqlDbApplication.Models.Sql.PointOfInterest", b =>
                 {
                     b.HasOne("SqlDbApplication.Models.Sql.City", "City")
@@ -211,28 +132,6 @@ namespace SqlDbApplication.Migrations
                         .HasForeignKey("CityId");
 
                     b.Navigation("City");
-                });
-
-            modelBuilder.Entity("SqlDbApplication.Models.Sql.VnetPrivateEndpointReferenceMetadata", b =>
-                {
-                    b.HasOne("SqlDbApplication.Models.Sql.VnetPrivateEndpointMetadata", "VnetPrivateEndpointMetadata")
-                        .WithMany()
-                        .HasForeignKey("PrivateEndpointId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("VnetPrivateEndpointMetadata");
-                });
-
-            modelBuilder.Entity("SqlDbApplication.Models.Sql.VnetPrivateEndpointTargetResourceMetadata", b =>
-                {
-                    b.HasOne("SqlDbApplication.Models.Sql.VnetPrivateEndpointMetadata", "VnetPrivateEndpointMetadata")
-                        .WithMany()
-                        .HasForeignKey("PrivateEndpointId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("VnetPrivateEndpointMetadata");
                 });
 
             modelBuilder.Entity("SqlDbApplication.Models.Sql.City", b =>

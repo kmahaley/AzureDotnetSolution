@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SqlDbApplication.Repositories.Sql;
 
@@ -11,9 +12,10 @@ using SqlDbApplication.Repositories.Sql;
 namespace SqlDbApplication.Migrations
 {
     [DbContext(typeof(SqlDatabaseContext))]
-    partial class SqlRepositoryImplModelSnapshot : ModelSnapshot
+    [Migration("20250518141132_CreatedOnInCity")]
+    partial class CreatedOnInCity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -21,13 +21,14 @@ namespace SqlDbApplication.Repositories.Sql
 
         public DbSet<PointOfInterest> PointOfInterests { get; set; }
 
-        //public SqlDatabaseContext()
-        //{
-        //}
+        public DbSet<VnetPrivateEndpointMetadata> PrivateEndpointMetadatas { get; set; }
+
+        public DbSet<VnetPrivateEndpointReferenceMetadata> PrivateEndpointReferenceMetadatas { get; set; }
+        
+        public DbSet<VnetPrivateEndpointTargetResourceMetadata> PrivateEndpointTargetResourceMetadatas { get; set; }
 
         public SqlDatabaseContext(DbContextOptions<SqlDatabaseContext> options) : base(options)
         {
         }
-
     }
 }

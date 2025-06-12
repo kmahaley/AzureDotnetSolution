@@ -79,6 +79,11 @@ docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=Password123" -p 1433:1433 --
       dotnet ef migrations add {UpdateScriptName}
       dotnet ef database update
       ```
+  - Dropping the database and starting fresh
+      ```
+      dotnet ef database drop
+      ```
+  
 
 ### Using Package manager console
 - You can you package manager console too instead of dotnet cli.

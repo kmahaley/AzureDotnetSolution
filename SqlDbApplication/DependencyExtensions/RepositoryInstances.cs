@@ -33,6 +33,8 @@ namespace SqlDbApplication.DependencyExtensions
 
             services.AddScoped<IProductRepository, ProductRepository>();
 
+            services.AddScoped<IPrivateEndpointRepository, PrivateEndpointRepository>();
+
             //Added singletons to test
             services.AddScoped<ICityRepository, CityRepository>();
             services.AddScoped<IPointOfInterestRepository, PointOfInterestRepository>();

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -20,5 +21,7 @@ namespace SqlDbApplication.Models.Sql
         public string? Description { get; set; }
 
         public IList<PointOfInterest> PointOfInterests { get; set; } = new List<PointOfInterest>();
+
+        public DateTime CreatedOn { get; set; }
     }
 }
