@@ -46,6 +46,16 @@ namespace AzureConsoleApplication.Factories
                     },
             };
         }
+        
+        public static VirtualMachineOSProfile CreateVirtualMachineOSProfile()
+        {
+            return new VirtualMachineOSProfile()
+            {
+                AdminUsername = Environment.GetEnvironmentVariable("AzureAdminUsername"),
+                AdminPassword = Environment.GetEnvironmentVariable("AzureAdminPassword"),
+                ComputerName = "computerName",
+            };
+        }
 
         public static VirtualMachineNetworkInterfaceReference CreateVirtualMachineNetworkInterfaceReference(string networkInterfaceId)
         {
@@ -65,6 +75,37 @@ namespace AzureConsoleApplication.Factories
             {
                 OSDisk = virtualMachineOSDisk,
                 ImageReference = imageReference,
+                DiskControllerType = diskControllerType,
+            };
+        }
+        
+        public static VirtualMachineStorageProfile CreateVirtualMachineStorageProfileForImageVersion(
+            ResourceIdentifier imageDefResourceId,
+            DiskControllerType diskControllerType)
+        {
+            return new VirtualMachineStorageProfile()
+            {
+                ImageReference = new ImageReference
+                {
+                    Id = imageDefResourceId
+                },
+                OSDisk = new VirtualMachineOSDisk(DiskCreateOptionType.FromImage)
+                {
+                    ManagedDisk = new VirtualMachineManagedDisk()
+                    {
+                        StorageAccountType = StorageAccountType.PremiumLrs
+                    },
+                },
+                //DataDisks =
+                //{
+                //    ArmModelCreator.CreateVirtualMachineDataDisk(
+                //        $"SampleDataDisk_1_{vmName}",
+                //        DataDisk,
+                //        0,
+                //        DiskCreateOptionType.Empty,
+                //        ArmModelCreator.CreateVirtualMachineManagedDisk(StorageAccountType.PremiumLrs),
+                //        CachingType.None),
+                //},
                 DiskControllerType = diskControllerType,
             };
         }

@@ -35,10 +35,12 @@ namespace AzureConsoleApplication
             Stopwatch sw = Stopwatch.StartNew();
             //await CreateVirtualMachineFactory.CreateVirtualMachineInEastAsiaAsync();
             //await CreateVirtualMachineFactory.CreateVirtualMachineInNorthEuropeAsync();
-            await CreateNetworkResourcesFactory.UpdateNetworkSecurityGroupInSubnetAsync();
+            //await CreateNetworkResourcesFactory.UpdateNetworkSecurityGroupInSubnetAsync();
             //await CreateNetworkResourcesFactory.WestpacVnetTransformationCheck();
 
-            
+            await CreateVirtualMachineUsingGalleyFactory.AzureOperationInWestUS2Async();
+
+
 
             sw.Stop();
             Console.WriteLine($"--- end of progrem ---time:{sw.ElapsedMilliseconds}");
