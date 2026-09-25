@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 using Azure;
 using Azure.Core;
@@ -28,6 +29,8 @@ namespace AzureConsoleApplication.Factories
 
         public static readonly string EbdSku = "Standard_E16bds_v5";
         public static readonly string Eadsv6 = "Standard_E4ads_v6";
+        public static readonly string Ecadsv5 = "Standard_EC4ads_v5";
+        public static readonly string Ddsv6 = "Standard_D4ds_v6";
 
         public static readonly int DataDisk = 500;
 
@@ -82,19 +85,19 @@ namespace AzureConsoleApplication.Factories
             Console.WriteLine("--------Create image version--------");
             //var standardDisk = "";
             //await CreateImageVersionFromOsDiskResourceIdAsync(
-            //    location, 
-            //    ImageDefResourceId, 
+            //    location,
+            //    ImageDefResourceId,
             //    standardDisk,
             //    "1.0.0");
             //var standardNvmeDisk = "";
             //await CreateImageVersionFromOsDiskResourceIdAsync(
-            //    location, 
+            //    location,
             //    ImageDefResourceId,
             //    standardNvmeDisk,
             //    "2.0.0");
             //var trustedScsiDisk = "";
             //await CreateImageVersionFromOsDiskResourceIdAsync(
-            //    location, 
+            //    location,
             //    ImageDefResourceId,
             //    trustedScsiDisk,
             //    "3.0.0");
@@ -118,40 +121,46 @@ namespace AzureConsoleApplication.Factories
             //    DiskControllerType.Scsi);
 
             //TODO: Provide arm resource id
+            var isTrustedLaunch = false;
             var galleryRef = "";
 
-            var diskName = $"ManagedOsDiskFromVhd_{vmName}";
+            var date = DateTime.UtcNow.ToString("yyyyMMddHHmmss");
+            var diskName = $"ManagedOsDiskFromVhd_{vmName}_{date}";
+            //var diskName = "ManagedOsDiskFromGallery_ConfidentialVm";
             var diskSize = 256;
-            //var diskResourceId = await CreateManagedDiskFromGalleyImagerVersion(
-            //    subscriptionResource,
-            //    rgName,
-            //    diskName,
-            //    location,
-            //    galleryRef,
-            //    diskSize);
+            var diskResourceId = await CreateManagedDiskFromGalleyImagerVersion(
+                subscriptionResource,
+                rgName,
+                diskName,
+                location,
+                galleryRef,
+                diskSize,
+                isTrustedLaunch);
 
-            var diskResourceId = "";
+            //var diskResourceIdStandard = "/subscriptions/06059207-ae2d-4ddb-80d3-bb9aea5f02df/resourceGroups/kam-dev-rg-wus2/providers/Microsoft.Compute/disks/ManagedOsDiskFromGallery_Standard";
+            //var diskResourceIdTrusted = "/subscriptions/06059207-ae2d-4ddb-80d3-bb9aea5f02df/resourceGroups/kam-dev-rg-wus2/providers/Microsoft.Compute/disks/ManagedOsDiskFromGallery_TrustedLaunch";
             var diskResourceIdentifier = new ResourceIdentifier(diskResourceId);
-            //await CreateVMWithManagedDiskAndNicResourceProvidedAsync(
+            await CreateVMWithManagedDiskAndNicResourceProvidedAsync(
+                subscriptionResource,
+                Ddsv6,
+                rgName,
+                location,
+                vmName,
+                networkInterfaceArmId,
+                diskResourceIdentifier,
+                isTrustedLaunch);
+
+            //var galleryImageResrc = new ResourceIdentifier("/subscriptions/06059207-ae2d-4ddb-80d3-bb9aea5f02df/resourceGroups/kam-dev-rg-wus2/providers/Microsoft.Compute/galleries/kam.dev.acg.wus2/images/TrustedLaunchSupportedWithAnyControllerTypeImageName/versions/1.0.0");
+            //var csGalleryImageResrc = new ResourceIdentifier("/subscriptions/f6961f7d-2134-4bd6-b7bf-1f7419e09370/resourceGroups/Cluster-AzureComputeGallery-synapseNonProd-rg/providers/Microsoft.Compute/galleries/Cluster_AzureComputeGallery_synapseNonProd_Primary/images/Spark_3.4.0_Linux_G2/versions/1.20260102.16451753");
+            //await CreateVMWithImageGalleryVersionAndNicResourceProvidedAsync(
             //    subscriptionResource,
             //    Eadsv6,
             //    rgName,
             //    location,
-            //    vmName,
+            //    $"{vmName}-nvme-{Eadsv6}-default",
             //    networkInterfaceArmId,
-            //    diskResourceIdentifier);
-
-            //var galleryImageResrc = new ResourceIdentifier("");
-            var csGalleryImageResrc = new ResourceIdentifier("");
-            await CreateVMWithImageGalleryVersionAndNicResourceProvidedAsync(
-                subscriptionResource,
-                Eadsv6,
-                rgName,
-                location,
-                $"{vmName}-scsi-{Eadsv6}",
-                networkInterfaceArmId1,
-                csGalleryImageResrc,
-                DiskControllerType.Scsi);
+            //    csGalleryImageResrc,
+            //    DiskControllerType.NVMe);
 
             //await CreateManagedDiskFromVhdInEastAsiaAsync();
 
@@ -177,7 +186,8 @@ namespace AzureConsoleApplication.Factories
             string location,
             string vmName,
             string networkInterfaceId,
-            ResourceIdentifier managedDiskId)
+            ResourceIdentifier managedDiskId,
+            bool isTrustedLaunch)
         {
             var rgCollections = subscription.GetResourceGroups();
             var rgResourceResponse = await rgCollections.GetAsync(rgName);
@@ -203,19 +213,24 @@ namespace AzureConsoleApplication.Factories
                         },
                         OSType = SupportedOperatingSystemType.Linux,
                     },
-                    DataDisks =
-                    {
-                        ArmModelCreator.CreateVirtualMachineDataDisk(
-                            $"SampleDataDisk_1_{vmName}",
-                            DataDisk,
-                            0,
-                            DiskCreateOptionType.Empty,
-                            ArmModelCreator.CreateVirtualMachineManagedDisk(StorageAccountType.PremiumLrs),
-                            CachingType.None),
-                    },
-                    DiskControllerType = DiskControllerType.Scsi,
+                    //DataDisks =
+                    //{
+                    //    ArmModelCreator.CreateVirtualMachineDataDisk(
+                    //        $"SampleDataDisk_1_{vmName}",
+                    //        DataDisk,
+                    //        0,
+                    //        DiskCreateOptionType.Empty,
+                    //        ArmModelCreator.CreateVirtualMachineManagedDisk(StorageAccountType.PremiumLrs),
+                    //        CachingType.None),
+                    //},
+                    //DiskControllerType = "SCSI,NVMe",
                 },
-                SecurityProfile = new SecurityProfile()
+                
+            };
+
+            if(isTrustedLaunch)
+            {
+                virtualMachineData.SecurityProfile = new SecurityProfile()
                 {
                     SecurityType = SecurityType.TrustedLaunch,
                     UefiSettings = new UefiSettings()
@@ -223,8 +238,8 @@ namespace AzureConsoleApplication.Factories
                         IsSecureBootEnabled = true,
                         IsVirtualTpmEnabled = true,
                     }
-                },
-            };
+                };
+            }
 
             VirtualMachineCollection vmCollection = resourceGroup.GetVirtualMachines();
             ArmOperation<VirtualMachineResource> virtualMachineOperation = await vmCollection.CreateOrUpdateAsync(
@@ -244,7 +259,8 @@ namespace AzureConsoleApplication.Factories
             string diskName,
             AzureLocation location,
             string galleryRef,
-            int diskSize)
+            int diskSize,
+            bool isTrustedLaunch = false)
         {
             var rgCollections = subscriptionResource.GetResourceGroups();
             var rgResourceResponse = await rgCollections.GetAsync(rgName);
@@ -266,18 +282,18 @@ namespace AzureConsoleApplication.Factories
 ,
                 },
                 DiskSizeGB = diskSize,
-                HyperVGeneration = HyperVGeneration.V2,
+                //HyperVGeneration = HyperVGeneration.V2,
                 OSType = SupportedOperatingSystemType.Linux,
-                SecurityProfile = new DiskSecurityProfile()   // Added this
+                
+            };
+            if (isTrustedLaunch)
+            {
+                managedDiskData.SecurityProfile = new DiskSecurityProfile()
                 {
                     SecurityType = DiskSecurityType.TrustedLaunch
-                }
-                //SupportedCapabilities = new SupportedCapabilities()
-                //{
-                //    DiskControllerTypes = "NVME",
-                //},
-            };
-
+                };
+            }
+            
             ManagedDiskCollection diskCollection = resourceGroup.GetManagedDisks();
             ArmOperation<ManagedDiskResource> managedDisOperation = await diskCollection.CreateOrUpdateAsync(
                 WaitUntil.Completed,
@@ -408,7 +424,7 @@ namespace AzureConsoleApplication.Factories
             {
                 HardwareProfile = ArmModelCreator.CreateVirtualMachineHardwareProfile(skuName),
                 NetworkProfile = ArmModelCreator.CreateVirtualMachineNetworkProfile(networkInterfaceReference),
-                StorageProfile = ArmModelCreator.CreateVirtualMachineStorageProfileForImageVersion(imageVersionResource, diskType),
+                StorageProfile = ArmModelCreator.CreateVirtualMachineStorageProfileForImageVersion(imageVersionResource),
                 SecurityProfile = new SecurityProfile()
                 {
                     SecurityType = SecurityType.TrustedLaunch,
@@ -473,7 +489,7 @@ namespace AzureConsoleApplication.Factories
                 imageVersionName,
                 versionData);
 
-            Console.WriteLine($"Succeeded: Created Version {lro.Value.Data.Name}, id:{lro.Id}");
+            Console.WriteLine($"Succeeded: Called SIG Version not waiting, id:{lro.Id}");
         }
 
         public static async Task CreateImageGalleryAndImageDefinitionAsync(

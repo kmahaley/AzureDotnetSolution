@@ -47,7 +47,11 @@ namespace CoreConsoleApplication
             var st = Stopwatch.StartNew();
             //var summary = BenchmarkRunner.Run<BechmarkApiDemo>();
 
-            
+            var gen2SupportedSkuFamilyList = "apple,banana, grapes , , orange";
+            var gen2SupportedSkuFamilies = gen2SupportedSkuFamilyList
+                    .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+
+            Console.WriteLine(gen2SupportedSkuFamilies);
 
             await Console.Out.WriteLineAsync($"Finished main. time:{st.Elapsed.Seconds}secs");
 

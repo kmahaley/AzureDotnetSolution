@@ -40,7 +40,7 @@ namespace AzureConsoleApplication
 
             await CreateVirtualMachineUsingGalleyFactory.AzureOperationInWestUS2Async();
 
-
+                
 
             sw.Stop();
             Console.WriteLine($"--- end of progrem ---time:{sw.ElapsedMilliseconds}");

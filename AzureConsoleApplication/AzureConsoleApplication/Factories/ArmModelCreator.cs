@@ -80,8 +80,7 @@ namespace AzureConsoleApplication.Factories
         }
         
         public static VirtualMachineStorageProfile CreateVirtualMachineStorageProfileForImageVersion(
-            ResourceIdentifier imageDefResourceId,
-            DiskControllerType diskControllerType)
+            ResourceIdentifier imageDefResourceId)
         {
             return new VirtualMachineStorageProfile()
             {
@@ -106,7 +105,7 @@ namespace AzureConsoleApplication.Factories
                 //        ArmModelCreator.CreateVirtualMachineManagedDisk(StorageAccountType.PremiumLrs),
                 //        CachingType.None),
                 //},
-                DiskControllerType = diskControllerType,
+                //DiskControllerType = diskControllerType,
             };
         }
 

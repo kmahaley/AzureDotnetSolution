@@ -12,6 +12,7 @@
 
 	<ItemGroup>
 		<!--Package to create Dependency tree-->
+		<PackageReference Include="Microsoft.Data.SqlClient" Version="2.1.7" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="NuGet.ProjectModel" Version="6.2.1" />
 		
