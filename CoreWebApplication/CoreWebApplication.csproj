@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
 	<PropertyGroup>
-		<TargetFramework>net6.0</TargetFramework>
+		<TargetFramework>net10.0</TargetFramework>
 		<Platforms>AnyCPU;x64</Platforms>
 		<UserSecretsId>fcee912e-1728-426c-b86f-fc500b436ea2</UserSecretsId>
 		<DockerDefaultTargetOS>Windows</DockerDefaultTargetOS>

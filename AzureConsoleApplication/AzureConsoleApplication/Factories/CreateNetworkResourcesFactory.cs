@@ -241,8 +241,8 @@ namespace AzureConsoleApplication.Factories
             var vnetRgResource = (await subscriptionResource.GetResourceGroupAsync(vnetRg)).Value;
             var vnetResource = (await vnetRgResource.GetVirtualNetworkAsync(vnetName)).Value;
             var subnetCollection = vnetResource.GetSubnets();
-            var filteredSubnetCollection = subnetCollection
-                .Where(subnet =>
+            var filteredSubnetCollection = Enumerable
+                .Where(subnetCollection, subnet =>
                 {
                     var subnetData = subnet.Data;
                     return !string.Equals("PrivateEndpointsSubnet", subnetData.Name, StringComparison.OrdinalIgnoreCase)
